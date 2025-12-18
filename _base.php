@@ -5,7 +5,7 @@
 // ============================================================================
 
 date_default_timezone_set('Asia/Kuala_Lumpur');
-session_start();
+session_start();hello
 
 // ============================================================================
 // General Page Functions
