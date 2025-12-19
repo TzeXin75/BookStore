@@ -10,8 +10,7 @@ $user_role = $_SESSION['user_role'] ?? 'guest'; // Default to 'guest' if not log
         </div>
 
         <div class="header-right">
-            <?php if ($user_role === 'member'): ?>
-                <!-- Full navigation for regular users (members) -->
+            <?php if ($user_role !== 'admin'): ?>
                 <a href="index.php" class="home-btn">
                     <i class="fas fa-home"></i>
                 </a>
