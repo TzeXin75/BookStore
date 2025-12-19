@@ -3,6 +3,11 @@
 session_start();
 require_once 'config/db_connect.php';
 
+if ($_SESSION['user_role'] !== 'member') {
+    header("Location: login.php");
+    exit();
+}
+
 
 if (isset($_GET['id'])) {
     $book_id = $_GET['id'];

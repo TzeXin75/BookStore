@@ -1,6 +1,11 @@
 <?php
 require_once 'db.php';
 
+if ($_SESSION['user_role'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
+
 // Allowed categories
 $categories = [
     'Fiction' => ['Novel','Comic'],

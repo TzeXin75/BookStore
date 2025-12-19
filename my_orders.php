@@ -2,6 +2,11 @@
 require_once 'config/db_connect.php';
 include 'head.php';
 
+if ($_SESSION['user_role'] !== 'member') {
+    header("Location: login.php");
+    exit();
+}
+
 // HARDCODED User ID (Change to $_SESSION['user_id'] later)
 $user_id = 1; 
 

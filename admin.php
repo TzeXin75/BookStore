@@ -1,4 +1,12 @@
-<?php require_once 'db.php'; ?>
+<?php
+session_start();
+require_once 'db.php';
+
+if ($_SESSION['user_role'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,11 +20,10 @@
         <aside class="sidebar">
             <h2>Admin Panel</h2>
             <ul>
-                <li><a href="?page=dashboard" class="active">Dashboard</a></li>
+                <li><a href="?page=dashboard">Dashboard</a></li>
                 <li><a href="?page=products">Products</a></li>
                 <li><a href="?page=users">Users</a></li>
                 <li><a href="?page=manage orders">Manage Orders</a></li>
-                <li><a href="?page=settings">Settings</a></li>
                 <li><a href="?page=logout">Logout</a></li>
             </ul>
         </aside>
@@ -36,10 +43,7 @@
                 include 'member.php';
             } elseif ($page === 'manage orders') {
                 include 'admin_orders.php';
-            }elseif ($page === 'settings') {
-                echo "<h2>Settings</h2><p>System settings page under construction...</p>";
             } elseif ($page === 'logout') {
-                echo "<h2>Logout</h2><p>You have been logged out.</p>";
                 header('Location: index.php');
             } else {
                 include 'dashboard.php';
