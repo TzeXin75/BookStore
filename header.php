@@ -17,12 +17,12 @@
             <!-- User Account Section -->
             <div class="nav-item user-menu">
                 <?php if (isset($_user)): ?>
-                    <a href="profile.php" class="account-btn">
+                    <a href="user/profile.php" class="account-btn">
                         <i class="fas fa-user"></i>
                         <span class="username"><?= htmlspecialchars($_user->username) ?></span>
                     </a>
                     <div class="sub-menu">
-                        <a href="profile.php"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="user/profile.php"><i class="fas fa-user-circle"></i> My Profile</a>
                         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     </div>
                 <?php else: ?>
