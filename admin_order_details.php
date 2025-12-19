@@ -2,6 +2,11 @@
 require_once 'config/db_connect.php';
 include 'includes/header.php';
 
+if ($_SESSION['user_role'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
+
 $order_id = $_GET['id'] ?? 0;
 
 // 1. Handle Status Update Submission

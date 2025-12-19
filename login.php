@@ -58,7 +58,8 @@ if (is_post()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Bookstore</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/acdn/vnd/font-awesome/6.5.0/css/all.min.css" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
 </head>
 <body>
     <?php include 'head.php'; ?>
@@ -121,5 +122,7 @@ if (is_post()) {
     .then(r => r.text())
     .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

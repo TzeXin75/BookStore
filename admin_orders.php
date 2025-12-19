@@ -1,6 +1,11 @@
 <?php
 require_once 'config/db_connect.php';
 
+if ($_SESSION['user_role'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
+
 // Fetch ALL orders, ordered by newest first
 $sql = "SELECT o.*, u.username 
         FROM orders o 
