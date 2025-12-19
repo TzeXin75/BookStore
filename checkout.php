@@ -9,7 +9,6 @@ if (session_status() === PHP_SESSION_NONE) {
 $user_id = $_SESSION['user_id'] ?? 1; // Tailored for GitHub
 
 // 1. Get Cart Items
-// GITHUB FORMAT: Using 'book' (singular)
 $stmt = $pdo->prepare("SELECT c.quantity, b.price FROM cart c JOIN book b ON c.book_id = b.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -120,8 +119,6 @@ if ($final_total < 0) $final_total = 0;
                         <label class="form-label">Full Name:</label>
                         <input type="text" name="full_name" required class="form-input">
                     </div>
-
-                    <!-- Email Input Removed - Will use default profile email -->
                     
                     <div class="form-group">
                         <label class="form-label">Shipping Address (Type to search or Click map):</label>
