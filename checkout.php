@@ -126,7 +126,7 @@ if ($final_total < 0) $final_total = 0;
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">Card / Account Number :</label>
+                            <label class="form-label">Card / Account Number:</label>
                             <input type="text" name="payment_ref" placeholder="0000-0000-0000-0000" required class="form-input">
                         </div>
                         
