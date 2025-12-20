@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $user_id = $_SESSION['user_id'] ?? 1; // Tailored for GitHub
 
 // 1. Get Cart Items
-$stmt = $pdo->prepare("SELECT c.quantity, b.price FROM cart c JOIN book b ON c.book_id = b.id WHERE c.user_id = ?");
+$stmt = $pdo->prepare("SELECT c.quantity, b.price FROM cart c JOIN book b ON c.id = b.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
