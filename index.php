@@ -260,7 +260,9 @@ function getBookImage($book) {
                     Join our <strong>BookStore Membership Program</strong> and enjoy amazing perks! 
                     Members receive early access to new arrivals, exclusive discounts, and special event invitations.
                 </p>
-                <button>Join Now</button>
+                <a href="membership_form.php">
+                    <button>Join Now</button>
+                </a>
             </div>
         </div>
     </section>
