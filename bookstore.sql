@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2025 at 10:54 AM
+-- Generation Time: Dec 20, 2025 at 11:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -233,6 +233,7 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `user_phone` varchar(20) DEFAULT NULL,
@@ -241,31 +242,33 @@ CREATE TABLE `users` (
   `user_role` enum('admin','member') DEFAULT 'member',
   `user_address` varchar(255) DEFAULT NULL,
   `user_registrationDate` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_status` tinyint(1) NOT NULL DEFAULT 1
+  `user_status` tinyint(1) NOT NULL DEFAULT 1,
+  `member_pay` decimal(10,0) NOT NULL,
+  `member_subscribeDate` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`) VALUES
-(0, 'haha', 'haha@gmail.com', '014-5678901', '601f1889667efaebb33b8c12572835da3f027f78', '', 'member', 'wowwwww', '2025-12-18 04:28:27', 1),
-(1, 'test_member', 'member@gmail.com', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', NULL, '0000-00-00 00:00:00', 1),
-(2, 'test_admin', 'admin@gmail.com', NULL, '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', NULL, 'member', NULL, '0000-00-00 00:00:00', 1),
-(3, 'Alice Tan', 'alice.tan@gmail.com', '012-3456789', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'alice.jpg', 'member', NULL, '0000-00-00 00:00:00', 1),
-(4, 'Brian Lee', 'brian.lee@gmail.com', '013-4567890', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'brian.png', 'member', NULL, '0000-00-00 00:00:00', 1),
-(5, 'lim', 'lim@gmail.com', '014-5678901', '8cb2237d0679ca88db6464eac60da96345513964', '694337215cf33.jpg', 'admin', 'll', '0000-00-00 00:00:00', 1),
-(6, 'Daniel Lim', 'daniel.lim@gmail.com', '015-6789012', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'daniel.png', 'member', NULL, '0000-00-00 00:00:00', 1),
-(7, 'Emily Ng', 'emily.ng@gmail.com', '016-7890123', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'emily.jpg', 'member', NULL, '0000-00-00 00:00:00', 1),
-(8, 'Farah Ahmad', 'farah.ahmad@gmail.com', '017-8901234', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'farah.png', 'member', NULL, '0000-00-00 00:00:00', 1),
-(9, 'George Tan', 'george.tan@gmail.com', '018-9012345', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'george.jpg', 'admin', NULL, '0000-00-00 00:00:00', 1),
-(10, 'Hannah Lee', 'hannah.lee@gmail.com', '019-0123456', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'hannah.png', 'member', NULL, '0000-00-00 00:00:00', 1),
-(11, 'Ivan Chong', 'ivan.chong@gmail.com', '011-1234567', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'ivan.jpg', 'member', NULL, '0000-00-00 00:00:00', 1),
-(12, 'Julia Teo', 'julia.teo@gmail.com', '010-2345678', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'julia.png', 'member', NULL, '0000-00-00 00:00:00', 1),
-(13, 'Lina', 'lina@gmail.com', '011-12345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', '694138b55ceed.jpg', 'member', 'haha', '0000-00-00 00:00:00', 1),
-(15, 'hui', 'hui@gmail.com', '', '601f1889667efaebb33b8c12572835da3f027f78', NULL, 'member', NULL, '0000-00-00 00:00:00', 1),
-(16, 'test', 'test@gmail.com', '011-12345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', '69418e33c7a90.jpg', 'member', 'wowwww', '0000-00-00 00:00:00', 1),
-(19, 'Jason', 'jason@gmail.com', NULL, '601f1889667efaebb33b8c12572835da3f027f78', '', 'member', NULL, '2025-12-18 04:16:29', 1);
+INSERT INTO `users` (`user_id`, `member_id`, `username`, `email`, `user_phone`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`, `member_pay`, `member_subscribeDate`) VALUES
+(0, 0, 'haha', 'haha@gmail.com', '014-5678901', '601f1889667efaebb33b8c12572835da3f027f78', '', 'member', 'wowwwww', '2025-12-18 04:28:27', 1, 0, '2025-12-20 18:17:52'),
+(1, 0, 'test_member', 'member@gmail.com', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(2, 0, 'test_admin', 'admin@gmail.com', NULL, '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', NULL, 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(3, 0, 'Alice Tan', 'alice.tan@gmail.com', '012-3456789', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'alice.jpg', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(4, 0, 'Brian Lee', 'brian.lee@gmail.com', '013-4567890', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'brian.png', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(5, 0, 'lim', 'lim@gmail.com', '014-5678901', '8cb2237d0679ca88db6464eac60da96345513964', '694337215cf33.jpg', 'admin', 'll', '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(6, 0, 'Daniel Lim', 'daniel.lim@gmail.com', '015-6789012', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'daniel.png', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(7, 0, 'Emily Ng', 'emily.ng@gmail.com', '016-7890123', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'emily.jpg', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(8, 0, 'Farah Ahmad', 'farah.ahmad@gmail.com', '017-8901234', '7110eda4d09e062aa5e4a390b0a572ac0d2c0220', 'farah.png', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(9, 0, 'George Tan', 'george.tan@gmail.com', '018-9012345', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'george.jpg', 'admin', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(10, 0, 'Hannah Lee', 'hannah.lee@gmail.com', '019-0123456', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'hannah.png', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(11, 0, 'Ivan Chong', 'ivan.chong@gmail.com', '011-1234567', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'ivan.jpg', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(12, 0, 'Julia Teo', 'julia.teo@gmail.com', '010-2345678', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'julia.png', 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(13, 0, 'Lina', 'lina@gmail.com', '011-12345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', '694138b55ceed.jpg', 'member', 'haha', '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(15, 0, 'hui', 'hui@gmail.com', '', '601f1889667efaebb33b8c12572835da3f027f78', NULL, 'member', NULL, '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(16, 0, 'test', 'test@gmail.com', '011-12345678', '7c4a8d09ca3762af61e59520943dc26494f8941b', '69418e33c7a90.jpg', 'member', 'wowwww', '0000-00-00 00:00:00', 1, 0, '2025-12-20 18:17:52'),
+(19, 0, 'Jason', 'jason@gmail.com', NULL, '601f1889667efaebb33b8c12572835da3f027f78', '', 'member', NULL, '2025-12-18 04:16:29', 1, 0, '2025-12-20 18:17:52');
 
 -- --------------------------------------------------------
 
