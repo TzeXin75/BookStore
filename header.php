@@ -19,7 +19,7 @@
                 <?php if (isset($_user)): ?>
                     <a href="user/profile.php" class="account-btn">
                         <i class="fas fa-user"></i>
-                        <span class="username"><?= htmlspecialchars($_user->username) ?></span>
+                        <span class="username"><?= htmlspecialchars($_user['username']) ?></span>
                     </a>
                     <div class="sub-menu">
                         <a href="user/profile.php"><i class="fas fa-user-circle"></i> My Profile</a>
