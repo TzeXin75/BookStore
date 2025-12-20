@@ -18,7 +18,6 @@ $sql = "SELECT o.*, u.username
 $stmt = $pdo->query($sql);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include 'includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +46,7 @@ include 'includes/header.php';
 <div class="orders-container">
     <div class="page-header">
         <h2 class="page-title">Cancelled Orders Archive</h2>
-        <a href="admin_orders.php" class="btn-back">&larr; Back to Active Orders</a>
+        <a href="admin.php?page=manage%20orders" class="btn-back">&larr; Back to Active Orders</a>
     </div>
 
     <div class="orders-card">
