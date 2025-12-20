@@ -18,7 +18,6 @@ $sql = "SELECT o.*, u.username
 $stmt = $pdo->query($sql);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include 'includes/header.php';
 ?>
 
 <style>

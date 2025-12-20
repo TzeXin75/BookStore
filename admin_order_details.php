@@ -65,7 +65,6 @@ $stmt_items = $pdo->prepare("SELECT od.*, b.title FROM order_details od JOIN boo
 $stmt_items->execute([$order_id]);
 $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
 
-include 'includes/header.php';
 ?>
 
 <style>
@@ -91,7 +90,7 @@ include 'includes/header.php';
 <div class="admin-container">
     <div class="header-row">
         <h2>Order Management #<?php echo $order['order_id']; ?></h2>
-        <a href="admin_orders.php" class="back-btn">&larr; Back to Orders</a>
+        <a href="admin.php?page=manage%20orders" class="back-btn">&larr; Back to Orders</a>
     </div>
 
     <?php if ($msg != ""): ?>

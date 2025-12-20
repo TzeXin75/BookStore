@@ -40,7 +40,7 @@ if ($_SESSION['user_role'] !== 'admin') {
             } elseif ($page === 'edit_product') {
                 include 'edit_product.php';
             } elseif ($page === 'users') {
-                include 'member.php';
+                include 'member/member.php';
             } elseif ($page === 'manage orders') {
                 include 'admin_orders.php';
             } elseif ($page === 'logout') {
