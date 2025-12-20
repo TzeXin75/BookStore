@@ -1,35 +1,47 @@
-<?php
-
+ <?php
 session_start();
 require_once 'config/db_connect.php';
 
-if ($_SESSION['user_role'] !== 'member') {
-    header("Location: login.php");
-    exit();
-}
-
+if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit(); }
 
 if (isset($_GET['id'])) {
     $book_id = $_GET['id'];
-    $user_id = 1; // HARDCODED (Change to $_SESSION['user_id'] later)
+    $user_id = $_SESSION['user_id'];
 
-    // 1. Check if this book is already in the DB cart for this user
-    $stmt = $pdo->prepare("SELECT * FROM cart WHERE user_id = ? AND book_id = ?");
-    $stmt->execute([$user_id, $book_id]);
-    $existing_item = $stmt->fetch();
+    try {
+        $pdo->beginTransaction();
 
-    if ($existing_item) {
-        // 2. If yes, UPDATE quantity (+1)
-        $update = $pdo->prepare("UPDATE cart SET quantity = quantity + 1 WHERE cart_id = ?");
-        $update->execute([$existing_item['cart_id']]);
-    } else {
-        // 3. If no, INSERT new row
-        $insert = $pdo->prepare("INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, 1)");
-        $insert->execute([$user_id, $book_id]);
-    }
+        // 1. Check current stock
+        $stmt = $pdo->prepare("SELECT stock FROM book WHERE id = ?");
+        $stmt->execute([$book_id]);
+        $book = $stmt->fetch();
+
+        if (!$book || $book['stock'] <= 0) {
+            die("Error: Out of stock.");
+        }
+
+        // 2. DEDUCT stock immediately
+        $update_stock = $pdo->prepare("UPDATE book SET stock = stock - 1 WHERE id = ?");
+        $update_stock->execute([$book_id]);
+
+        // 3. Add to cart (using 'id' column as per your DB error)
+        $check_cart = $pdo->prepare("SELECT * FROM cart WHERE user_id = ? AND id = ?");
+        $check_cart->execute([$user_id, $book_id]);
+        $exists = $check_cart->fetch();
+
+        if ($exists) {
+    $update_cart = $pdo->prepare("UPDATE cart SET quantity = quantity + 1 WHERE cart_id = ?");
+    $update_cart->execute([$exists['cart_id']]);
+} else {
+    $insert_cart = $pdo->prepare("INSERT INTO cart (user_id, id, quantity) VALUES (?, ?, 1)");
+    $insert_cart->execute([$user_id, $book_id]);
 }
 
-//redirect
+        $pdo->commit();
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        die("System Error: " . $e->getMessage());
+    }
+}
 header("Location: cart.php");
 exit();
-?>
