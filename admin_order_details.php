@@ -30,7 +30,7 @@ if (isset($_POST['update_status'])) {
             $stmt_items->execute([$order_id]);
             $restock_items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
 
-            $update_stock = $pdo->prepare("UPDATE book SET stock_quantity = stock_quantity + ? WHERE id = ?");
+            $update_stock = $pdo->prepare("UPDATE book SET stock = stock+ ? WHERE id = ?");
             foreach ($restock_items as $item) {
                 $update_stock->execute([$item['quantity'], $item['book_id']]);
             }
