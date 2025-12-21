@@ -1,279 +1,402 @@
 <?php
-// profile.php - Fully edited, secure, beautiful user profile page
+include '../_base.php';
 
-// ALL PHP CODE AT THE TOP - BEFORE ANY HTML OUTPUT!
-include '../_base.php';  // This handles session_start(), auth(), $_db, etc.
-
+// 1. Setup Page Info
 $_title = 'My Profile';
+include '../head.php'; 
 
-// Force login (redirect if not authenticated)
+// 2. Authentication Check
 auth();
 
-// Default photo
-$photo = 'default.jpg';
-
-// Fetch current user data (GET or after update)
-if (is_get() || is_post()) {
-
-
+// 3. GET Request: Fetch User Data
+if (is_get()) {
     $stm = $_db->prepare('SELECT * FROM users WHERE user_id = ?');
     $stm->execute([$_user['user_id']]);
-    $u = $stm->fetch(PDO::FETCH_OBJ);  // Use object for consistency
+    $u = $stm->fetch();
 
     if (!$u) {
-        temp('info', 'User not found.');
-        redirect('../index.php');
+        redirect('/');
     }
 
-    $username     = $u->username ?? '';
-    $email        = $u->email ?? '';
-    $user_phone   = $u->user_phone ?? '';
-    $user_address = $u->user_address ?? '';
-    $photo        = $u->user_photo ?? 'default.jpg';
-
-    $_SESSION['photo'] = $photo;  // Update session photo
+    extract((array)$u); 
+    $photo = $user_photo;
+    $_SESSION['photo'] = $user_photo;
 }
 
-// Handle form submission (POST)
+// 4. POST Request: Handle Updates
 if (is_post()) {
     $username     = req('username');
+    $email        = req('email');
     $user_phone   = req('user_phone');
     $user_address = req('user_address');
+    $photo        = $_SESSION['photo'];
+    $f            = get_file('photo');
+    $user_role    = req('role');
 
-    // Validation
-    $_err = [];
-    if (empty($username)) $_err['username'] = 'Full name is required';
-    if (!empty($user_phone) && !preg_match('/^\+?\d{10,15}$/', $user_phone)) {
-        $_err['user_phone'] = 'Invalid phone number';
-    }
-
-    // File upload handling (profile photo)
-    if (!empty($_FILES['photo']['name'])) {
-        $upload_dir = '../photos/';
-        $file_ext   = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
-        $allowed    = ['jpg', 'jpeg', 'png', 'gif'];
-        $new_name   = uniqid() . '.' . $file_ext;
-
-        if ($_FILES['photo']['error'] === UPLOAD_ERR_OK &&
-            in_array($file_ext, $allowed) &&
-            $_FILES['photo']['size'] <= 2 * 1024 * 1024) {  // 2MB max
-
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_dir . $new_name)) {
-                $photo = $new_name;
-                // Delete old photo if not default
-                if ($old_photo = $u->user_photo ?? '' && $old_photo !== 'default.jpg') {
-                    @unlink($upload_dir . $old_photo);
-                }
-            } else {
-                $_err['photo'] = 'Failed to upload photo';
-            }
-        } else {
-            $_err['photo'] = 'Invalid file type or size (max 2MB)';
+    // --- Validation Logic ---
+    
+    // Email Validation
+    if ($email == '') {
+        $_err['email'] = 'Required';
+    } else if (strlen($email) > 100) {
+        $_err['email'] = 'Maximum 100 characters';
+    } else if (!is_email($email)) {
+        $_err['email'] = 'Invalid email';
+    } else {
+        $stm = $_db->prepare('SELECT COUNT(*) FROM users WHERE email = ? AND user_id != ?');
+        $stm->execute([$email, $_user['user_id']]);
+        if ($stm->fetchColumn() > 0) {
+            $_err['email'] = 'Email already in use';
         }
     }
 
-    // Update database if no errors
-    if (empty($_err)) {
+    // Name Validation
+    if ($username == '') {
+        $_err['username'] = 'Required';
+    } else if (strlen($username) > 100) {
+        $_err['username'] = 'Maximum 100 characters';
+    }
+
+    // Phone Validation
+    if ($user_phone == '') {
+        $_err['user_phone'] = 'Required';
+    } else if (strlen($user_phone) > 20) {
+        $_err['user_phone'] = 'Maximum 20 characters';
+    }
+
+    // Address Validation
+    if ($user_address == '') {
+        $_err['user_address'] = 'Required';
+    } else if (strlen($user_address) > 255) {
+        $_err['user_address'] = 'Maximum 255 characters';
+    }
+
+    // Photo Validation
+    if ($f) {
+        if (!str_starts_with($f->type, 'image/')) {
+            $_err['photo'] = 'Must be an image';
+        } else if ($f->size > 1 * 1024 * 1024) {
+            $_err['photo'] = 'Maximum 1MB';
+        }
+    }
+
+    // --- Database Update ---
+    if (!$_err) {
+        if ($f) {
+            if ($photo && $photo != 'default.jpg') {
+                @unlink("../photos/$photo");
+            }
+            $photo = save_photo($f, '../photos/');
+        }
+        
         $stm = $_db->prepare('
-            UPDATE users 
-            SET username = ?, user_phone = ?, user_address = ?, user_photo = ?
+            UPDATE users
+            SET email = ?, username = ?, user_photo = ?, user_phone = ?, user_address = ?
             WHERE user_id = ?
         ');
-        $stm->execute([$username, $user_phone, $user_address, $photo, $_user->user_id]);
+        $stm->execute([$email, $username, $photo, $user_phone, $user_address, $_user['user_id']]);
+
+        // Update Session
+        $_user['email']        = $email;
+        $_user['username']     = $username;
+        $_user['user_phone']   = $user_phone;
+        $_user['user_address'] = $user_address;
+        $_user['user_photo']   = $photo;
 
         temp('info', 'Profile updated successfully!');
-        redirect('profile.php');  // Refresh to show updated data
+        redirect('profile.php');
     }
 }
-
-// If we reach here, safe to output HTML
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - BookStore</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            margin: 0;
-            padding: 20px;
-        }
-        .profile-container {
-            max-width: 900px;
-            margin: 50px auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .profile-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 40px 40px;
-            text-align: center;
-            position: relative;
-        }
-        .profile-photo-wrapper {
-            position: absolute;
-            top: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 6px solid white;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        .profile-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .profile-header h1 {
-            margin: 0 0 10px;
-            font-size: 2.2rem;
-        }
-        .profile-header p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 1.1rem;
-        }
-        .profile-form-section {
-            padding: 60px 40px 40px;
-        }
-        .form-group {
-            margin-bottom: 25px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border 0.3s;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
-        }
-        .file-input {
-            margin-top: 10px;
-        }
-        .success-msg {
-            background: #d1fae5;
-            color: #065f46;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .error-msg {
-            color: #dc3545;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.2s;
-        }
-        .submit-btn:hover {
-            transform: translateY(-2px);
-        }
-        .back-link {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 1rem;
-        }
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .profile-container { margin: 30px 15px; }
-            .profile-header { padding: 50px 20px 30px; }
-            .profile-form-section { padding: 40px 20px 20px; }
-        }
-    </style>
-</head>
-<body>
+<style>
+    /* --- Modern Profile UI Variables --- */
+    :root {
+        --primary-color: #4f46e5; /* Indigo */
+        --primary-hover: #4338ca;
+        --bg-color: #f3f4f6;
+        --card-bg: #ffffff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --border-color: #e5e7eb;
+    }
 
-<div class="profile-container">
-    <div class="profile-header">
-        <div class="profile-photo-wrapper">
-            <img src="../photos/<?= htmlspecialchars($photo) ?>" alt="Profile Photo" class="profile-photo">
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+    }
+
+    .profile-wrapper {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    /* --- The Card Container (Grid Layout) --- */
+    .profile-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 320px 1fr; /* Sidebar | Content */
+        min-height: 600px;
+    }
+
+    /* --- Left Sidebar (Visuals) --- */
+    .profile-sidebar {
+        background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+        border-right: 1px solid var(--border-color);
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .avatar-container {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 10px 0 5px;
+        color: var(--text-main);
+    }
+
+    .sidebar-email {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+        word-break: break-all;
+    }
+
+    /* --- Right Content (Form) --- */
+    .profile-content {
+        padding: 40px;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-main);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box; /* Critical for layout */
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .file-input-wrapper {
+        margin-top: 5px;
+        padding: 10px;
+        border: 1px dashed var(--border-color);
+        border-radius: 6px;
+        background: #f9fafb;
+    }
+
+    /* --- Buttons --- */
+    .btn-group {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        border: none;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        border: 1px solid var(--border-color);
+        color: #374151;
+    }
+
+    .btn-secondary:hover {
+        background-color: #f9fafb;
+        border-color: #d1d5db;
+    }
+
+    /* --- Alerts --- */
+    .alert-success {
+        background-color: #ecfdf5;
+        color: #065f46;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        border: 1px solid #a7f3d0;
+    }
+
+    .error-text {
+        color: #ef4444;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+        .profile-card {
+            grid-template-columns: 1fr; /* Stack vertically */
+        }
+        .profile-sidebar {
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+            padding: 30px;
+        }
+        .form-grid {
+            grid-template-columns: 1fr; /* 1 column on mobile */
+        }
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+        .profile-content {
+            padding: 25px;
+        }
+    }
+</style>
+
+<div class="profile-wrapper">
+    
+    <?php if ($msg = temp('info')): ?>
+        <div class="alert-success">
+            <i class="fa fa-check-circle"></i> <?= htmlspecialchars($msg) ?>
         </div>
-        <h1><?= htmlspecialchars($username) ?></h1>
-        <p><?= htmlspecialchars($email) ?></p>
-    </div>
+    <?php endif; ?>
 
-    <div class="profile-form-section">
-        <?php if ($msg = temp('info')): ?>
-            <div class="success-msg"><?= htmlspecialchars($msg) ?></div>
-        <?php endif; ?>
-
-        <form method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="username">Full Name</label>
-                <input type="text" id="username" name="username" value="<?= htmlspecialchars($username) ?>" required>
-                <?php if (err('username')): ?><span class="error-msg"><?= $_err['username'] ?></span><?php endif; ?>
+    <form method="post" enctype="multipart/form-data" class="profile-card">
+        
+        <div class="profile-sidebar">
+            <div class="avatar-container">
+                <?php 
+                    // Logic: Check if photo exists. If yes, use it. If no, generate a default avatar.
+                    if (!empty($photo)) {
+                        $src = "../photos/" . htmlspecialchars($photo);
+                    } else {
+                        // Generate avatar based on name
+                        $src = "https://ui-avatars.com/api/?name=" . urlencode($username) . "&background=random&size=150";
+                    }
+                ?>
+                <img src="<?= $src ?>" alt="Profile" class="profile-avatar">
             </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" value="<?= htmlspecialchars($email) ?>" disabled>
-            </div>
-
-            <div class="form-group">
-                <label for="user_phone">Phone Number</label>
-                <input type="tel" id="user_phone" name="user_phone" value="<?= htmlspecialchars($user_phone) ?>">
-                <?php if (err('user_phone')): ?><span class="error-msg"><?= $_err['user_phone'] ?></span><?php endif; ?>
-            </div>
-
-            <div class="form-group">
-                <label for="user_address">Address</label>
-                <input type="text" id="user_address" name="user_address" value="<?= htmlspecialchars($user_address) ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="photo">Profile Photo</label>
-                <input type="file" id="photo" name="photo" accept="image/*" class="file-input">
-                <?php if (err('photo')): ?><span class="error-msg"><?= $_err['photo'] ?></span><?php endif; ?>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 5px;">Max 2MB (JPG, PNG, GIF)</p>
-            </div>
-
-            <button type="submit" class="submit-btn">Update Profile</button>
-        </form>
-
-        <div class="back-link">
-            <a href="../index.php">← Back to Home</a>
+            <h2 class="sidebar-name"><?= htmlspecialchars($username) ?></h2>
+            <p class="sidebar-email"><?= htmlspecialchars($email) ?></p>
         </div>
-    </div>
+
+        <div class="profile-content">
+            <h3 class="section-title">Account Details</h3>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label" for="username">Full Name</label>
+                    <input type="text" id="username" name="username" class="form-input" 
+                           value="<?= htmlspecialchars($username) ?>" maxlength="100">
+                    <span class="error-text"><?= $_err['username'] ?? '' ?></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" 
+                           value="<?= htmlspecialchars($email) ?>" maxlength="100">
+                    <span class="error-text"><?= $_err['email'] ?? '' ?></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="user_phone">Phone Number</label>
+                    <input type="text" id="user_phone" name="user_phone" class="form-input" 
+                           value="<?= htmlspecialchars($user_phone) ?>" maxlength="20">
+                    <span class="error-text"><?= $_err['user_phone'] ?? '' ?></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="user_address">Shipping Address</label>
+                    <textarea id="user_address" name="user_address" class="form-input" 
+                              rows="3" maxlength="255"><?= htmlspecialchars($user_address) ?></textarea>
+                    <span class="error-text"><?= $_err['user_address'] ?? '' ?></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="photo">Update Profile Photo</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="photo" name="photo" accept="image/*" style="width: 100%;">
+                    </div>
+                    <span class="error-text"><?= $_err['photo'] ?? '' ?></span>
+                    <small style="color: #9ca3af;">Supported: JPG, PNG (Max 1MB)</small>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+
+    </form>
 </div>
 
-</body>
-</html>
+<?php include '../_foot.php'; ?>
