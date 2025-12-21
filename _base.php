@@ -222,7 +222,7 @@ function auth(...$roles) {
     global $_user;
     if ($_user) {
         if ($roles) {
-            if (in_array($_user->role, $roles)) {
+            if (in_array($_user['user_role'], $roles)) {
                 return; // OK
             }
         }

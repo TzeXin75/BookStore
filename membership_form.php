@@ -4,6 +4,7 @@ $_title = 'User | Membership Upgrade';
 require_once 'head.php';
 
 // ----------------------------------------------------------------------------
+auth('member', 'customer');
 
 if (is_post()) {
     $email      = req('email');
