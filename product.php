@@ -1,6 +1,5 @@
 <?php
 require_once 'config/db_connect.php';
-
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -41,7 +40,22 @@ include 'includes/header.php';
 
         <div style="margin-top: 30px;">
             <?php if ($book['stock'] > 0): ?>
-                <a href="add_to_cart.php?id=<?= $book['id'] ?>" class="btn-primary" style="display: block; text-align: center; padding: 15px; background: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; text-transform: uppercase;">Add to Cart</a>
+                <form action="add_to_cart.php" method="POST">
+                    <input type="hidden" name="id" value="<?= $book['id'] ?>">
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <span style="font-weight: bold;">Quantity:</span>
+                        <div style="display: flex; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; width: 120px;">
+                            <button type="button" onclick="changeQty(-1)" style="flex: 1; padding: 10px; background: #eee; border: none; cursor: pointer;">-</button>
+                            <input type="number" name="quantity" id="book_qty" value="1" min="1" max="<?= $book['stock'] ?>" readonly style="width: 40px; text-align: center; border: none; font-weight: bold;">
+                            <button type="button" onclick="changeQty(1)" style="flex: 1; padding: 10px; background: #eee; border: none; cursor: pointer;">+</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; border: none; padding: 15px; background: #2c3e50; color: white; border-radius: 5px; font-weight: bold; text-transform: uppercase; cursor: pointer;">
+                        Add to Cart
+                    </button>
+                </form>
             <?php else: ?>
                 <button disabled style="width: 100%; padding: 15px; background: #ccc; border: none; color: #666; border-radius: 5px;">Out of Stock</button>
             <?php endif; ?>
@@ -53,5 +67,17 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+function changeQty(amt) {
+    const input = document.getElementById('book_qty');
+    const max = parseInt(input.max);
+    let current = parseInt(input.value);
+    current += amt;
+    if (current < 1) current = 1;
+    if (current > max) current = max;
+    input.value = current;
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>
