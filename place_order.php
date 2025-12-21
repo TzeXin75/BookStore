@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
+
 if (isset($_SESSION['user']['user_id'])) {
     $user_id = $_SESSION['user']['user_id'];
 } elseif (isset($_SESSION['user_id'])) {
