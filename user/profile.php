@@ -14,8 +14,10 @@ $photo = 'default.jpg';
 
 // Fetch current user data (GET or after update)
 if (is_get() || is_post()) {
+
+
     $stm = $_db->prepare('SELECT * FROM users WHERE user_id = ?');
-    $stm->execute([$_user->user_id]);
+    $stm->execute([$_user['user_id']]);
     $u = $stm->fetch(PDO::FETCH_OBJ);  // Use object for consistency
 
     if (!$u) {
