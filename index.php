@@ -121,8 +121,7 @@ function getBookImage($book) {
                         <p class="price">$<?= number_format($book['price'], 2) ?></p>
                         <?php if ($book['stock'] > 0): ?>
                             <p>Stock: <?php echo $book['stock']; ?></p>
-
-                            <button><a href="add_to_cart.php?id=<?php echo $book['id']; ?>" >Add to Cart</a></button>
+                            <a href="add_to_cart.php?id=<?php echo $book['id']; ?>" style="display: inline-block; background: #2c3e50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Add to Cart</a>
                         <?php else: ?>
                             <p style="color:red;">Out of Stock</p>
                         <?php endif; ?>
@@ -166,8 +165,7 @@ function getBookImage($book) {
                         <p class="price">$<?= number_format($book['price'], 2) ?></p>
                         <?php if ($book['stock'] > 0): ?>
                             <p>Stock: <?php echo $book['stock']; ?></p>
-
-                            <button><a href="add_to_cart.php?id=<?php echo $book['id']; ?>" >Add to Cart</a></button>
+                            <a href="add_to_cart.php?id=<?php echo $book['id']; ?>" style="display: inline-block; background: #2c3e50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Add to Cart</a>
                         <?php else: ?>
                             <p style="color:red;">Out of Stock</p>
                         <?php endif; ?>
@@ -236,8 +234,7 @@ function getBookImage($book) {
                         <p class="price">$<?= number_format($book['price'], 2) ?></p>
                         <?php if ($book['stock'] > 0): ?>
                             <p>Stock: <?php echo $book['stock']; ?></p>
-
-                            <button><a href="add_to_cart.php?id=<?php echo $book['id']; ?>" >Add to Cart</a></button>
+                            <a href="add_to_cart.php?id=<?php echo $book['id']; ?>" style="display: inline-block; background: #2c3e50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Add to Cart</a>
                         <?php else: ?>
                             <p style="color:red;">Out of Stock</p>
                         <?php endif; ?>
