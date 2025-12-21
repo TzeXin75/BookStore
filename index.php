@@ -1,5 +1,5 @@
 <?php
-// 1. FIXED: Must start session at the VERY TOP for login to work
+// 1. SESSION START (Must be first)
 if (session_status() === PHP_SESSION_NONE) { 
     session_start(); 
 }
@@ -18,20 +18,21 @@ if (!empty($allSubcategories)) {
 }
 
 // --- 2. FETCH BOOKS FOR THAT RANDOM SUBCATEGORY ---
-$stmt = $pdo->prepare("SELECT * FROM book WHERE subcategory = ? ORDER BY RAND() LIMIT 4");
+// Increase LIMIT if you want to see more books in the Featured section
+$stmt = $pdo->prepare("SELECT * FROM book WHERE subcategory = ? ORDER BY RAND() LIMIT 8");
 $stmt->execute([$featuredSubcategory]);
 $featuredBooks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 // --- 3. HELPER FOR OTHER SECTIONS ---
-function getBooks($pdo, $column, $value) {
-    $stmt = $pdo->prepare("SELECT * FROM book WHERE $column = ? ORDER BY id DESC LIMIT 4");
+function getBooks($pdo, $column, $value, $limit = 4) {
+    $stmt = $pdo->prepare("SELECT * FROM book WHERE $column = ? ORDER BY id DESC LIMIT $limit");
     $stmt->execute([$value]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$comics = getBooks($pdo, 'subcategory', 'Comic');
-$education = getBooks($pdo, 'category', 'Education'); 
+$comics = getBooks($pdo, 'subcategory', 'Comic', 4);
+$education = getBooks($pdo, 'category', 'Education', 4); 
 
 // --- HELPER: DEFAULT IMAGE ---
 function getBookImage($book) {
@@ -39,7 +40,7 @@ function getBookImage($book) {
 
     if (!empty($book['images'])) {
         $images = explode(',', $book['images']);
-        $path = "uploads/" . $images[0];
+        $path = "uploads/" . trim($images[0]);
         if (file_exists($path)) {
             return htmlspecialchars($path);
         }
@@ -61,10 +62,10 @@ function getBookImage($book) {
 </head>
 
 <body>
-    <!-- FIXED: Using standard PHP include. The browser will handle the session automatically -->
     <?php include 'header.php'; ?>
     
     <main>
+        <!-- Swiper Section remains the same -->
         <section class="promo-swiper">
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
@@ -76,30 +77,20 @@ function getBookImage($book) {
                             <button>Shop Now</button>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80" class="slide-bg" alt="Books Background">
-                        <div class="carousel-card">
-                            <h2>New Arrivals</h2>
-                            <p>Check out the latest books this month.</p>
-                            <button>Discover</button>
-                        </div>
-                    </div>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
             </div>
         </section>
-    </main>
 
-    <section class="product-section">
-        <div class="section-header">
-            <h2 class="section-title">Featured Books</h2>
-            <a href="category.php?sub=<?= urlencode($featuredSubcategory) ?>" class="view-all-btn">View All &rarr;</a>
-        </div>
-        
-        <div class="product-container">
-            <?php if (count($featuredBooks) > 0): ?>
+        <!-- 1. FEATURED SECTION -->
+        <section class="product-section">
+            <div class="section-header">
+                <h2 class="section-title">Featured: <?= htmlspecialchars($featuredSubcategory) ?></h2>
+                <a href="category.php?sub=<?= urlencode($featuredSubcategory) ?>" class="view-all-btn">View All &rarr;</a>
+            </div>
+            <div class="product-container">
                 <?php foreach ($featuredBooks as $book): ?>
                     <div class="product-card">
                         <a href="product.php?id=<?= $book['id'] ?>">
@@ -107,42 +98,70 @@ function getBookImage($book) {
                         </a>
                         <h3><?= htmlspecialchars($book['title']) ?></h3>
                         <p class="price">$<?= number_format($book['price'], 2) ?></p>
-                        <?php if ($book['stock'] > 0): ?>
-                            <p>Stock: <?= $book['stock']; ?></p>
-                            <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display: inline-block; background: #2c3e50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Add to Cart</a>
-                        <?php else: ?>
-                            <p style="color:red;">Out of Stock</p>
-                        <?php endif; ?>
+                        <p>Stock: <?= $book['stock']; ?></p>
+                        <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display:inline-block; background:#2c3e50; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;">Add to Cart</a>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <p>No featured books available.</p>
-            <?php endif; ?>
-        </div>
-    </section>
+            </div>
+        </section>
 
-    <!-- News and About sections remain here -->
+        <!-- 2. COMICS SECTION -->
+        <section class="product-section">
+            <div class="section-header">
+                <h2 class="section-title">Trending Comics</h2>
+                <a href="category.php?sub=Comic" class="view-all-btn">View All &rarr;</a>
+            </div>
+            <div class="product-container">
+                <?php foreach ($comics as $book): ?>
+                    <div class="product-card">
+                        <a href="product.php?id=<?= $book['id'] ?>">
+                            <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
+                        </a>
+                        <h3><?= htmlspecialchars($book['title']) ?></h3>
+                        <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                        <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display:inline-block; background:#2c3e50; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;">Add to Cart</a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- 3. EDUCATION SECTION -->
+        <section class="product-section">
+            <div class="section-header">
+                <h2 class="section-title">Education & Textbooks</h2>
+                <a href="category.php?sub=Textbook" class="view-all-btn">View All &rarr;</a>
+            </div>
+            <div class="product-container">
+                <!-- FIXED: Now correctly uses $education variable instead of $comics -->
+                <?php if (count($education) > 0): ?>
+                    <?php foreach ($education as $book): ?>
+                        <div class="product-card">
+                            <a href="product.php?id=<?= $book['id'] ?>">
+                                <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
+                            </a>
+                            <h3><?= htmlspecialchars($book['title']) ?></h3>
+                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display:inline-block; background:#2c3e50; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;">Add to Cart</a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p style="padding: 20px;">No education books found in database.</p>
+                <?php endif; ?>
+            </div>
+        </section>
+    </main>
 
     <div id="footer-placeholder"></div>
 
     <script>
-    // FIXED: Removed redundant fetch('header.php') which was breaking sessions.
-    // We only need to fetch the footer and initialize the menu logic.
-
     fetch('footer.html')
     .then(r => r.text())
     .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
 
-    // Header JS Logic (attached to the PHP included header)
     $(document).ready(function() {
         $('#hamburger').click(function() { $('#navLinks').toggleClass('active'); });
-        $('.nav-item').hover(
-            function() { if ($(window).width() > 768) $(this).children('.sub-menu').stop(true, true).slideDown(200); },
-            function() { if ($(window).width() > 768) $(this).children('.sub-menu').stop(true, true).slideUp(200); }
-        );
     });
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
