@@ -1,18 +1,19 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { 
-    session_start(); 
-}
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user'])) {
+if (isset($_SESSION['user']['user_id'])) {
+    $user_id = $_SESSION['user']['user_id'];
+} elseif (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION['user']['user_id']; 
 $total_price = 0;
 
-$sql = "SELECT c.cart_id, c.quantity, c.id as book_id, b.id, b.title, b.price 
+$sql = "SELECT c.cart_id, c.quantity, b.id, b.title, b.price 
         FROM cart c 
         JOIN book b ON c.id = b.id 
         WHERE c.user_id = ?";
