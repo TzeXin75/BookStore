@@ -15,6 +15,15 @@ $mainImage = "uploads/" . trim($images[0]);
 include 'includes/header.php';
 ?>
 
+<style>
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
 <div class="book-container" style="max-width: 1100px; margin: 40px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 20px;">
     <div class="gallery-section">
         <img id="mainImg" src="<?= $mainImage ?>" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -47,7 +56,7 @@ include 'includes/header.php';
                         <span style="font-weight: bold;">Quantity:</span>
                         <div style="display: flex; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; width: 120px;">
                             <button type="button" onclick="changeQty(-1)" style="flex: 1; padding: 10px; background: #eee; border: none; cursor: pointer;">-</button>
-                            <input type="number" name="quantity" id="book_qty" value="1" min="1" max="<?= $book['stock'] ?>" readonly style="width: 40px; text-align: center; border: none; font-weight: bold;">
+                            <input type="number" name="quantity" id="book_qty" value="1" min="1" max="<?= $book['stock'] ?>" style="width: 40px; text-align: center; border: none; font-weight: bold;" onchange="validateQty()">
                             <button type="button" onclick="changeQty(1)" style="flex: 1; padding: 10px; background: #eee; border: none; cursor: pointer;">+</button>
                         </div>
                     </div>
@@ -71,12 +80,21 @@ include 'includes/header.php';
 <script>
 function changeQty(amt) {
     const input = document.getElementById('book_qty');
+    let current = parseInt(input.value) || 1;
+    applyBounds(current + amt);
+}
+
+function validateQty() {
+    const input = document.getElementById('book_qty');
+    applyBounds(parseInt(input.value));
+}
+
+function applyBounds(val) {
+    const input = document.getElementById('book_qty');
     const max = parseInt(input.max);
-    let current = parseInt(input.value);
-    current += amt;
-    if (current < 1) current = 1;
-    if (current > max) current = max;
-    input.value = current;
+    if (val < 1 || isNaN(val)) val = 1;
+    if (val > max) val = max;
+    input.value = val;
 }
 </script>
 

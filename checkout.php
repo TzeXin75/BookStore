@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 $user_id = $_SESSION['user_id'] ?? 1; 
 
-// --- VOUCHER LOGIC ---
 $msg = ""; $msg_type = ""; 
 if (isset($_POST['remove_voucher'])) {
     unset($_SESSION['discount_amount']);
@@ -26,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voucher_code'])) {
     }
 }
 
-// --- FETCH CART ---
 $stmt = $pdo->prepare("SELECT c.quantity, b.price, b.title FROM cart c JOIN book b ON c.id = b.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -58,6 +56,7 @@ $checkout_ref = "REF" . time();
         .confirm-btn { background: #28a745; color: white; padding: 15px; width: 100%; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; font-weight: bold; }
         #qr-code-container { text-align: center; margin-bottom: 15px; display: none; padding: 15px; background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; }
         .summary-item { display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 8px; }
+        #payment-error { color: #dc3545; font-weight: bold; margin-bottom: 15px; display: none; padding: 10px; border: 1px solid #dc3545; border-radius: 4px; background: #fff5f5; }
     </style>
 </head>
 <body>
@@ -93,7 +92,6 @@ $checkout_ref = "REF" . time();
         <div class="form-section">
             <form action="place_order.php" method="POST" id="checkoutForm">
                 <input type="hidden" name="checkout_ref" value="<?= $checkout_ref ?>">
-                <!-- Hidden input to ensure place_order.php logic triggers when JS submits the form -->
                 <input type="hidden" name="place_order" value="1">
 
                 <h3>Shipping Details</h3>
@@ -123,12 +121,14 @@ $checkout_ref = "REF" . time();
                         </a>
                     </div>
                     <div id="standard-fields">
-                        <label id="ref-label">Number</label>
+                        <label id="ref-label">Card Number</label>
                         <input type="text" name="payment_ref" id="payment-input" required class="form-input" placeholder="0000 0000 0000 0000" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         <div id="cvv-container"><label>CVV</label><input type="text" name="cvv" id="cvv-input" class="form-input" style="width:80px;" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
                         <div id="bank-pass-container" style="display:none;"><label>Password</label><input type="password" name="bank_password" id="bank-pass-input" class="form-input"></div>
                     </div>
                 </div>
+
+                <div id="payment-error"></div>
                 <button type="submit" name="place_order" id="confirmBtn" class="confirm-btn" style="margin-top:20px;">Confirm & Pay</button>
             </form>
         </div>
@@ -155,11 +155,11 @@ $checkout_ref = "REF" . time();
     marker.on('dragend', e => {
         updateAddress(e.target.getLatLng().lat, e.target.getLatLng().lng);
     });
+
     let searchTimer;
     document.getElementById('addressBox').addEventListener('input', function() {
         const query = this.value;
         clearTimeout(searchTimer);
-        
         searchTimer = setTimeout(() => {
             if(query.length > 5) {
                 fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
@@ -171,13 +171,11 @@ $checkout_ref = "REF" . time();
                             map.setView([lat, lon], 16);
                             marker.setLatLng([lat, lon]);
                         }
-                    })
-                    .catch(err => console.error("Search failed:", err));
+                    });
             }
-        }, 1000); // 1 second delay after user stops typing
+        }, 1000);
     });
 
-    // --- 4. Payment UI Logic ---
     let pollInterval;
     function selectPayment(type) {
         const btn = document.getElementById('confirmBtn');
@@ -186,7 +184,9 @@ $checkout_ref = "REF" . time();
         const cvvBox = document.getElementById('cvv-container');
         const bankBox = document.getElementById('bank-pass-container');
         const label = document.getElementById('ref-label');
+        const errorDiv = document.getElementById('payment-error');
 
+        errorDiv.style.display = "none";
         document.getElementById('credit_card').checked = (type === 'credit');
         document.getElementById('online_banking').checked = (type === 'bank');
         document.getElementById('ewallet').checked = (type === 'ewallet');
@@ -207,8 +207,22 @@ $checkout_ref = "REF" . time();
     }
 
     document.getElementById('checkoutForm').onsubmit = function(e) {
-        if(document.getElementById('credit_card').checked && !document.getElementById('cvv-input').value) { alert("CVV required"); return false; }
-        if(document.getElementById('online_banking').checked && !document.getElementById('bank-pass-input').value) { alert("Password required"); return false; }
+        const errorDiv = document.getElementById('payment-error');
+        const cvvVal = document.getElementById('cvv-input').value;
+        const passVal = document.getElementById('bank-pass-input').value;
+
+        errorDiv.style.display = "none";
+
+        if(document.getElementById('credit_card').checked && !cvvVal) {
+            errorDiv.innerText = "Warning: CVV required";
+            errorDiv.style.display = "block";
+            return false;
+        }
+        if(document.getElementById('online_banking').checked && !passVal) {
+            errorDiv.innerText = "Warning: Password required";
+            errorDiv.style.display = "block";
+            return false;
+        }
     };
 </script>
 </body>
