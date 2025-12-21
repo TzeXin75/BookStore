@@ -4,7 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'member') {
+// Allow any logged-in user (both members and regular customers)
+if (!isset($_SESSION['user'])) {
     header("Location: login.php");
     exit();
 }
@@ -12,7 +13,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'member') {
 $user_id = $_SESSION['user']['user_id']; 
 $total_price = 0;
 
-$sql = "SELECT c.cart_id, c.quantity, b.id, b.title, b.price 
+$sql = "SELECT c.cart_id, c.quantity, c.id as book_id, b.id, b.title, b.price 
         FROM cart c 
         JOIN book b ON c.id = b.id 
         WHERE c.user_id = ?";
