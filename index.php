@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php';
+require_once 'config/db_connect.php';
 
 // --- 1. LOGIC TO PICK A RANDOM SUBCATEGORY ---
 $stmtSub = $pdo->query("SELECT DISTINCT subcategory FROM book");
