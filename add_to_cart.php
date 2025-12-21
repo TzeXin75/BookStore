@@ -2,7 +2,7 @@
 session_start();
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user']['user_id'])) {
+if (!isset($_SESSION['user']) || !isset($_SESSION['user']['user_id'])) {
     header("Location: login.php"); 
     exit(); 
 }
@@ -17,7 +17,7 @@ if ($book_id) {
 
         $stmt = $pdo->prepare("SELECT stock FROM book WHERE id = ?");
         $stmt->execute([$book_id]);
-        $book = $stmt->fetch();
+        $book = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$book) {
             header("Location: index.php");
@@ -27,7 +27,7 @@ if ($book_id) {
         // Check cart's status
         $check_cart = $pdo->prepare("SELECT cart_id, quantity FROM cart WHERE user_id = ? AND id = ?");
         $check_cart->execute([$user_id, $book_id]);
-        $exists = $check_cart->fetch();
+        $exists = $check_cart->fetch(PDO::FETCH_ASSOC);
 
         $current_in_cart = $exists ? $exists['quantity'] : 0;
         $new_total = $current_in_cart + $quantity;
@@ -41,10 +41,14 @@ if ($book_id) {
         }
 
         $pdo->commit();
+        header("Location: cart.php");
+        exit();
     } catch (Exception $e) {
         $pdo->rollBack();
         die("System Error: " . $e->getMessage());
     }
+} else {
+    // No book_id provided
+    header("Location: index.php");
+    exit();
 }
-header("Location: cart.php");
-exit();
