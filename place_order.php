@@ -2,7 +2,6 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
-// Smart ID Check
 if (isset($_SESSION['user']['user_id'])) {
     $user_id = $_SESSION['user']['user_id'];
 } elseif (isset($_SESSION['user_id'])) {
@@ -21,7 +20,7 @@ $pay_ref = $_POST['payment_ref'] ?? 'N/A';
 $total_amount = 0;
 $order_items = []; 
 
-// Fetch current cart items for THIS user
+
 $stmt = $pdo->prepare("SELECT c.quantity, b.id, b.price FROM cart c JOIN book b ON c.id = b.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $db_cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -55,7 +54,6 @@ try {
     $stmt_pay = $pdo->prepare("INSERT INTO payments (order_id, payment_method, transaction_ref, amount, status) VALUES (?, ?, ?, ?, 'Success')");
     $stmt_pay->execute([$order_id, $pay_method, $pay_ref, $total_amount]);
 
-    // CRITICAL FIX: Clear only THIS user's cart after success
     $clear_cart = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
     $clear_cart->execute([$user_id]);
 
