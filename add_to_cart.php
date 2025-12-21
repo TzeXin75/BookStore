@@ -2,7 +2,7 @@
 session_start();
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user']['user_id'])) {
+if (!isset($_SESSION['user']) || !isset($_SESSION['user']['user_id'])) {
     header("Location: login.php"); 
     exit(); 
 }
@@ -18,7 +18,7 @@ if ($book_id) {
         // Check if book exists and has enough stock (but don't deduct yet!)
         $stmt = $pdo->prepare("SELECT stock FROM book WHERE id = ?");
         $stmt->execute([$book_id]);
-        $book = $stmt->fetch();
+        $book = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$book || $book['stock'] < $quantity) {
             die("Error: Requested quantity exceeds available stock.");
@@ -27,7 +27,7 @@ if ($book_id) {
         // Add to cart database
         $check_cart = $pdo->prepare("SELECT * FROM cart WHERE user_id = ? AND id = ?");
         $check_cart->execute([$user_id, $book_id]);
-        $exists = $check_cart->fetch();
+        $exists = $check_cart->fetch(PDO::FETCH_ASSOC);
 
         if ($exists) {
             $update_cart = $pdo->prepare("UPDATE cart SET quantity = quantity + ? WHERE cart_id = ?");
@@ -38,10 +38,14 @@ if ($book_id) {
         }
 
         $pdo->commit();
+        header("Location: cart.php");
+        exit();
     } catch (Exception $e) {
         $pdo->rollBack();
         die("System Error: " . $e->getMessage());
     }
+} else {
+    // No book_id provided
+    header("Location: index.php");
+    exit();
 }
-header("Location: cart.php");
-exit();
