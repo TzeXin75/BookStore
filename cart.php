@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'member') {
     exit();
 }
 
-$user_id = $_SESSION['user_id']; 
+$user_id = $_SESSION['user']['user_id']; 
 $total_price = 0;
 
 $sql = "SELECT c.cart_id, c.quantity, b.id, b.title, b.price 

@@ -2,14 +2,14 @@
 session_start();
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user_id'])) { 
+if (!isset($_SESSION['user']['user_id'])) {
     header("Location: login.php"); 
     exit(); 
 }
 
 $book_id = $_POST['id'] ?? $_GET['id'] ?? null;
 $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user']['user_id'];
 
 if ($book_id) {
     try {
