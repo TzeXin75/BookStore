@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once 'config/db_connect.php';
 
-// Allow any logged-in user (both members and regular customers)
 if (!isset($_SESSION['user'])) {
     header("Location: login.php");
     exit();
@@ -75,7 +74,6 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         <?php else: ?>
-            <!-- FIXED: Better spacing to prevent button overlap -->
             <div class="empty-cart" style="text-align: center; padding: 80px 20px; background: #f9f9f9; border-radius: 10px; border: 2px dashed #ddd;">
                 <i class="fa-solid fa-cart-shopping" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
                 <p style="font-size: 1.3rem; color: #666; margin-bottom: 25px; display: block;">Your shopping cart is currently empty.</p>
