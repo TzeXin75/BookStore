@@ -29,19 +29,25 @@ if (is_post()) {
         ');
         
         $stm->execute([$email, $password]);
-        $user = $stm->fetch(PDO::FETCH_ASSOC); // Force fetch as array (keeps consistency with current code)
+        $user = $stm->fetch(PDO::FETCH_ASSOC); // <--- STEP 1: USER IS DEFINED HERE
 
         if ($user) {
+            // --- [FIXED CODE IS HERE] ---
+            // If user_status is 0 (Inactive)
+            if ($user['user_status'] == 0) {
+                // We MUST pass the message in the URL (?info=...) so the HTML can read it from $_GET['info']
+                redirect('login.php?info=Your account is inactive. Please contact the administrator.');
+            }
+            // -----------------------------
+
             temp('info', 'Login successfully');
 
             // Determine where to redirect based on role
             if ($user['user_role'] === 'admin') {
-                login($user, 'admin.php');     // Redirect admin to admin.php
+                login($user, 'admin.php');     
             } else {
-                login($user, 'index.php');     // Redirect normal user to index.php
+                login($user, 'index.php');     
             }
-
-            // No need for extra header() or exit() here — login() already does redirect + exit
         }
         else {
             $_err['password'] = 'Invalid email or password';
@@ -51,6 +57,7 @@ if (is_post()) {
 
 // ----------------------------------------------------------------------------
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
