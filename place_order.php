@@ -2,18 +2,26 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user_id']) || !isset($_POST['place_order'])) {
+// Smart ID Check
+if (isset($_SESSION['user']['user_id'])) {
+    $user_id = $_SESSION['user']['user_id'];
+} elseif (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
     header("Location: index.php"); exit();
 }
 
-$user_id = $_SESSION['user_id'];
+if (!isset($_POST['place_order'])) {
+    header("Location: cart.php"); exit();
+}
+
 $address = $_POST['address'];
 $pay_method = $_POST['payment_method'];
 $pay_ref = $_POST['payment_ref'] ?? 'N/A';
 $total_amount = 0;
 $order_items = []; 
 
-// Fetch current cart items
+// Fetch current cart items for THIS user
 $stmt = $pdo->prepare("SELECT c.quantity, b.id, b.price FROM cart c JOIN book b ON c.id = b.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $db_cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -32,34 +40,29 @@ if (isset($_SESSION['discount_amount'])) {
 try {
     $pdo->beginTransaction();
 
-    // Create Order
     $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, shipping_address, order_status) VALUES (?, ?, ?, 'Pending')");
     $stmt->execute([$user_id, $total_amount, $address]);
     $order_id = $pdo->lastInsertId();
 
-    // Process items and update stock
     $stmt_detail = $pdo->prepare("INSERT INTO order_details (order_id, id, quantity, unit_price) VALUES (?, ?, ?, ?)");
     $stmt_stock = $pdo->prepare("UPDATE book SET stock = stock - ? WHERE id = ?");
 
     foreach ($order_items as $item) {
         $stmt_detail->execute([$order_id, $item['id'], $item['quantity'], $item['price']]);
-        $stmt_stock->execute([$item['quantity'], $item['id']]); // Deduct stock once here
+        $stmt_stock->execute([$item['quantity'], $item['id']]);
     }
 
-    // Record Payment
     $stmt_pay = $pdo->prepare("INSERT INTO payments (order_id, payment_method, transaction_ref, amount, status) VALUES (?, ?, ?, ?, 'Success')");
     $stmt_pay->execute([$order_id, $pay_method, $pay_ref, $total_amount]);
 
-    // Empty Database Cart
+    // CRITICAL FIX: Clear only THIS user's cart after success
     $clear_cart = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
     $clear_cart->execute([$user_id]);
 
     $pdo->commit();
 
-    // Clear Sessions
     unset($_SESSION['discount_amount']);
     unset($_SESSION['voucher_code']);
-    unset($_SESSION['paid_refs']);
 
     include 'includes/header.php';
     ?>
@@ -76,6 +79,6 @@ try {
     include 'includes/footer.php';
 
 } catch (Exception $e) {
-    $pdo->rollBack();
+    if ($pdo->inTransaction()) { $pdo->rollBack(); }
     die("Error processing order: " . $e->getMessage());
 }
