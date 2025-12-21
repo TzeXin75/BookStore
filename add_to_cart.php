@@ -1,41 +1,41 @@
- <?php
+<?php
 session_start();
 require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user_id'])) { header("Location: login.php"); exit(); }
+if (!isset($_SESSION['user_id'])) { 
+    header("Location: login.php"); 
+    exit(); 
+}
 
-if (isset($_GET['id'])) {
-    $book_id = $_GET['id'];
-    $user_id = $_SESSION['user_id'];
+$book_id = $_POST['id'] ?? $_GET['id'] ?? null;
+$quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
+$user_id = $_SESSION['user_id'];
 
+if ($book_id) {
     try {
         $pdo->beginTransaction();
 
-        // 1. Check current stock
+        // Check if book exists and has enough stock (but don't deduct yet!)
         $stmt = $pdo->prepare("SELECT stock FROM book WHERE id = ?");
         $stmt->execute([$book_id]);
         $book = $stmt->fetch();
 
-        if (!$book || $book['stock'] <= 0) {
-            die("Error: Out of stock.");
+        if (!$book || $book['stock'] < $quantity) {
+            die("Error: Requested quantity exceeds available stock.");
         }
 
-        // 2. DEDUCT stock immediately
-        $update_stock = $pdo->prepare("UPDATE book SET stock = stock - 1 WHERE id = ?");
-        $update_stock->execute([$book_id]);
-
-        // 3. Add to cart (using 'id' column as per your DB error)
+        // Add to cart database
         $check_cart = $pdo->prepare("SELECT * FROM cart WHERE user_id = ? AND id = ?");
         $check_cart->execute([$user_id, $book_id]);
         $exists = $check_cart->fetch();
 
         if ($exists) {
-    $update_cart = $pdo->prepare("UPDATE cart SET quantity = quantity + 1 WHERE cart_id = ?");
-    $update_cart->execute([$exists['cart_id']]);
-} else {
-    $insert_cart = $pdo->prepare("INSERT INTO cart (user_id, id, quantity) VALUES (?, ?, 1)");
-    $insert_cart->execute([$user_id, $book_id]);
-}
+            $update_cart = $pdo->prepare("UPDATE cart SET quantity = quantity + ? WHERE cart_id = ?");
+            $update_cart->execute([$quantity, $exists['cart_id']]);
+        } else {
+            $insert_cart = $pdo->prepare("INSERT INTO cart (user_id, id, quantity) VALUES (?, ?, ?)");
+            $insert_cart->execute([$user_id, $book_id, $quantity]);
+        }
 
         $pdo->commit();
     } catch (Exception $e) {
