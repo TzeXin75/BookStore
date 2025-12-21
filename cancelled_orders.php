@@ -1,15 +1,14 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+// check if you are admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
+// get all cancelled orders from database
 $sql = "SELECT o.*, u.username 
         FROM orders o 
         JOIN users u ON o.user_id = u.user_id 
@@ -17,7 +16,6 @@ $sql = "SELECT o.*, u.username
         ORDER BY o.order_date DESC";
 $stmt = $pdo->query($sql);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -26,6 +24,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Admin: Cancelled Orders Archive</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         .orders-container { max-width: 1200px; margin: 3rem auto; padding: 0 1rem; }
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
@@ -44,9 +43,15 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
 <div class="orders-container">
+    <?php if(isset($_SESSION['admin_msg'])): ?>
+        <div style="background:#d4edda; color:#155724; padding:15px; border-radius:5px; margin-bottom:20px; border:1px solid #c3e6cb;">
+            <?= $_SESSION['admin_msg']; unset($_SESSION['admin_msg']); ?>
+        </div>
+    <?php endif; ?>
+
     <div class="page-header">
         <h2 class="page-title">Cancelled Orders Archive</h2>
-        <a href="admin.php?page=manage%20orders" class="btn-back">&larr; Back to Active Orders</a>
+        <a href="admin_orders.php" class="btn-back">&larr; Back to Active Orders</a>
     </div>
 
     <div class="orders-card">

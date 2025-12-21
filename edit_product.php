@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php';
+require_once 'config/db_connect.php';
 
 // Allowed categories and subcategories
 $categories = [

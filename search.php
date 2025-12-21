@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php';
+require_once 'config/db_connect.php';
 
 // 1. Get the search query from the URL (header uses name="q")
 $query = isset($_GET['q']) ? trim($_GET['q']) : '';

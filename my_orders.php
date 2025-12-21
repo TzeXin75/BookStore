@@ -1,22 +1,38 @@
 <?php
-require_once 'config/db_connect.php';
-
+// 1. FIXED: Start session and use Smart Identification for the user
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once 'config/db_connect.php';
 
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'member') {
+// Smart ID & Role Check
+if (isset($_SESSION['user']['user_id'])) {
+    $user_id = $_SESSION['user']['user_id'];
+    $user_role = $_SESSION['user']['user_role'] ?? $_SESSION['user']['role'] ?? 'member';
+} elseif (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $user_role = $_SESSION['user_role'] ?? 'member';
+} else {
+    // No session found at all
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION['user_id'] ?? 1; 
+// 2. FIXED: Allow both members and admins to view history (or just members)
+// If you only want members to see this, keep the check. 
+// If it keeps kicking you out, it's because your role name in the DB might be 'customer' or 'admin'
+if (!$user_role) {
+    header("Location: login.php");
+    exit();
+}
 
+// 3. FIXED: Fetch orders for the ACTUAL logged-in user (Removed the "?? 1" default)
 $stmt = $pdo->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC");
 $stmt->execute([$user_id]);
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include 'includes/header.php';
+// Use the standard include path your project expects
+include 'includes/header.php'; 
 ?>
 
 <div style="max-width: 1200px; margin: 40px auto; padding: 20px; min-height: 60vh;">

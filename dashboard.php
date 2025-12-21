@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php'; 
+require_once 'config/db_connect.php'; 
 
 // --- 1. DATA FETCHING LOGIC ---
 

@@ -2,7 +2,15 @@
 require_once 'config/db_connect.php';
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
-$user_id = $_SESSION['user_id'] ?? 1; 
+
+if (isset($_SESSION['user']['user_id'])) {
+    $user_id = $_SESSION['user']['user_id'];
+} elseif (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    header("Location: login.php"); 
+    exit(); 
+}
 
 $msg = ""; $msg_type = ""; 
 if (isset($_POST['remove_voucher'])) {

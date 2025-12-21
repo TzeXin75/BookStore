@@ -1,37 +1,54 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
+//check whther you are admin , if no then no access oh
+$is_admin = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin');
+
+if (!$is_admin) {
+    die("Unauthorized: Only admins can cancel orders.");
+}
+
 if (isset($_GET['id'])) {
-    $order_id = $_GET['id'];
-    $user_id = 1; // HARDCODED
+    $order_id = intval($_GET['id']);
 
-    // 1. Verify ownership and status
-    $check_sql = "SELECT order_status FROM orders WHERE order_id = ? AND user_id = ?";
-    $stmt = $pdo->prepare($check_sql);
-    $stmt->execute([$order_id, $user_id]);
-    $order = $stmt->fetch();
+    try {
+        $pdo->beginTransaction();
 
-    if ($order && $order['order_status'] == 'Pending') {
-        
-        // 2. RESTORE STOCK
-        // Get all items in this order
-        $stmt_items = $pdo->prepare("SELECT book_id, quantity FROM order_details WHERE order_id = ?");
-        $stmt_items->execute([$order_id]);
-        $items = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
+        // 1. Get current status
+        $stmt = $pdo->prepare("SELECT order_status FROM orders WHERE order_id = ?");
+        $stmt->execute([$order_id]);
+        $status = $stmt->fetchColumn();
 
-        // Add quantity back to books table
-        $update_stock = $pdo->prepare("UPDATE book SET stock = stock + ? WHERE book_id = ?");
-        foreach ($items as $item) {
-            $update_stock->execute([$item['quantity'], $item['book_id']]);
+        // Only cancel if it's not already cancelled
+        if ($status && $status !== 'Cancelled') {
+            
+            // 2. Restore Stock (Using your SQL names: table 'order_details', column 'id')
+            $stmt_items = $pdo->prepare("SELECT id, quantity FROM order_details WHERE order_id = ?");
+            $stmt_items->execute([$order_id]);
+            $items = $stmt_items->fetchAll();
+
+            $upd_stock = $pdo->prepare("UPDATE book SET stock = stock + ? WHERE id = ?");
+            foreach ($items as $item) {
+                $upd_stock->execute([$item['quantity'], $item['id']]);
+            }
+
+            // 3. Update Order Status
+            $update_order = $pdo->prepare("UPDATE orders SET order_status = 'Cancelled' WHERE order_id = ?");
+            $update_order->execute([$order_id]);
+
+            $pdo->commit();
+            $_SESSION['admin_msg'] = "Order #$order_id cancelled and stock restored.";
+        } else {
+            $pdo->rollBack();
         }
 
-        // 3. Set status to Cancelled
-        $update_sql = "UPDATE orders SET order_status = 'Cancelled' WHERE order_id = ?";
-        $pdo->prepare($update_sql)->execute([$order_id]);
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) { $pdo->rollBack(); }
+        die("Error: " . $e->getMessage());
     }
 }
 
-header("Location: my_orders.php");
+// Redirect back to the Archive list
+header("Location: cancelled_order.php");
 exit();
-?>
