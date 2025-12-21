@@ -2,14 +2,14 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
-// Security: Verify Admin Role
+ //to verify whether user is admin role or
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: login.php"); exit();
 }
 
 $order_id = $_GET['id'] ?? 0;
 
-// --- TASK 2 FIX: Handle Status Update Logic inside this file ---
+//status logic rahhhh
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $target_id = intval($_POST['order_id']);
     $new_status = $_POST['status'];
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     try {
         $pdo->beginTransaction();
 
-        // 1. Get current status to check if we are CHANGING to Cancelled
+        // 1. Get the current status and see if we changing or not
         $stmt_status = $pdo->prepare("SELECT order_status FROM orders WHERE order_id = ?");
         $stmt_status->execute([$target_id]);
         $old_status = $stmt_status->fetchColumn();
