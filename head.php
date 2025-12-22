@@ -11,13 +11,13 @@ $user_role = $_SESSION['user_role'] ?? 'guest'; // Default to 'guest' if not log
 
         <div class="header-right">
             <?php if ($user_role !== 'admin'): ?>
-                <a href="index.php" class="home-btn">
+                <a href="../index.php" class="home-btn">
                     <i class="fas fa-home"></i>
                 </a>
-                <a href="cart.php" class="cart-btn">
+                <a href="../cart.php" class="cart-btn">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
-                <a href="my_orders.php" class="order-btn">
+                <a href="../my_orders.php" class="order-btn">
                     <i class="fas fa-history"></i>
                 </a>
             <?php endif; ?>
