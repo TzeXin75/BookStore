@@ -27,7 +27,8 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php include 'header.php'; ?>
     <main class="cart-container" style="max-width: 1000px; margin: 3rem auto; padding: 20px; min-height: 60vh;">
         <h2 style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Your Shopping Cart</h2>
-        
+
+        <!--check if cart has items-->  
         <?php if (count($cart_items) > 0): ?>
             <table class="cart-table" style="width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                 <thead><tr style="background: #2c3e50; color: white; text-align: left;"><th style="padding: 15px;">Book Title</th><th style="padding: 15px;">Price</th><th style="padding: 15px;">Qty</th><th style="padding: 15px;">Subtotal</th><th style="padding: 15px;">Action</th></tr></thead>
