@@ -63,6 +63,9 @@ if (is_post()) {
     else if (!preg_match('/^[0-9\-\+\(\)\s]+$/', $phone)) {
         $_err['phone'] = 'Invalid phone number';
     }
+    else if (!is_unique($phone, 'users', 'user_phone')) {
+        $_err['phone'] = 'Duplicated';
+    }
 
     // Validate: address
     if (!$address) {
