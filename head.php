@@ -6,7 +6,7 @@ $user_role = $_SESSION['user_role'] ?? 'guest'; // Default to 'guest' if not log
 <header>
     <div class="header-container">
         <div class="header-left">
-            <a href="index.php" class="logo">BookStore</a>
+            <a href="../index.php" class="logo">BookStore</a>
         </div>
 
         <div class="header-right">
