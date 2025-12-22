@@ -46,7 +46,10 @@ if ($_SESSION['user_role'] !== 'admin') {
             } elseif ($page === 'manage orders') {
                 include 'admin_orders.php';
             } elseif ($page === 'logout') {
-                header('Location: index.php');
+            $_SESSION = array();
+            session_destroy();
+            header('Location: index.php');
+            exit();
             } else {
                 include 'dashboard.php';
             }
