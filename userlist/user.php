@@ -98,7 +98,7 @@ $arr = $p->result;
 <br>
 
 <div id="pager-container">
-    <?= $p->html("page=users&sort=$sort&dir=$dir&name=" . urlencode($name), "pg") ?>
+    <?= $p->html("page=users&sort=$sort&dir=$dir&name=" . urlencode($name), "", "pg") ?>
 </div>
 
 <script>
