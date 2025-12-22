@@ -67,6 +67,7 @@ if (!$u) {
 </style>
 
 <div class="page-header">
+    <link rel="stylesheet" href="../style.css">
     <h2>User Details</h2>
     <a href="?page=users" class="btn-back">← Back to List</a>
 </div>
@@ -74,27 +75,48 @@ if (!$u) {
 <div class="profile-grid">
     
     <div class="card profile-card">
-        <?php  
-            $photo = !empty($u->user_photo) ? './photos/' . $u->user_photo : "https://ui-avatars.com/api/?name=" . urlencode($u->username) . "&background=random"; 
-        ?>
-        <img src="<?= $photo ?>" alt="Profile" class="avatar-lg">
-        
-        <h3 class="profile-name"><?= htmlspecialchars($u->username) ?></h3>
-        <p class="profile-email"><?= htmlspecialchars($u->email) ?></p>
-
-        <div style="margin-bottom: 20px;">
-            <span class="badge <?= $u->user_role ?>"><?= $u->user_role ?></span>
+        <div class="card-header-visual">
+            <div class="avatar-wrapper">
+                <?php 
+                    $photo = !empty($u->user_photo) ? './photos/' . $u->user_photo : "https://ui-avatars.com/api/?name=" . urlencode($u->username) . "&background=random&size=128"; 
+                ?>
+                <img src="<?= $photo ?>" alt="Profile" class="avatar-lg">
+                </div>
+            
+            <h3 class="profile-name"><?= htmlspecialchars($u->username) ?></h3>
+            <p class="profile-email"><?= htmlspecialchars($u->email) ?></p>
+            
+            <div class="role-badge-display">
+                <span class="badge-pill role-<?= $u->user_role ?>">
+                    <?= ucfirst($u->user_role) ?>
+                </span>
+            </div>
         </div>
+        
+        <div class="card-actions">
+            <h4 class="action-title">Admin Controls</h4>
+            
+            <form method="post" class="role-form">
+                <input type="hidden" name="action" value="update_role">
+                
+                <div class="form-group">
+                    <label class="input-label">Assign Role</label>
+                    <div class="select-wrapper">
+                        <select name="role" onchange="this.form.submit()" class="custom-select">
+                            <option value="customer" <?= $u->user_role == 'customer' ? 'selected' : '' ?>>Customer</option>
+                            <option value="member"   <?= $u->user_role == 'member'   ? 'selected' : '' ?>>Member</option>
+                            <option value="admin"    <?= $u->user_role == 'admin'    ? 'selected' : '' ?>>Admin</option>
+                        </select>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                </div>
+            </form>
 
-        <form method="post" style="text-align: left; background: #f8f9fa; padding: 15px; border-radius: 8px;">
-            <input type="hidden" name="action" value="update_role">
-            <label style="font-size: 0.85rem;">Change Role:</label>
-            <select name="role" onchange="this.form.submit()" style="width: 100%; padding: 5px;">
-                <option value="customer" <?= $u->user_role == 'customer' ? 'selected' : '' ?>>Customer</option>
-                <option value="member"   <?= $u->user_role == 'member'   ? 'selected' : '' ?>>Member</option>
-                <option value="admin"    <?= $u->user_role == 'admin'    ? 'selected' : '' ?>>Admin</option>
-            </select>
-        </form>
+            <div class="card-info-row">
+                <span>Member Since</span>
+                <strong><?= date('M Y', strtotime($u->user_registrationDate)) ?></strong>
+            </div>
+        </div>
     </div>
 
     <div class="card" id="personalInfoCard">

@@ -6,9 +6,9 @@ $_title = 'My Profile';
 include '../head.php'; 
 
 // 2. Authentication Check
-auth();
+auth('member');
 
-// 3. GET Request: Fetch User Data
+// 3. GET Request
 if (is_get()) {
     $stm = $_db->prepare('SELECT * FROM users WHERE user_id = ?');
     $stm->execute([$_user['user_id']]);
@@ -109,219 +109,9 @@ if (is_post()) {
 }
 ?>
 
-<style>
-    /* --- Modern Profile UI Variables --- */
-    :root {
-        --primary-color: #4f46e5; /* Indigo */
-        --primary-hover: #4338ca;
-        --bg-color: #f3f4f6;
-        --card-bg: #ffffff;
-        --text-main: #111827;
-        --text-muted: #6b7280;
-        --border-color: #e5e7eb;
-    }
-
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-main);
-    }
-
-    .profile-wrapper {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-
-    /* --- The Card Container (Grid Layout) --- */
-    .profile-card {
-        background: var(--card-bg);
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: 320px 1fr; /* Sidebar | Content */
-        min-height: 600px;
-    }
-
-    /* --- Left Sidebar (Visuals) --- */
-    .profile-sidebar {
-        background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
-        border-right: 1px solid var(--border-color);
-        padding: 40px 30px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .avatar-container {
-        position: relative;
-        margin-bottom: 20px;
-    }
-
-    .profile-avatar {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .sidebar-name {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 10px 0 5px;
-        color: var(--text-main);
-    }
-
-    .sidebar-email {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        margin-bottom: 30px;
-        word-break: break-all;
-    }
-
-    /* --- Right Content (Form) --- */
-    .profile-content {
-        padding: 40px;
-    }
-
-    .section-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-main);
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group.full-width {
-        grid-column: span 2;
-    }
-
-    .form-label {
-        display: block;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 8px;
-    }
-
-    .form-input {
-        width: 100%;
-        padding: 10px 14px;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        font-size: 0.95rem;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        box-sizing: border-box; /* Critical for layout */
-    }
-
-    .form-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    }
-
-    .file-input-wrapper {
-        margin-top: 5px;
-        padding: 10px;
-        border: 1px dashed var(--border-color);
-        border-radius: 6px;
-        background: #f9fafb;
-    }
-
-    /* --- Buttons --- */
-    .btn-group {
-        margin-top: 30px;
-        display: flex;
-        gap: 15px;
-    }
-
-    .btn {
-        padding: 10px 24px;
-        border-radius: 6px;
-        font-size: 0.95rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        display: inline-block;
-        border: none;
-    }
-
-    .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background-color: var(--primary-hover);
-        transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-        background-color: white;
-        border: 1px solid var(--border-color);
-        color: #374151;
-    }
-
-    .btn-secondary:hover {
-        background-color: #f9fafb;
-        border-color: #d1d5db;
-    }
-
-    /* --- Alerts --- */
-    .alert-success {
-        background-color: #ecfdf5;
-        color: #065f46;
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        border: 1px solid #a7f3d0;
-    }
-
-    .error-text {
-        color: #ef4444;
-        font-size: 0.8rem;
-        margin-top: 5px;
-        display: block;
-    }
-
-    /* --- Responsive --- */
-    @media (max-width: 768px) {
-        .profile-card {
-            grid-template-columns: 1fr; /* Stack vertically */
-        }
-        .profile-sidebar {
-            border-right: none;
-            border-bottom: 1px solid var(--border-color);
-            padding: 30px;
-        }
-        .form-grid {
-            grid-template-columns: 1fr; /* 1 column on mobile */
-        }
-        .form-group.full-width {
-            grid-column: span 1;
-        }
-        .profile-content {
-            padding: 25px;
-        }
-    }
-</style>
 
 <div class="profile-wrapper">
+    <link rel="stylesheet" href="../style.css">
     
     <?php if ($msg = temp('info')): ?>
         <div class="alert-success">
@@ -399,4 +189,15 @@ if (is_post()) {
     </form>
 </div>
 
-<?php include '../_foot.php'; ?>
+<div id="footer-placeholder"></div>
+    <script>
+    fetch('../footer.html')
+    .then(r => r.text())
+    .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
+
+    $(document).ready(function() {
+        $('#hamburger').click(function() { $('#navLinks').toggleClass('active'); });
+    });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
