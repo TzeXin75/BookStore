@@ -1,5 +1,5 @@
 <?php
-// 1. SESSION START (Must be first)
+// 1. SESSION START
 if (session_status() === PHP_SESSION_NONE) { 
     session_start(); 
 }
@@ -18,7 +18,6 @@ if (!empty($allSubcategories)) {
 }
 
 // --- 2. FETCH BOOKS FOR THAT RANDOM SUBCATEGORY ---
-// Increase LIMIT if you want to see more books in the Featured section
 $stmt = $pdo->prepare("SELECT * FROM book WHERE subcategory = ? ORDER BY RAND() LIMIT 8");
 $stmt->execute([$featuredSubcategory]);
 $featuredBooks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -65,7 +64,7 @@ function getBookImage($book) {
     <?php include 'header.php'; ?>
     
     <main>
-        <!-- Swiper Section remains the same -->
+        <!-- Swiper Section -->
         <section class="promo-swiper">
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
@@ -132,7 +131,6 @@ function getBookImage($book) {
                 <a href="category.php?sub=Textbook" class="view-all-btn">View All &rarr;</a>
             </div>
             <div class="product-container">
-                <!-- FIXED: Now correctly uses $education variable instead of $comics -->
                 <?php if (count($education) > 0): ?>
                     <?php foreach ($education as $book): ?>
                         <div class="product-card">

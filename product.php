@@ -1,35 +1,54 @@
 <?php
+// start session
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+// connect to database with a seperate file in config
 require_once 'config/db_connect.php';
 
+// Fetch book details based on ID from GET parameter
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Prepare and execute the SQL to get specific book details
 $stmt = $pdo->prepare("SELECT * FROM book WHERE id = ?");
 $stmt->execute([$id]);
 $book = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// If book not found, redirect or show error
 if (!$book) { die("Book not found."); }
 
+// Process images
 $images = !empty($book['images']) ? explode(',', $book['images']) : ['default.png'];
+
+// Set the first image in the array as the primary featured image
 $mainImage = "uploads/" . trim($images[0]);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    
+    <!--Show the book name in the browser tab -->
     <title><?= htmlspecialchars($book['title']) ?> - Bookstore</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
+        /* Hide arrow of the box to get a clean look*/ 
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
 <body>
+    <!-- include global site header-->
     <?php include 'header.php'; ?>
     
+    <!--Product layout -->
     <main style="max-width: 1100px; margin: 40px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 20px; min-height: 60vh;">
+        
+    <!-- Gallery Section: display the main photo and thumbnails -->
         <div class="gallery-section">
             <img id="mainImg" src="<?= $mainImage ?>" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+    <!--Thumbnail images loop -->
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <?php foreach($images as $img): ?>
                     <img src="uploads/<?= trim($img) ?>" style="width: 60px; height: 80px; cursor: pointer; border: 1px solid #ddd;" onclick="document.getElementById('mainImg').src=this.src">
@@ -37,6 +56,7 @@ $mainImage = "uploads/" . trim($images[0]);
             </div>
         </div>
 
+                <!--Display price , author and availability-->
         <div class="info-section">
             <h1><?= htmlspecialchars($book['title']) ?></h1>
             <p style="color: #28a745; font-size: 1.8rem; font-weight: bold; margin-bottom: 20px;">$<?= number_format($book['price'], 2) ?></p>
@@ -45,15 +65,20 @@ $mainImage = "uploads/" . trim($images[0]);
                 <p><strong>Author:</strong> <?= htmlspecialchars($book['author']) ?></p>
                 <p><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher']) ?></p>
                 <p><strong>Category:</strong> <?= htmlspecialchars($book['category']) ?></p>
+
+                <!-- Show availability status -->
                 <p style="margin-top: 15px; color: <?= ($book['stock'] > 0) ? '#28a745' : '#dc3545' ?>;">
                     <strong>Availability:</strong> <?= ($book['stock'] > 0) ? $book['stock'] . ' units in stock' : 'Out of Stock' ?>
                 </p>
             </div>
 
+                <!--Add to cart section-->
             <div style="margin-top: 30px;">
                 <?php if ($book['stock'] > 0): ?>
                     <form action="add_to_cart.php" method="POST">
                         <input type="hidden" name="id" value="<?= $book['id'] ?>">
+                        
+                <!--Quantity selector: show a plus and minus sign button-->
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                             <span style="font-weight: bold;">Quantity:</span>
                             <div style="display: flex; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; width: 120px;">
@@ -65,11 +90,14 @@ $mainImage = "uploads/" . trim($images[0]);
                         <button type="submit" style="width: 100%; border: none; padding: 15px; background: #2c3e50; color: white; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Cart</button>
                     </form>
                 <?php else: ?>
+                    
+                    
+                <!--Show out of stock when no stock-->
                     <button disabled style="width: 100%; padding: 15px; background: #ccc; border: none; color: #666; border-radius: 5px;">Out of Stock</button>
                 <?php endif; ?>
             </div>
 
-
+                <!--Description section-->
             <div style="margin-top: 30px; line-height: 1.6; color: #555;">
                 <h3>Description</h3>
                 <p><?= nl2br(htmlspecialchars($book['description'])) ?></p>
@@ -77,13 +105,22 @@ $mainImage = "uploads/" . trim($images[0]);
         </div>
     </main>
 
+
+    <!--load footer into the page-->
     <div id="footer-placeholder"></div>
+    
     <script>
+    /* function to adjust the plus/minus buttons*/
     function changeQty(amt) { const i = document.getElementById('book_qty'); applyBounds(parseInt(i.value) + amt); }
+    
+    /*validaton check , check if user typed number manually*/
     function validateQty() { applyBounds(parseInt(document.getElementById('book_qty').value)); }
+    
+    /*ensure the quantity typed is between 1 and available stock limit*/
     function applyBounds(v) { const i = document.getElementById('book_qty'); const m = parseInt(i.max); if (v < 1 || isNaN(v)) v = 1; if (v > m) v = m; i.value = v; }
+
+    /*inject the footer.html content*/
     fetch('footer.html').then(r => r.text()).then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
-    $(document).ready(function() { $('#hamburger').click(function() { $('#navLinks').toggleClass('active'); }); });
-    </script>
+   </script>
 </body>
 </html>
