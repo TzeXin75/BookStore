@@ -97,7 +97,7 @@ if (is_post()) {
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ');
         $hashedPassword = sha1($password);       
-        $stm->execute([$email, $hashedPassword, $name, $photo, 'member', $phone, $address]);
+        $stm->execute([$email, $hashedPassword, $name, $photo, 'customer', $phone, $address]);
 
         temp('info', 'Registration successful! Please login.');
         redirect('/login.php');
@@ -129,9 +129,9 @@ if (is_post()) {
         .main-content {
             flex: 1;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 20px;
         }
         .register-container {
             max-width: 500px;
@@ -179,7 +179,6 @@ if (is_post()) {
             border-radius: 8px;
             font-size: 1rem;
             transition: border 0.3s, box-shadow 0.3s;
-            box-sizing: border-box;
         }
         input:focus {
             outline: none;
@@ -196,7 +195,6 @@ if (is_post()) {
             font-family: inherit;
             resize: vertical;
             min-height: 80px;
-            box-sizing: border-box;
         }
         textarea:focus {
             outline: none;
