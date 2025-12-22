@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2025 at 12:15 AM
+-- Generation Time: Dec 22, 2025 at 04:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -203,14 +203,13 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
-  `member_id` varchar(20) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `user_phone` varchar(20) DEFAULT NULL,
+  `user_phone` int(11) DEFAULT NULL,
   `user_dob` date DEFAULT NULL,
   `user_password` varchar(255) DEFAULT NULL,
   `user_photo` varchar(255) DEFAULT NULL,
-  `user_role` enum('admin','member','customer') DEFAULT 'customer',
+  `user_role` enum('admin','member') DEFAULT 'member',
   `user_address` varchar(255) DEFAULT NULL,
   `user_registrationDate` datetime NOT NULL DEFAULT current_timestamp(),
   `user_status` tinyint(1) NOT NULL DEFAULT 1
@@ -220,42 +219,41 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `member_id`, `username`, `email`, `user_phone`, `user_dob`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`) VALUES
-(21, '', 'ahmad_ali', 'ahmad.ali88@gmail.com', '012-3456789', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '12, Jalan Tun Razak, 50400 Kuala Lumpur, Wilayah Persekutuan', '2025-12-22 07:06:48', 1),
-(22, '', 'siti_nurhaliza', 'siti.nur90@gmail.com', '019-8765432', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '45, Lorong Bahagia, Taman Melawati, 53100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(23, 'M-003', 'tan_wei_ming', 'tan.weiming@gmail.com', '016-1234567', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '88, Jalan SS2/24, 47300 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
-(24, '', 'subramaniam_k', 'subra.k@gmail.com', '017-5551234', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '5, Jalan Gasing, 46000 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
-(25, '', 'lee_chong_wei', 'lee.chongwei@gmail.com', '012-9988776', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '101, Jalan Burma, 10050 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
-(26, '', 'nor_azman', 'azman.nor@gmail.com', '013-3344556', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '23, Jalan Skudai, 81300 Skudai, Johor', '2025-12-22 07:06:48', 1),
-(27, '', 'lim_mei_ling', 'lim.meiling@gmail.com', '014-6677889', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', 'B-12-3, Kondominium Indah, Jalan Ampang, 50450 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(28, 'M-004', 'rajesh_kumar', 'rajesh.kumar@gmail.com', '018-7766554', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '7, Lebuhraya Persekutuan, 40000 Shah Alam, Selangor', '2025-12-22 07:06:48', 1),
-(29, '', 'fatimah_yusof', 'fatimah.y@gmail.com', '011-12349876', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '15, Jalan Sultan Ismail, 20200 Kuala Terengganu, Terengganu', '2025-12-22 07:06:48', 1),
-(30, '', 'wong_kah_seng', 'wong.kahseng@gmail.com', '010-2233445', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '99, Jalan Sultan Azlan Shah, 31400 Ipoh, Perak', '2025-12-22 07:06:48', 1),
-(31, '', 'nurul_ain', 'nurul.ain@gmail.com', '019-1122334', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '34, Taman Universiti, 81300 Skudai, Johor', '2025-12-22 07:06:48', 1),
-(32, '', 'ganesh_m', 'ganesh.m@gmail.com', '016-9988112', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '21, Jalan Tengku Kelana, 41000 Klang, Selangor', '2025-12-22 07:06:48', 1),
-(33, 'M-005', 'sarah_lee', 'sarah.lee@gmail.com', '017-4455667', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Lorong Selamat, 10400 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
-(34, '', 'mohammad_zaki', 'm.zaki@gmail.com', '013-7788990', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '56, Jalan Long Yunus, 15200 Kota Bharu, Kelantan', '2025-12-22 07:06:48', 1),
-(35, '', 'chin_xiao_wei', 'chin.xw@gmail.com', '012-6655443', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '8, Jalan Tebrau, 80250 Johor Bahru, Johor', '2025-12-22 07:06:48', 1),
-(36, '', 'kavita_devi', 'kavita.devi@gmail.com', '018-2233441', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '44, Jalan Brickfields, 50470 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(37, '', 'zainal_abidin', 'zainal.a@gmail.com', '014-9988771', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '77, Jalan Tunku Abdul Rahman, 93100 Kuching, Sarawak', '2025-12-22 07:06:48', 1),
-(38, '', 'ng_kok_leong', 'ng.kokleong@gmail.com', '011-55667788', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '3, Jalan Gaya, 88000 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1),
-(39, '', 'aishah_binti_omar', 'aishah.omar@gmail.com', '010-8877665', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '19, Jalan Meru, 41050 Klang, Selangor', '2025-12-22 07:06:48', 1),
-(40, '', 'vincent_tan', 'vincent.tan@gmail.com', '012-3322110', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '10, Persiaran Gurney, 10250 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
-(41, 'M-006', 'siti_sarah', 'siti.sarah@gmail.com', '019-4433221', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Hang Tuah, 75300 Melaka, Melaka', '2025-12-22 07:06:48', 1),
-(42, '', 'jason_lim', 'jason.lim@gmail.com', '016-5566443', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '22, Jalan Templer, 46050 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
-(43, '', 'thirumalai_r', 'thiru.r@gmail.com', '017-8899001', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '11, Jalan Silibin, 30100 Ipoh, Perak', '2025-12-22 07:06:48', 1),
-(44, '', 'hazwan_hashim', 'hazwan.h@gmail.com', '013-1122998', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '67, Jalan Beserah, 25300 Kuantan, Pahang', '2025-12-22 07:06:48', 1),
-(45, '', 'chan_yee_ling', 'chan.yl@gmail.com', '012-7788665', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '33, Jalan Cheras, 56100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(46, '', 'amanda_wong', 'amanda.wong@gmail.com', '018-9900112', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', 'Lot 45, Jalan Penampang, 88300 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1),
-(47, '', 'faizal_hussein', 'faizal.h@gmail.com', '011-33441122', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '8, Jalan Satok, 93400 Kuching, Sarawak', '2025-12-22 07:06:48', 1),
-(48, '', 'devan_nair', 'devan.nair@gmail.com', '014-2233990', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '14, Jalan Sungai Besi, 57100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(49, '', 'koh_li_ann', 'koh.liann@gmail.com', '010-6677443', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '9, Jalan Molek 2/1, Taman Molek, 81100 Johor Bahru, Johor', '2025-12-22 07:06:48', 1),
-(50, '', 'syed_mokhtar', 'syed.mokhtar@gmail.com', '019-5544332', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '50, Jalan Putra, 05150 Alor Setar, Kedah', '2025-12-22 07:06:48', 1),
-(51, 'M-001', 'jason', 'jason@gmail.com', '012-4567890', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1),
-(52, '', 'lim', 'lim@gmail.com', '017-3322445', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '88, Jalan Seremban 2, 70300 Seremban, Negeri Sembilan', '2025-12-22 07:13:13', 1),
-(53, 'M-002', 'test_member', 'member@gmail.com', '016-1122334', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Batu Caves, 68100 Batu Caves, Selangor', '2025-12-22 07:13:13', 1),
-(54, '', 'test_admin', 'admin@gmail.com', '011-99887766', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '12, Jalan Tanjung Bungah, 11200 Tanjung Bungah, Pulau Pinang', '2025-12-22 07:13:13', 1),
-(55, '', 'test_customer', 'customer@gmail.com', '013-5544667', NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'customer', '3, Presint 9, 62250 Putrajaya, Wilayah Persekutuan', '2025-12-22 07:13:13', 1);
+INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_dob`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`) VALUES
+(21, 'ahmad_ali', 'ahmad.ali88@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Jalan Tun Razak, 50400 Kuala Lumpur, Wilayah Persekutuan', '2025-12-22 07:06:48', 1),
+(22, 'siti_nurhaliza', 'siti.nur90@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '45, Lorong Bahagia, Taman Melawati, 53100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
+(23, 'tan_wei_ming', 'tan.weiming@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '88, Jalan SS2/24, 47300 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
+(24, 'subramaniam_k', 'subra.k@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Gasing, 46000 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
+(25, 'lee_chong_wei', 'lee.chongwei@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '101, Jalan Burma, 10050 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
+(26, 'nor_azman', 'azman.nor@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '23, Jalan Skudai, 81300 Skudai, Johor', '2025-12-22 07:06:48', 1),
+(27, 'lim_mei_ling', 'lim.meiling@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'B-12-3, Kondominium Indah, Jalan Ampang, 50450 Kuala Lumpur', '2025-12-22 07:06:48', 1),
+(28, 'rajesh_kumar', 'rajesh.kumar@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '7, Lebuhraya Persekutuan, 40000 Shah Alam, Selangor', '2025-12-22 07:06:48', 1),
+(29, 'fatimah_yusof', 'fatimah.y@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '15, Jalan Sultan Ismail, 20200 Kuala Terengganu, Terengganu', '2025-12-22 07:06:48', 1),
+(30, 'wong_kah_seng', 'wong.kahseng@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '99, Jalan Sultan Azlan Shah, 31400 Ipoh, Perak', '2025-12-22 07:06:48', 1),
+(31, 'nurul_ain', 'nurul.ain@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '', '2025-12-22 07:06:48', 1),
+(32, 'ganesh_m', 'ganesh.m@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '21, Jalan Tengku Kelana, 41000 Klang, Selangor', '2025-12-22 07:06:48', 1),
+(33, 'sarah_lee', 'sarah.lee@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Lorong Selamat, 10400 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
+(34, 'mohammad_zaki', 'm.zaki@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '56, Jalan Long Yunus, 15200 Kota Bharu, Kelantan', '2025-12-22 07:06:48', 1),
+(35, 'chin_xiao_wei', 'chin.xw@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Tebrau, 80250 Johor Bahru, Johor', '2025-12-22 07:06:48', 1),
+(36, 'kavita_devi', 'kavita.devi@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '44, Jalan Brickfields, 50470 Kuala Lumpur', '2025-12-22 07:06:48', 1),
+(37, 'zainal_abidin', 'zainal.a@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '77, Jalan Tunku Abdul Rahman, 93100 Kuching, Sarawak', '2025-12-22 07:06:48', 1),
+(38, 'ng_kok_leong', 'ng.kokleong@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '3, Jalan Gaya, 88000 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1),
+(39, 'aishah_binti_omar', 'aishah.omar@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '19, Jalan Meru, 41050 Klang, Selangor', '2025-12-22 07:06:48', 1),
+(40, 'vincent_tan', 'vincent.tan@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Persiaran Gurney, 10250 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
+(41, 'siti_sarah', 'siti.sarah@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Hang Tuah, 75300 Melaka, Melaka', '2025-12-22 07:06:48', 1),
+(42, 'jason_lim', 'jason.lim@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '22, Jalan Templer, 46050 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
+(43, 'thirumalai_r', 'thiru.r@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '11, Jalan Silibin, 30100 Ipoh, Perak', '2025-12-22 07:06:48', 1),
+(44, 'hazwan_hashim', 'hazwan.h@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '67, Jalan Beserah, 25300 Kuantan, Pahang', '2025-12-22 07:06:48', 1),
+(45, 'chan_yee_ling', 'chan.yl@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '33, Jalan Cheras, 56100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
+(46, 'amanda_wong', 'amanda.wong@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'Lot 45, Jalan Penampang, 88300 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1),
+(47, 'faizal_hussein', 'faizal.h@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Satok, 93400 Kuching, Sarawak', '2025-12-22 07:06:48', 1),
+(48, 'devan_nair', 'devan.nair@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '14, Jalan Sungai Besi, 57100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
+(49, 'koh_li_ann', 'koh.liann@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '9, Jalan Molek 2/1, Taman Molek, 81100 Johor Bahru, Johor', '2025-12-22 07:06:48', 1),
+(50, 'syed_mokhtar', 'syed.mokhtar@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '50, Jalan Putra, 05150 Alor Setar, Kedah', '2025-12-22 07:06:48', 1),
+(51, 'jason', 'jason@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1),
+(52, 'lim', 'lim@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '88, Jalan Seremban 2, 70300 Seremban, Negeri Sembilan', '2025-12-22 07:13:13', 1),
+(53, 'test_member', 'member@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Batu Caves, 68100 Batu Caves, Selangor', '2025-12-22 07:13:13', 1),
+(54, 'test_admin', 'admin@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '12, Jalan Tanjung Bungah, 11200 Tanjung Bungah, Pulau Pinang', '2025-12-22 07:13:13', 1);
 
 -- --------------------------------------------------------
 
