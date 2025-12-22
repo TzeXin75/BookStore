@@ -16,7 +16,7 @@ if (isset($_POST['pay'])) {
         <?php else: ?>
             <h2>TNG E-Wallet Pay</h2>
             <p>Ref ID: <?= $ref ?></p>
-            <form method="POST"><button type="submit" name="pay" style="padding:15px 30px; background:#28a745; color:white; border:none; border-radius:5px; cursor:pointer; font-size:1.1em;">Pay Now</button></form>
+            <form method="POST"><button type="submit" name="pay" style="padding:15px 30px; background:#2563eb; color:white; border:none; border-radius:5px; cursor:pointer; font-size:1.1em;">Pay Now</button></form>
         <?php endif; ?>
     </div>
 </body>

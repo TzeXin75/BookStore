@@ -68,7 +68,7 @@ $checkout_ref = "REF" . time();
     </style>
 </head>
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php include 'header.php'; ?>
 
     <div class="checkout-layout">
         <div class="order-summary-box">
@@ -185,6 +185,7 @@ $checkout_ref = "REF" . time();
     });
 
     let pollInterval;
+
     function selectPayment(type) {
         const btn = document.getElementById('confirmBtn');
         const qrBox = document.getElementById('qr-code-container');
@@ -193,18 +194,37 @@ $checkout_ref = "REF" . time();
         const bankBox = document.getElementById('bank-pass-container');
         const label = document.getElementById('ref-label');
         const errorDiv = document.getElementById('payment-error');
+        const nameField = document.getElementsByName('full_name')[0];
+        const addrField = document.getElementById('addressBox');
 
         errorDiv.style.display = "none";
+        clearInterval(pollInterval);
+
+        // --- BUG FIX: Check Name and Address before allowing E-Wallet QR ---
+        if (type === 'ewallet') {
+            if (!nameField.value || !addrField.value) {
+                errorDiv.innerText = "Warning: Please provide Name and Shipping Address before choosing E-Wallet.";
+                errorDiv.style.display = "block";
+                // Reset radio to credit card and stop
+                document.getElementById('credit_card').checked = true;
+                return;
+            }
+        }
+
         document.getElementById('credit_card').checked = (type === 'credit');
         document.getElementById('online_banking').checked = (type === 'bank');
         document.getElementById('ewallet').checked = (type === 'ewallet');
         
         qrBox.style.display="none"; stdFields.style.display="block"; cvvBox.style.display="none"; bankBox.style.display="none"; btn.style.display="block";
-        clearInterval(pollInterval);
 
         if(type === 'credit') { label.innerText = "Card Number"; cvvBox.style.display = "block"; }
         else if(type === 'bank') { label.innerText = "Account Number"; bankBox.style.display = "block"; }
-        else if(type === 'ewallet') { btn.style.display = "none"; stdFields.style.display = "none"; qrBox.style.display = "block"; startPolling(); }
+        else if(type === 'ewallet') { 
+            btn.style.display = "none"; 
+            stdFields.style.display = "none"; 
+            qrBox.style.display = "block"; 
+            startPolling(); 
+        }
     }
 
     function startPolling() {
@@ -233,5 +253,31 @@ $checkout_ref = "REF" . time();
         }
     };
 </script>
+<div id="footer-placeholder"></div>
+<script>
+    fetch('header.php')
+    .then(r => r.text())
+    .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+        $('#hamburger').click(function() { $('#navLinks').toggleClass('active'); });
+        $('.nav-item').hover(
+            function() { if ($(window).width() > 768) $(this).children('.sub-menu').stop(true, true).slideDown(200); },
+            function() { if ($(window).width() > 768) $(this).children('.sub-menu').stop(true, true).slideUp(200); }
+        );
+        $('.main-category').click(function(e) {
+            if ($(window).width() <= 768) {
+                e.preventDefault();
+                $(this).siblings('.sub-menu').stop(true, true).slideToggle(200);
+            }
+        });
+    });
+
+    fetch('footer.html')
+    .then(r => r.text())
+    .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

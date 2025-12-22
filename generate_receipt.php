@@ -6,25 +6,44 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['user_id'])) {
+// --- FIXED: Smart ID & Role Identification ---
+if (isset($_SESSION['user']['user_id'])) {
+    $user_id = $_SESSION['user']['user_id'];
+    $user_role = $_SESSION['user']['user_role'] ?? 'member';
+} elseif (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $user_role = $_SESSION['user_role'] ?? 'member';
+} else {
     die("Error: Please log in to download receipts.");
 }
 
-$user_id = $_SESSION['user_id'];
 $order_id = $_GET['id'] ?? 0;
 
-$sql = "SELECT o.*, u.username, u.email 
-        FROM orders o 
-        JOIN users u ON o.user_id = u.user_id 
-        WHERE o.order_id = ? AND o.user_id = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$order_id, $user_id]);
+// --- FIXED: SQL Logic for Admin vs Member ---
+// If Admin, they can view any order. If Member, they must own the order.
+if ($user_role === 'admin') {
+    $sql = "SELECT o.*, u.username, u.email 
+            FROM orders o 
+            JOIN users u ON o.user_id = u.user_id 
+            WHERE o.order_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$order_id]);
+} else {
+    $sql = "SELECT o.*, u.username, u.email 
+            FROM orders o 
+            JOIN users u ON o.user_id = u.user_id 
+            WHERE o.order_id = ? AND o.user_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$order_id, $user_id]);
+}
+
 $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$order) {
     die("Error: Order not found or access denied.");
 }
 
+// Fetch Items (Maintained original logic)
 $sql_items = "SELECT od.*, b.title 
               FROM order_details od 
               JOIN book b ON od.id = b.id 
@@ -66,6 +85,7 @@ $pdf->Cell(0, 8, date('d M Y, H:i', strtotime($order['order_date'])), 0, 1);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(35, 8, 'Customer:', 0, 0);
 $pdf->SetFont('Arial', '', 11);
+// This will now correctly show the owner's email from the JOIN query
 $pdf->Cell(0, 8, htmlspecialchars($order['username']) . ' (' . htmlspecialchars($order['email']) . ')', 0, 1);
 
 $pdf->Ln(10);
