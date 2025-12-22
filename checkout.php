@@ -1,8 +1,10 @@
 <?php
+//start session and connect to database
 require_once 'config/db_connect.php';
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 
+//ensure only logged in users can access the checkout page
 if (isset($_SESSION['user']['user_id'])) {
     $user_id = $_SESSION['user']['user_id'];
 } elseif (isset($_SESSION['user_id'])) {
@@ -12,6 +14,7 @@ if (isset($_SESSION['user']['user_id'])) {
     exit(); 
 }
 
+//handle voucher application and removal
 $msg = ""; $msg_type = ""; 
 if (isset($_POST['remove_voucher'])) {
     unset($_SESSION['discount_amount']);
@@ -19,6 +22,7 @@ if (isset($_POST['remove_voucher'])) {
     $msg = "Voucher removed."; $msg_type = "success";
 }
 
+//check if applied voucher is valid or not
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voucher_code'])) {
     $code = trim($_POST['voucher_code']);
     $stmt = $pdo->prepare("SELECT * FROM vouchers WHERE code = ? AND status = 'Active' AND expiry_date >= CURDATE()");
@@ -33,12 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voucher_code'])) {
     }
 }
 
+//take cart items to display at order summary
 $stmt = $pdo->prepare("SELECT c.quantity, b.price, b.title FROM cart c JOIN book b ON c.id = b.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+//check if cart is empty , if its empty then dont allow checkout
 if (count($cart_items) == 0) { header("Location: index.php"); exit(); }
 
+
+//calculate subtotal , apply discount , generate unique reference for payment
 $base_total = 0;
 foreach ($cart_items as $item) { $base_total += $item['price'] * $item['quantity']; }
 $discount = $_SESSION['discount_amount'] ?? 0;
@@ -52,9 +60,11 @@ $checkout_ref = "REF" . time();
     <title>Checkout - Bookstore</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!--map library for map-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        /*page layout*/
         .checkout-layout { max-width: 1100px; margin: 20px auto; display: flex; gap: 30px; padding: 0 20px; }
         .order-summary-box { flex: 1; background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; height: fit-content; }
         .form-section { flex: 1.5; background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
@@ -71,7 +81,8 @@ $checkout_ref = "REF" . time();
     <?php include 'header.php'; ?>
 
     <div class="checkout-layout">
-        <div class="order-summary-box">
+    <!---order summary -->    
+    <div class="order-summary-box">
             <h3>Order Summary</h3>
             <hr>
             <div style="margin: 15px 0;">
@@ -83,6 +94,8 @@ $checkout_ref = "REF" . time();
                 <?php endforeach; ?>
             </div>
             <hr>
+            
+                <!--display the voucher code and reduced price-->
             <?php if ($discount > 0): ?>
                 <div class="summary-item" style="color: green; font-weight: bold;">
                     <span>Discount (<?= $_SESSION['voucher_code'] ?>):</span> 
@@ -91,12 +104,14 @@ $checkout_ref = "REF" . time();
                 <form action="checkout.php" method="POST"><button type="submit" name="remove_voucher" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8em; padding:0; margin-bottom:10px;">[Remove Voucher]</button></form>
             <?php endif; ?>
             <h2 style="color: #28a745; display: flex; justify-content: space-between;"><span>Total:</span> <span>$<?= number_format($final_total, 2) ?></span></h2>
+            <!--promo code form-->
             <form action="checkout.php" method="POST" style="display:flex; gap:5px; margin-top:15px;">
                 <input type="text" name="voucher_code" class="form-input" style="margin:0;" placeholder="Promo Code">
                 <button type="submit" style="background:#333; color:white; border:none; padding:0 10px; border-radius:4px; cursor:pointer;">Apply</button>
             </form>
         </div>
 
+            <!--shipping and payment form-->
         <div class="form-section">
             <form action="place_order.php" method="POST" id="checkoutForm">
                 <input type="hidden" name="checkout_ref" value="<?= $checkout_ref ?>">
@@ -104,11 +119,14 @@ $checkout_ref = "REF" . time();
 
                 <h3>Shipping Details</h3>
                 <input type="text" name="full_name" required class="form-input" placeholder="Recipient Name">
+                
+            <!--interactive map-->
                 <div id="map"></div>
                 <textarea name="address" id="addressBox" required class="form-textarea" rows="3" placeholder="Address..."></textarea>
 
                 <hr>
                 <h3>Payment Method</h3>
+            <!--UI for selecting payment method-->
                 <div class="payment-option" onclick="selectPayment('credit')">
                     <input type="radio" id="credit_card" name="payment_method" value="Credit Card" checked>
                     <label for="credit_card" style="width:100%; cursor:pointer;"><strong>Credit Card</strong></label>
@@ -122,12 +140,17 @@ $checkout_ref = "REF" . time();
                     <label for="ewallet" style="width:100%; cursor:pointer;"><strong>E-Wallet (TNG)</strong></label>
                 </div>
 
+            <!--show input fields or QR based on the selected payment method-->
                 <div id="payment-details-box" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top:10px;">
-                    <div id="qr-code-container">
+                    
+            <!--show QR when selected in payment method-->
+                <div id="qr-code-container">
                         <a href="#" onclick="window.open('mobile_payment.php?ref=<?= $checkout_ref ?>','popup','width=400,height=600'); return false;">
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SIMULATE" alt="QR Code">
                         </a>
                     </div>
+                    
+            <!--input bar for card/account numbers-->
                     <div id="standard-fields">
                         <label id="ref-label">Card Number</label>
                         <input type="text" name="payment_ref" id="payment-input" required class="form-input" placeholder="0000 0000 0000 0000" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
@@ -143,10 +166,13 @@ $checkout_ref = "REF" . time();
     </div>
 
 <script>
+    
+    //initialize map
     var map = L.map('map').setView([3.1390, 101.6869], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     var marker = L.marker([3.1390, 101.6869], {draggable: true}).addTo(map);
 
+    //function to update address based on lat lng
     function updateAddress(lat, lng) {
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
             .then(r => r.json())
@@ -155,6 +181,7 @@ $checkout_ref = "REF" . time();
             });
     }
 
+    //update the pointer and address when clicked or dragged
     map.on('click', e => { 
         marker.setLatLng(e.latlng); 
         updateAddress(e.latlng.lat, e.latlng.lng); 
@@ -164,6 +191,7 @@ $checkout_ref = "REF" . time();
         updateAddress(e.target.getLatLng().lat, e.target.getLatLng().lng);
     });
 
+    //if user type address , move marker to that location
     let searchTimer;
     document.getElementById('addressBox').addEventListener('input', function() {
         const query = this.value;
@@ -184,6 +212,7 @@ $checkout_ref = "REF" . time();
         }, 1000);
     });
 
+    /*switch UI of payment*/
     let pollInterval;
 
     function selectPayment(type) {
@@ -201,6 +230,7 @@ $checkout_ref = "REF" . time();
         clearInterval(pollInterval);
 
 
+        //validation for ewallet , will require info before QR is un hidden
         if (type === 'ewallet') {
             if (!nameField.value || !addrField.value) {
                 errorDiv.innerText = "Warning: Please provide Name and Shipping Address before choosing E-Wallet.";
@@ -214,6 +244,7 @@ $checkout_ref = "REF" . time();
         document.getElementById('online_banking').checked = (type === 'bank');
         document.getElementById('ewallet').checked = (type === 'ewallet');
         
+        //control visibility of fields based on payment type selected
         qrBox.style.display="none"; stdFields.style.display="block"; cvvBox.style.display="none"; bankBox.style.display="none"; btn.style.display="block";
 
         if(type === 'credit') { label.innerText = "Card Number"; cvvBox.style.display = "block"; }
@@ -222,10 +253,12 @@ $checkout_ref = "REF" . time();
             btn.style.display = "none"; 
             stdFields.style.display = "none"; 
             qrBox.style.display = "block"; 
-            startPolling(); 
+            startPolling(); // check if mobile payment is done
         }
     }
 
+    
+    //check the server if payment is completed in mobile phone(check_payment_status.php)
     function startPolling() {
         pollInterval = setInterval(() => {
             fetch(`check_payment_status.php?ref=<?= $checkout_ref ?>`)
@@ -233,6 +266,7 @@ $checkout_ref = "REF" . time();
         }, 2000);
     }
 
+    /*final validation for final form*/
     document.getElementById('checkoutForm').onsubmit = function(e) {
         const errorDiv = document.getElementById('payment-error');
         const cvvVal = document.getElementById('cvv-input').value;
@@ -271,6 +305,7 @@ $checkout_ref = "REF" . time();
         });
     });
 
+    <!--load footer-->
     fetch('footer.html')
     .then(r => r.text())
     .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
