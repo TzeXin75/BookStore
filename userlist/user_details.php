@@ -102,7 +102,7 @@ if (!$u) {
             <h3 style="margin: 0; border: none;">Personal Information</h3>
             
             <div>
-                <button type="button" class="btn primary btn-edit-start" onclick="toggleEditMode(true)">Edit Profile</button>
+                <button type="button" class="btn primary btn-edit-start" onclick="toggleEditMode(true)">Edit</button>
                 <div class="btn-save-group">
                     <button type="button" class="btn-cancel" onclick="toggleEditMode(false)">Cancel</button>
                     <button type="submit" form="profileForm" class="btn primary">Update</button>

@@ -36,24 +36,26 @@ class SimplePager {
         $this->count = count($this->result);
     }
 
-    public function html($href = '', $attr = '') {
-        if (!$this->result) return;
+    public function html($href = '', $attr = '', $queryParam = 'page') {
+    if (!$this->result) return;
 
-        // Generate pager (html)
-        $prev = max($this->page - 1, 1);
-        $next = min($this->page + 1, $this->page_count);
+    // Generate pager (html)
+    $prev = max($this->page - 1, 1);
+    $next = min($this->page + 1, $this->page_count);
 
-        echo "<nav class='pager' $attr>";
-        echo "<a href='?page=1&$href'>First</a>";
-        echo "<a href='?page=$prev&$href'>Previous</a>";
+    echo "<nav class='pager' $attr>";
+    
+    // We use $queryParam instead of hardcoded 'page'
+    echo "<a href='?$queryParam=1&$href'>First</a>";
+    echo "<a href='?$queryParam=$prev&$href'>Previous</a>";
 
-        for ($p = 1; $p <= $this->page_count; $p++) {
-            $c = $p == $this->page ? 'active' : '';
-            echo "<a href='?page=$p&$href' class='$c'>$p</a>";
-        }
-
-        echo "<a href='?page=$next&$href'>Next</a>";
-        echo "<a href='?page=$this->page_count&$href'>Last</a>";
-        echo "</nav>";
+    for ($p = 1; $p <= $this->page_count; $p++) {
+        $c = $p == $this->page ? 'active' : '';
+        echo "<a href='?$queryParam=$p&$href' class='$c'>$p</a>";
     }
+
+    echo "<a href='?$queryParam=$next&$href'>Next</a>";
+    echo "<a href='?$queryParam=$this->page_count&$href'>Last</a>";
+    echo "</nav>";
+}
 }
