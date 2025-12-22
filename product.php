@@ -45,7 +45,6 @@ $mainImage = "uploads/" . trim($images[0]);
                 <p><strong>Author:</strong> <?= htmlspecialchars($book['author']) ?></p>
                 <p><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher']) ?></p>
                 <p><strong>Category:</strong> <?= htmlspecialchars($book['category']) ?></p>
-                <!-- Restored Stock Availability -->
                 <p style="margin-top: 15px; color: <?= ($book['stock'] > 0) ? '#28a745' : '#dc3545' ?>;">
                     <strong>Availability:</strong> <?= ($book['stock'] > 0) ? $book['stock'] . ' units in stock' : 'Out of Stock' ?>
                 </p>

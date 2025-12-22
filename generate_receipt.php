@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// --- FIXED: Smart ID & Role Identification ---
 if (isset($_SESSION['user']['user_id'])) {
     $user_id = $_SESSION['user']['user_id'];
     $user_role = $_SESSION['user']['user_role'] ?? 'member';
@@ -19,8 +18,6 @@ if (isset($_SESSION['user']['user_id'])) {
 
 $order_id = $_GET['id'] ?? 0;
 
-// --- FIXED: SQL Logic for Admin vs Member ---
-// If Admin, they can view any order. If Member, they must own the order.
 if ($user_role === 'admin') {
     $sql = "SELECT o.*, u.username, u.email 
             FROM orders o 
@@ -43,7 +40,6 @@ if (!$order) {
     die("Error: Order not found or access denied.");
 }
 
-// Fetch Items (Maintained original logic)
 $sql_items = "SELECT od.*, b.title 
               FROM order_details od 
               JOIN book b ON od.id = b.id 
@@ -85,7 +81,6 @@ $pdf->Cell(0, 8, date('d M Y, H:i', strtotime($order['order_date'])), 0, 1);
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(35, 8, 'Customer:', 0, 0);
 $pdf->SetFont('Arial', '', 11);
-// This will now correctly show the owner's email from the JOIN query
 $pdf->Cell(0, 8, htmlspecialchars($order['username']) . ' (' . htmlspecialchars($order['email']) . ')', 0, 1);
 
 $pdf->Ln(10);

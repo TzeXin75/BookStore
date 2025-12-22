@@ -200,12 +200,11 @@ $checkout_ref = "REF" . time();
         errorDiv.style.display = "none";
         clearInterval(pollInterval);
 
-        // --- BUG FIX: Check Name and Address before allowing E-Wallet QR ---
+
         if (type === 'ewallet') {
             if (!nameField.value || !addrField.value) {
                 errorDiv.innerText = "Warning: Please provide Name and Shipping Address before choosing E-Wallet.";
                 errorDiv.style.display = "block";
-                // Reset radio to credit card and stop
                 document.getElementById('credit_card').checked = true;
                 return;
             }

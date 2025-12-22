@@ -2,7 +2,6 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
-// BRIDGE: Ensure header.php recognizes the user so buttons appear
 if (isset($_SESSION['user']['user_id'])) {
     $user_id = $_SESSION['user']['user_id'];
     $_user = $_SESSION['user']; 
@@ -40,19 +39,16 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8" />
     <title>Category: <?= ucfirst(htmlspecialchars($subcategory)) ?></title>
     <link rel="stylesheet" href="style.css" />
-    <style>
-        /* Fallback for icons since CDN is removed */
-        .fa-search::before { content: "🔍"; font-style: normal; }
-        .fa-shopping-cart::before { content: "Cart"; font-family: sans-serif; font-size: 0.8em; }
-        .fa-history::before { content: "Orders"; font-family: sans-serif; font-size: 0.8em; }
-    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <?php include 'header.php'; ?>
 
-    <main class="container" style="max-width: 1200px; margin: 40px auto; padding: 20px; min-height: 70vh;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h2>Category: <?= ucfirst(htmlspecialchars($subcategory)) ?></h2>
+    <main class="product-section" style="max-width: 1200px; margin: 40px auto; padding: 20px; min-height: 70vh;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 class="section-title">Category: <?= ucfirst(htmlspecialchars($subcategory)) ?></h2>
             <form method="GET" style="display: flex; gap: 10px;">
                 <input type="hidden" name="sub" value="<?= htmlspecialchars($subcategory) ?>">
                 <input type="text" name="search" placeholder="Search..." value="<?= htmlspecialchars($search) ?>" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
@@ -60,22 +56,22 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </form>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+        <div class="product-container">
             <?php if (count($books) > 0): ?>
                 <?php foreach ($books as $book): ?>
-                    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div class="product-card">
                         <a href="product.php?id=<?= $book['id'] ?>">
                             <?php 
                                 $imgs = explode(',', $book['images']);
                                 $imgSrc = !empty($imgs[0]) ? "uploads/".trim($imgs[0]) : "includes/default-book.png";
                             ?>
-                            <img src="<?= $imgSrc ?>" style="width: 150px; height: 210px; object-fit: cover; margin-bottom: 15px;">
+                            <img src="<?= $imgSrc ?>" alt="<?= htmlspecialchars($book['title']) ?>">
                         </a>
-                        <h3 style="font-size: 1.1rem; height: 50px; overflow: hidden;"><?= htmlspecialchars($book['title']) ?></h3>
-                        <p style="color: #28a745; font-weight: bold; font-size: 1.2rem;">$<?= number_format($book['price'], 2) ?></p>
-                        <p style="font-size: 0.85rem;">Stock: <?= $book['stock'] ?></p>
+                        <h3><?= htmlspecialchars($book['title']) ?></h3>
+                        <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                        <p style="font-size: 0.9rem; color: #666;">Stock: <?= $book['stock'] ?></p>
                         <div style="margin-top: 15px;">
-                            <a href="add_to_cart.php?id=<?= $book['id'] ?>" style="display: block; background: #2c3e50; color: white; padding: 10px; text-decoration: none; border-radius: 4px; font-weight: bold;">Add to Cart</a>
+                            <a href="add_to_cart.php?id=<?= $book['id'] ?>" class="add-to-cart-btn" style="display: block; background: #2c3e50; color: white; padding: 10px; text-decoration: none; border-radius: 4px; font-weight: bold;">Add to Cart</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -86,7 +82,6 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </main>
 
     <div id="footer-placeholder"></div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         fetch('footer.html').then(r => r.text()).then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
         $(document).ready(function() { $('#hamburger').click(function() { $('#navLinks').toggleClass('active'); }); });

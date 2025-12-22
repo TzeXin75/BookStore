@@ -15,6 +15,7 @@ if (isset($_SESSION['user']['user_id'])) {
 if (!isset($_POST['place_order'])) { header("Location: cart.php"); exit(); }
 
 $address = $_POST['address'];
+$full_name = $_POST['full_name'];
 $pay_method = $_POST['payment_method'];
 $pay_ref = $_POST['payment_ref'] ?? 'N/A';
 
@@ -37,7 +38,6 @@ try {
     $stmt_detail = $pdo->prepare("INSERT INTO order_details (order_id, id, quantity, unit_price) VALUES (?, ?, ?, ?)");
     $stmt_stock = $pdo->prepare("UPDATE book SET stock = stock - ? WHERE id = ?");
 
-    // FIXED: Directly processing cart results to ensure all books are saved
     foreach ($cart_items as $item) {
         $stmt_detail->execute([$order_id, $item['id'], $item['quantity'], $item['price']]);
         $stmt_stock->execute([$item['quantity'], $item['id']]);
@@ -57,11 +57,8 @@ try {
     <meta charset="UTF-8" />
     <title>Success - Bookstore</title>
     <link rel="stylesheet" href="style.css" />
-    <style>
-        .fa-search::before { content: "🔍"; font-style: normal; }
-        .fa-shopping-cart::before { content: "Cart"; font-family: sans-serif; font-size: 0.8em; }
-        .fa-history::before { content: "Orders"; font-family: sans-serif; font-size: 0.8em; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -74,7 +71,6 @@ try {
         </div>
     </main>
     <div id="footer-placeholder"></div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         fetch('footer.html').then(r => r.text()).then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
         $(document).ready(function() { $('#hamburger').click(function() { $('#navLinks').toggleClass('active'); }); });
