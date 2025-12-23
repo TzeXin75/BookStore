@@ -1,138 +1,28 @@
-<style>
-    /* =========================================
-       FOOTER STYLES
-       ========================================= */
-    footer {
-        background-color: #2c3e50 !important; /* Dark blue theme */
-        color: white !important;
-        padding: 50px 0 20px 0 !important;
-        margin-top: auto !important; /* Keeps footer at bottom of page */
-        font-family: "Segoe UI", Arial, sans-serif !important;
-        width: 100%;
-    }
-
-    .footer-container {
-        max-width: 1100px;
-        margin: 0 auto !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        flex-wrap: wrap !important; /* Allows columns to stack on small screens */
-        gap: 40px !important;
-        padding: 0 20px !important;
-    }
-
-    /* Column Sizing */
-    .footer-about, .footer-links, .footer-social {
-        flex: 1 !important;
-        min-width: 250px !important;
-    }
-
-    footer h3 {
-        font-size: 1.2rem !important;
-        margin-bottom: 20px !important;
-        color: #3498db !important; /* Accent blue for titles */
-        font-weight: bold !important;
-    }
-
-    footer p {
-        font-size: 0.9rem !important;
-        line-height: 1.6 !important;
-        color: #bdc3c7 !important; /* Soft grey text */
-    }
-
-    /* Links List Styling */
-    .footer-links ul {
-        list-style: none !important;
-        padding: 0 !important;
-    }
-
-    .footer-links ul li {
-        margin-bottom: 12px !important;
-    }
-
-    .footer-links ul li a {
-        color: #bdc3c7 !important;
-        text-decoration: none !important;
-        transition: color 0.3s ease !important;
-    }
-
-    .footer-links ul li a:hover {
-        color: white !important;
-        text-decoration: underline !important;
-    }
-
-    /* Social Icons Styling */
-    .social-icons {
-        display: flex !important;
-        gap: 15px !important;
-        align-items: center !important;
-    }
-
-    .social-icons a {
-        color: #bdc3c7 !important;
-        text-decoration: none !important;
-        border: 1px solid #bdc3c7 !important;
-        padding: 4px 8px !important;
-        border-radius: 4px !important;
-        font-weight: bold !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .social-icons a:hover {
-        color: white !important;
-        border-color: white !important;
-        background-color: rgba(255, 255, 255, 0.1) !important;
-    }
-
-    /* Bottom Copyright Bar */
-    .footer-bottom {
-        text-align: center !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-        margin-top: 40px !important;
-        padding-top: 20px !important;
-        font-size: 0.85rem !important;
-        color: #7f8c8d !important;
-    }
-
-    /* Mobile Responsiveness */
-    @media screen and (max-width: 768px) {
-        .footer-container {
-            flex-direction: column !important;
-            text-align: center !important;
-        }
-        .social-icons {
-            justify-content: center !important;
-        }
-    }
-</style>
-
-<footer>
-    <div class="footer-container">
-        <div class="footer-about">
-            <h3>About BookStore</h3>
-            <p>Your one-stop online shop for all your favorite books. Discover, read, and enjoy a world of stories with us.</p>
-        </div>
-
-        <div class="footer-links">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Contact Us</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-social">
-            <h3>Follow Us</h3>
-            <div class="social-icons">
-                <a href="#" title="Facebook">F</a>
-                <a href="#" title="Twitter">𝕏</a>
-                <a href="#" title="Instagram">ig</a>
-            </div>
-        </div>
+<div class="footer-container">
+    <div class="footer-about">
+        <h3>About BookStore</h3>
+        <p>Your one-stop online shop for all your favorite books. Discover, read, and enjoy!</p>
     </div>
 
-    <div class="footer-bottom">
-        <p>&copy; 2025 BookStore. All rights reserved.</p>
+    <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
     </div>
-</footer>
+
+    <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="footer-bottom">
+    <p>&copy; 2025 BookStore. All rights reserved.</p>
+</div>

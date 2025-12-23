@@ -1,176 +1,126 @@
 <?php
-// --- 1. DATABASE & CONFIGURATION ---
-// Connect to the database and set the default image path
-require_once 'db.php';
-$defaultBookImage = "uploads/download.svg";
+// start session
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+// connect to database with a seperate file in config
+require_once 'config/db_connect.php';
 
-// Check if a book ID was sent in the URL (e.g., product.php?id=12)
-if (!isset($_GET['id'])) {
-    header("Location: index.php");
-    exit;
-}
+// Fetch book details based on ID from GET parameter
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Convert ID to a number and fetch the specific book from the database
-$id = intval($_GET['id']);
+// Prepare and execute the SQL to get specific book details
 $stmt = $pdo->prepare("SELECT * FROM book WHERE id = ?");
 $stmt->execute([$id]);
 $book = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// If no book matches that ID, stop the script
-if (!$book) die("Book not found.");
+// If book not found, redirect or show error
+if (!$book) { die("Book not found."); }
 
-// --- 2. MEDIA GALLERY LOGIC ---
-// Convert the comma-separated image string into a list (array)
-$images = !empty($book['images']) ? explode(',', $book['images']) : [];
-// Check if a video file name exists for this book
-$videoFile = !empty($book['video']) ? $book['video'] : null;
+// Process images
+$images = !empty($book['images']) ? explode(',', $book['images']) : ['default.png'];
 
-// Decide what the "Main Display" should show when the page first loads
-// Priority: 1. Cover Image, 2. First Gallery Image, 3. Default SVG Icon
-if (!empty($book['cover_image']) && file_exists("uploads/" . $book['cover_image'])) {
-    $mainImage = "uploads/" . $book['cover_image'];
-} else {
-    $mainImage = !empty($images) ? "uploads/" . trim($images[0]) : $defaultBookImage;
-}
+// Set the first image in the array as the primary featured image
+$mainImage = "uploads/" . trim($images[0]);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title><?= htmlspecialchars($book['title']) ?></title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8" />
+    
+    <!--Show the book name in the browser tab -->
+    <title><?= htmlspecialchars($book['title']) ?> - Bookstore</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
-        /* Layout for the book details grid */
-        .book-container { display: grid; grid-template-columns: 12fr 8fr; gap: 40px; max-width: 1100px; margin: 0 auto; padding: 20px; }
-        .gallery-wrapper { display: flex; gap: 15px; }
-        .thumbnail-strip { display: flex; flex-direction: column; gap: 10px; }
-        
-        /* Thumbnail styles */
-        .thumb { width: 60px; height: 80px; object-fit: cover; cursor: pointer; border: 1px solid #ddd; opacity: 0.7; transition: 0.3s; position: relative; overflow: hidden; }
-        .thumb.active, .thumb:hover { opacity: 1; border-color: #333; }
-        
-        /* Video thumbnail special overlay */
-        .video-thumb-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); z-index: 2; }
-        
-        /* Main image and video viewing area */
-        .main-image-area { background-color: #f9f9f9; width: 100%; height: 500px; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; border-radius: 8px; }
-        .main-image-area img, .main-image-area video { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        /* Typography and product info styles */
-        .product-info h1 { font-size: 2rem; margin-bottom: 10px; }
-        .price-range { color: #5bc0de; font-size: 1.5rem; margin-bottom: 20px; font-weight: bold; }
-        .specs { margin-bottom: 20px; color: #666; font-size: 0.9rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .description-list { padding-left: 20px; margin-bottom: 30px; line-height: 1.6; color: #555; }
-        .shipping-note li { color: #d9534f; font-size: 0.9rem; margin-bottom: 8px; border-left: 2px solid #d9534f; padding-left: 10px; list-style: none; }
-        
-        /* Add to cart section */
-        .action-box { background: #f9f9f9; padding: 20px; border-top: 1px solid #eee; }
-        .add-btn { background-color: #304458ff; color: white; width: 100%; padding: 15px; border: none; cursor: pointer; text-transform: uppercase; }
+        /* Hide arrow of the box to get a clean look*/ 
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
 <body>
+    <!-- include global site header-->
     <?php include 'header.php'; ?>
+    
+    <!--Product layout -->
+    <main style="max-width: 1100px; margin: 40px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 20px; min-height: 60vh;">
+        
+    <!-- Gallery Section: display the main photo and thumbnails -->
+        <div class="gallery-section">
+            <img id="mainImg" src="<?= $mainImage ?>" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
-    <div class="book-container">
-        <div class="gallery-wrapper">
-            <div class="thumbnail-strip">
-               <?php if ($videoFile): ?>
-                    <div class="thumb video-thumb" onclick="showVideo(this)">
-                        <div class="video-thumb-overlay">
-                            <div class="play-triangle"></div> 
-                        </div>
-                        <video style="width: 100%; height: 100%; object-fit: cover;">
-                            <source src="uploads/videos/<?= htmlspecialchars($videoFile) ?>#t=0.5" type="video/mp4">
-                        </video>
-                    </div>
-                <?php endif; ?>
-
+    <!--Thumbnail images loop -->
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <?php foreach($images as $img): ?>
-                    <img src="uploads/<?= trim($img) ?>" 
-                         class="thumb" 
-                         onclick="showImage(this)" 
-                         onerror="this.onerror=null; this.src='<?= $defaultBookImage ?>';">
+                    <img src="uploads/<?= trim($img) ?>" style="width: 60px; height: 80px; cursor: pointer; border: 1px solid #ddd;" onclick="document.getElementById('mainImg').src=this.src">
                 <?php endforeach; ?>
             </div>
+        </div>
 
-            <div class="main-image-area" id="mainDisplayArea">
-                <img id="mainImg" src="<?= $mainImage ?>" alt="<?= htmlspecialchars($book['title']) ?>" onerror="this.onerror=null; this.src='<?= $defaultBookImage ?>';">
-                
-                <?php if ($videoFile): ?>
-                    <video id="mainVideo" controls style="display: none; width: 100%; height: 100%; background: #000;">
-                        <source src="uploads/videos/<?= htmlspecialchars($videoFile) ?>" type="video/mp4">
-                    </video>
+                <!--Display price , author and availability-->
+        <div class="info-section">
+            <h1><?= htmlspecialchars($book['title']) ?></h1>
+            <p style="color: #28a745; font-size: 1.8rem; font-weight: bold; margin-bottom: 20px;">$<?= number_format($book['price'], 2) ?></p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <p><strong>Author:</strong> <?= htmlspecialchars($book['author']) ?></p>
+                <p><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher']) ?></p>
+                <p><strong>Category:</strong> <?= htmlspecialchars($book['category']) ?></p>
+
+                <!-- Show availability status -->
+                <p style="margin-top: 15px; color: <?= ($book['stock'] > 0) ? '#28a745' : '#dc3545' ?>;">
+                    <strong>Availability:</strong> <?= ($book['stock'] > 0) ? $book['stock'] . ' units in stock' : 'Out of Stock' ?>
+                </p>
+            </div>
+
+                <!--Add to cart section-->
+            <div style="margin-top: 30px;">
+                <?php if ($book['stock'] > 0): ?>
+                    <form action="add_to_cart.php" method="POST">
+                        <input type="hidden" name="id" value="<?= $book['id'] ?>">
+                        
+                <!--Quantity selector: show a plus and minus sign button-->
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                            <span style="font-weight: bold;">Quantity:</span>
+                            <div style="display: flex; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; width: 120px;">
+                                <button type="button" onclick="changeQty(-1)" style="flex: 1; padding: 10px; background: #eee; border: none; cursor: pointer;">-</button>
+                                <input type="number" name="quantity" id="book_qty" value="1" min="1" max="<?= $book['stock'] ?>" style="width: 40px; text-align: center; border: none; font-weight: bold;" onchange="validateQty()">
+                                <button type="button" onclick="changeQty(1)" style="flex: 1; padding: 10px; background: #eee; border: none; cursor: pointer;">+</button>
+                            </div>
+                        </div>
+                        <button type="submit" style="width: 100%; border: none; padding: 15px; background: #2c3e50; color: white; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Cart</button>
+                    </form>
+                <?php else: ?>
+                    
+                    
+                <!--Show out of stock when no stock-->
+                    <button disabled style="width: 100%; padding: 15px; background: #ccc; border: none; color: #666; border-radius: 5px;">Out of Stock</button>
                 <?php endif; ?>
             </div>
-        </div>
 
-        <div class="product-info">
-            <h1><?= htmlspecialchars($book['title']) ?></h1>
-            <div class="price-range">RM<?= number_format($book['price'], 2) ?></div>
-            
-            <div class="specs">
-                Author: <?= htmlspecialchars($book['author']) ?> | 
-                Publisher: <?= htmlspecialchars($book['publisher']) ?>
+                <!--Description section-->
+            <div style="margin-top: 30px; line-height: 1.6; color: #555;">
+                <h3>Description</h3>
+                <p><?= nl2br(htmlspecialchars($book['description'])) ?></p>
             </div>
-            
-            <div class="description-list"><?= nl2br(htmlspecialchars($book['description'])) ?></div>
-            
-            <div class="shipping-note">
-                <ul>
-                    <li><strong>Stock:</strong> <?= $book['stock'] ?> units available.</li>
-                    <li>Images are for illustration purposes only.</li>
-                </ul>
-            </div>
-
-            <form action="add_to_cart.php" method="POST" class="action-box">
-                <input type="number" name="quantity" value="1" min="1" max="<?= $book['stock'] ?>" style="width: 60px; margin-bottom: 10px;">
-                <button type="submit" class="add-btn">Add to cart</button>
-            </form>
         </div>
-    </div>
+    </main>
 
+
+    <!--load footer into the page-->
     <div id="footer-placeholder"></div>
-
+    
     <script>
-        // --- 7. JAVASCRIPT FOR MEDIA SWITCHING ---
-        const mainImg = document.getElementById('mainImg');
-        const mainVideo = document.getElementById('mainVideo');
+    /* function to adjust the plus/minus buttons*/
+    function changeQty(amt) { const i = document.getElementById('book_qty'); applyBounds(parseInt(i.value) + amt); }
+    
+    /*validaton check , check if user typed number manually*/
+    function validateQty() { applyBounds(parseInt(document.getElementById('book_qty').value)); }
+    
+    /*ensure the quantity typed is between 1 and available stock limit*/
+    function applyBounds(v) { const i = document.getElementById('book_qty'); const m = parseInt(i.max); if (v < 1 || isNaN(v)) v = 1; if (v > m) v = m; i.value = v; }
 
-        // Function to switch display to an Image
-        function showImage(element) {
-            mainImg.style.display = 'block'; // Show image
-            if(mainVideo) {
-                mainVideo.style.display = 'none'; // Hide video
-                mainVideo.pause(); // Stop video audio
-            }
-            
-            mainImg.src = element.src; // Set main display to thumbnail's source
-            
-            // Highlight the active thumbnail
-            document.querySelectorAll('.thumb').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        // Function to switch display to the Video
-        function showVideo(element) {
-            mainImg.style.display = 'none'; // Hide image
-            if(mainVideo) {
-                mainVideo.style.display = 'block'; // Show video
-                mainVideo.play(); // Start playback automatically
-            }
-
-            // Highlight the active thumbnail
-            document.querySelectorAll('.thumb').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        // --- 8. FOOTER FETCH ---
-        // Dynamically load the footer HTML file
-        fetch('footer.html')
-        .then(r => r.text())
-        .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
-    </script>
+    /*inject the footer.html content*/
+    fetch('footer.html').then(r => r.text()).then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
+   </script>
 </body>
 </html>

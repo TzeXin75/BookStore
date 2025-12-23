@@ -1,6 +1,5 @@
 /* =========================================
    1. RESET & GLOBAL DEFAULTS
-   Standardizes margins and padding across all browsers.
    ========================================= */
 * {
     margin: 0;
@@ -17,7 +16,7 @@ body {
     flex-direction: column;
 }
 
-main { flex: 1; } /* Ensures the main content area grows to fill the page */
+main { flex: 1; }
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 img { max-width: 100%; display: block; }
@@ -25,7 +24,6 @@ button, .btn { cursor: pointer; border: none; font-family: inherit; }
 
 /* =========================================
    2. HEADER & NAVIGATION
-   Styles for the logo, search bar, and main menu.
    ========================================= */
 header {
     background-color: #2c3e50;
@@ -48,7 +46,6 @@ header {
 .header-left .logo { font-size: 1.8rem; font-weight: bold; color: white; }
 .header-center { flex: 1; display: flex; justify-content: center; }
 
-/* Search bar styling inside the header */
 .search-form { display: flex; width: 100%; max-width: 500px; }
 .search-form input { flex: 1; padding: 0.6rem; border-radius: 5px 0 0 5px; border: none; outline: none; }
 .search-form button { padding: 0.6rem 1rem; border-radius: 0 5px 5px 0; background-color: #3498db; color: white; transition: background 0.3s; }
@@ -57,34 +54,13 @@ header {
 .header-right { display: flex; align-items: center; gap: 1.2rem; }
 .header-right a { color: white; font-size: 1.2rem; }
 
-/* Hamburger Menu Icon (Mobile Only) */
-.hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30px;
-    height: 25px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
+.hamburger { display: none; background: none; font-size: 1.5rem; color: white; }
 
-.hamburger .bar {
-    width: 100%;
-    height: 3px;
-    background-color: white; 
-    border-radius: 10px;
-    transition: all 0.3s linear;
-}
-
-/* Secondary navigation bar with categories */
 .nav-links { background-color: #34495e; display: flex; justify-content: center; gap: 2rem; padding: 0.8rem 1rem; }
 .nav-item { position: relative; }
 .nav-item > a { color: white; font-weight: 500; padding: 0.5rem 0; display: block; }
 .nav-item > a:hover { color: #3498db; }
 
-/* Dropdown Sub-menus */
 .sub-menu {
     display: none; position: absolute; top: 100%; left: 0;
     background-color: #2c3e50; min-width: 160px;
@@ -96,7 +72,7 @@ header {
 @media (min-width: 769px) { .nav-item:hover .sub-menu { display: block; } }
 
 /* =========================================
-   3. HERO / SWIPER (Sliding Banner)
+   3. HERO / SWIPER (Index Page)
    ========================================= */
 .swiper-slide { position: relative; background-color: #000; overflow: hidden; min-height: 400px; }
 .slide-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.7; }
@@ -112,11 +88,13 @@ header {
 .carousel-card button:hover { background-color: #1d4ed8; }
 
 /* =========================================
-   4. LAYOUT & SECTIONS (Global spacing)
+   4. LAYOUT & SECTIONS (Global)
    ========================================= */
-.product-section, .product-page, .news-section, .about-section, .promo-section {
+.product-section, .product-page, .news-section, .about-section, .promo-section { /* Added promo-section */
     max-width: 1200px; margin: 3rem auto; padding: 0 1rem;
 }
+
+
 
 .section-header, .product-header {
     display: flex; justify-content: space-between; align-items: center;
@@ -127,233 +105,1650 @@ header {
 .view-all-btn:hover { color: #2563eb; }
 
 /* =========================================
-   FINAL PRODUCT GRID (The Container)
+   5. PRODUCT GRID (Split & Updated)
    ========================================= */
-.product-container, .product-grid, .product-search {
-    display: flex !important;
-    flex-wrap: wrap !important; /* Allows books to wrap to the next line */
-    gap: 20px !important;
-    justify-content: flex-start !important; /* Keeps cards aligned to the left */
-    width: 100% !important;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px 0;
+
+/* --- A. Product GRID (Category/Search - 4 COLUMNS) --- */
+.product-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    width: 100%;
+    justify-content: start;
+    
 }
 
-/* =========================================
-   FINAL PRODUCT CARD (The Individual Book)
-   ========================================= */
+
+.product-form {
+    display: flex !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px;
+    width: 100%;
+    justify-content: start;
+}
+
+/* --- B. Product CONTAINER (Index Home - 4 COLUMNS) --- */
+.product-container {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important; /* Home page is 4 columns */
+    gap: 20px;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+
+/* --- Product Card Base Style --- */
 .product-card {
-    /* FIXED WIDTH: This stops the card from becoming 'bulky' */
-    flex: 0 1 230px !important; 
-    width: 230px !important;
-    
-    background: white !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    padding: 15px !important;
-    text-align: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 400px !important; /* Fixed height so all cards align in a row */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-    transition: transform 0.2s ease;
+    width: 100%; 
+    background: white; border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 15px; text-align: center; transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column; 
+    margin-bottom: 0;
 }
 
-.product-card:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
-}
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-/* Image Fix: Controls the book cover size precisely */
 .product-card img {
-    width: 100% !important;
-    height: 220px !important; /* Standardized height for all book covers */
-    object-fit: contain !important; /* Shows full cover without stretching */
-    background-color: #f3f4f6 !important;
-    border-radius: 4px;
-    margin-bottom: 10px !important;
+    width: 100% !important; height: 220px !important;
+    object-fit: cover !important; border-radius: 5px; margin-bottom: 10px;
 }
 
-/* Text Styling & Line Clamping */
-.product-card h3 {
-    font-size: 0.95rem !important;
-    margin: 5px 0 !important;
-    color: #2c3e50 !important;
-    line-height: 1.3 !important;
-    /* Limits title to exactly 2 lines for uniform card height */
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    height: 2.6em !important;
+.product-card h3 { font-size: 1rem; margin: 10px 0 5px; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.product-card .price { color: #b03030; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px; }
+
+.product-card button { 
+    background-color: #2563eb; color: white; padding: 8px 0; 
+    width: 100%; border-radius: 4px; font-size: 0.9rem; margin-top: auto; transition: background 0.3s; 
+}
+.product-card button:hover { background-color: #1d4ed8; }
+
+
+
+/* =========================================
+   6. PRODUCT DETAIL PAGE STYLES
+   ========================================= */
+
+.product-details { flex: 1 1 55%; }
+.product-details h1 { margin-top: 0; font-size: 1.8rem; }
+.product-details .price { font-size: 1.5rem; color: #e53935; }
+
+.btn.add-cart { background: #007bff; color: #fff; }
+.btn.add-cart:hover { background: #0063cc; }
+
+.btn.wishlist { background: #ff9800; color: #fff; }
+.btn.wishlist:hover { background: #e68900; }
+
+/* =========================================
+   1. GLOBAL & RESET
+   ========================================= */
+* {
+    box-sizing: border-box; /* Critical for consistent layout sizes */
 }
 
-.product-card p {
-    font-size: 0.85rem !important;
-    color: #777 !important;
-}
-
-.product-card .price {
-    color: #b03030 !important;
-    font-weight: bold !important;
-    font-size: 1.1rem !important;
-    margin-top: auto !important; /* Pushes price and button to the bottom */
-    padding-bottom: 10px;
-}
-
-/* Add to Cart Button */
-.product-card button {
-    background-color: #2563eb !important;
-    color: white !important;
-    padding: 8px 0 !important;
-    width: 100% !important;
-    border-radius: 4px !important;
-    font-size: 0.9rem !important;
-    font-weight: bold !important;
-}
-
-/* --- Responsive: 2 Books per row on mobile --- */
-@media screen and (max-width: 600px) {
-    .product-card {
-        flex: 0 1 calc(50% - 10px) !important;
-        width: calc(50% - 10px) !important;
-        height: auto !important; /* Allow height to be flexible on mobile */
-        padding: 10px !important;
-    }
-    .product-card img {
-        height: 160px !important;
-    }
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
 }
 
 /* =========================================
-   6. ADMIN PANEL & FORMS
-   Styles for managing products in the backend.
+   2. MAIN LAYOUT STRUCTURE
    ========================================= */
-.admin-container { display: flex; min-height: 100vh; }
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    background: #ecf0f1;
+    overflow-x: auto; /* Prevents large tables from breaking layout */
+}
+
+/* =========================================
+   3. SIDEBAR NAVIGATION
+   ========================================= */
 .sidebar {
-    width: 250px; background-color: #2c3e50; color: white; padding: 1rem 0; flex-shrink: 0;
+    width: 250px;
+    background-color: #2c3e50; /* Dark Blue */
+    color: white;
+    padding: 1rem 0;
+    flex-shrink: 0; /* Prevents sidebar from shrinking on small screens */
+    display: flex;
+    flex-direction: column;
 }
-.sidebar h2 { text-align: center; margin-bottom: 1.5rem; }
-.sidebar ul li a { display: block; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-.main-content { flex: 1; padding: 2rem; background: #ecf0f1; }
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #ecf0f1;
+    font-size: 1.5rem;
+}
 
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #bdc3c7; /* Light grey text */
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #34495e;
+    color: #fff;
+    border-left: 4px solid #3498db; /* Blue active strip */
+}
+
+/* =========================================
+   4. CARDS & CONTAINERS
+   ========================================= */
+.card, 
+.table-wrapper, 
+.action-bar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* =========================================
+   5. FORMS & BUTTONS
+   ========================================= */
+/* Labels */
+.card label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+input[type="search"],
+input[type="file"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    background-color: white;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* Search Form specific tweaks */
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-form input[type="search"] {
+    width: 250px;
+    margin-bottom: 0;
+}
+
+/* Buttons */
+.btn.primary,
+button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn.primary:hover,
+button[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Icon Buttons (Trash) */
+#btnDelete {
+    transition: transform 0.2s;
+}
+
+#btnDelete:hover {
+    transform: scale(1.1);
+}
+
+/* =========================================
+   6. TABLES
+   ========================================= */
+.table,
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+}
+
+.table th,
+.admin-table th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    padding: 1rem;
+    border-bottom: 2px solid #ddd;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table td,
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    color: #555;
+    vertical-align: middle;
+}
+
+/* Row Hover & Selection */
+.table tr:hover,
+.admin-table tr:hover {
+    background-color: #f1faff;
+}
+
+tr.selected {
+    background-color: #e3f2fd !important;
+}
+
+/* Checkboxes */
+.cb-cell {
+    text-align: center;
+    width: 40px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+/* =========================================
+   7. PAGINATION
+   ========================================= */
+.pager-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pager {
+    display: flex;
+    gap: 5px;
+}
+
+.pager a {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.pager a:hover {
+    background-color: #e9ecef;
+}
+
+.pager a.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+/* =========================================
+     UI ELEMENTS (BADGES & ALERTS)
+   ========================================= */
+/* Role Badges */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+    min-width: 80px;
+}
+
+.badge.customer {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.badge.member {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.badge.admin {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* Alert Boxes */
+.success-box {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.error-box {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+/*           (ADMIN) USER INFORMATION
+   ========================================= */
+
+/* --- 1. Page Header & Layout --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.btn-back {
+    text-decoration: none;
+    color: #64748b;
+    background: white;
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-back:hover {
+    background: #f8fafc;
+    color: #334155;
+    border-color: #cbd5e1;
+}
+
+/* Grid Layout */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr; 
+    gap: 25px;
+    align-items: stretch;
+}
+
+
+/* --- 2. LEFT CARD  --- */
+.profile-card {
+    background: #ffffff;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    padding: 0 !important; /* Reset default padding */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Top Visual Section */
+.card-header-visual {
+    background: linear-gradient(180deg, #f9fafb 0%, #ffffff 100%);
+    padding: 40px 30px 30px;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Avatar & Status */
+.avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+}
+
+.avatar-lg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Typography */
+.profile-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 5px 0;
+}
+
+.profile-email {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0 0 15px 0;
+    word-break: break-all;
+}
+
+/* Role Badges */
+.badge-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.role-admin    { background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }
+.role-member   { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
+
+/* Admin Actions Section */
+.card-actions {
+    padding: 25px 30px;
+    background-color: #ffffff;
+    margin-top: auto;
+}
+
+.action-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+/* Custom Select Styling */
+.select-wrapper {
+    position: relative;
+}
+
+.custom-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.custom-select:hover { border-color: #cbd5e1; }
+.custom-select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+
+.select-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+.card-info-row {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+
+/* --- 3. RIGHT CARD (Detailed Info & Edit Mode) --- */
 .card {
-    background: #fff; padding: 20px; border-radius: 8px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; 
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 30px;
 }
 
-/* Admin Input Fields */
-.card input[type="text"], .card input[type="number"], .card textarea, .card select {
-    width: 100%; padding: 10px; margin-bottom: 20px; 
-    border: 1px solid #ddd; border-radius: 5px; background-color: white; 
+/* Table Styling */
+.info-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; /* Nicer spacing */
 }
 
-.btn.primary { background-color: #2563eb; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; }
-
-.admin-table { width: 100%; border-collapse: collapse; background: white; margin-top: 1rem; }
-.admin-table th, .admin-table td { padding: 1rem; border-bottom: 1px solid #ddd; text-align: left; }
-
-/* =========================================
-   7. FOOTER, NEWS & ABOUT US
-   Layouts for the brand story and footer area.
-   ========================================= */
-.about-container, .promo-container { 
-    max-width: 1200px; margin: 3rem auto; display: flex; align-items: center; gap: 3rem; flex-wrap: wrap;
+.info-table th {
+    width: 30%;
+    text-align: left;
+    color: #64748b; /* Muted text */
+    font-weight: 600;
+    vertical-align: top;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
 }
-.about-image img, .promo-image img { width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-/* News articles grid */
-.news-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-.news-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-.news-card img { height: 180px; width: 100%; object-fit: cover; }
-.news-content { padding: 1.5rem; }
+.info-table td {
+    color: #334155; /* Darker text */
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
 
-footer { background-color: #2c3e50; color: white; padding: 3rem 2rem 1rem; margin-top: auto; }
+/* Inputs in Edit Mode */
+.edit-mode-field { 
+    display: none; 
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+.view-mode-field { display: block; }
 
-/* =========================================
-   8. RESPONSIVE RULES (Mobile/Tablet)
-   ========================================= */
-@media screen and (max-width: 768px) {
-    .header-container { flex-direction: column; }
-    .nav-links { display: none; } /* Mobile menu hidden by default */
-    
-    /* On mobile, cards show in 2 columns */
-    .product-container { 
-        grid-template-columns: repeat(2, 1fr) !important; 
-        gap: 15px; 
+/* Radio Buttons Group */
+.radio-group {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    height: 38px;
+}
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #334155;
+    margin: 0;
+}
+.radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+    margin: 0;
+}
+
+/* --- 4. JS Toggle Logic Styling --- */
+
+/* Swapping Fields */
+.is-editing .edit-mode-field { display: block; }
+.is-editing .view-mode-field { display: none; }
+
+/* Buttons */
+.btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+    transition: transform 0.1s;
+}
+.btn:active { transform: translateY(1px); }
+
+.primary { background-color: #4f46e5; color: white; }
+.primary:hover { background-color: #4338ca; }
+
+/* Cancel Button */
+.btn-cancel {
+    background-color: #f1f5f9;
+    color: #475569;
+    padding: 8px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-cancel:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    border-color: #94a3b8;
+}
+
+/* Group Visibility */
+.btn-save-group { display: none; gap: 10px; }
+.is-editing .btn-save-group { display: flex; }
+.is-editing .btn-edit-start { display: none !important; }
+
+
+/* --- 5. Responsive Design --- */
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr; /* Stack vertically on mobile */
     }
-    .product-card { max-width: 100%; }
+    
+    .profile-card {
+        margin-bottom: 20px;
+    }
+}
 
-    .about-container, .promo-container { flex-direction: column; }
+/*            User profile ui
+   =========================================  */
+:root {
+    --primary-color: #4f46e5; /* Indigo */
+    --primary-hover: #4338ca;
+    --bg-color: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    /* margin: 0;  <-- Optional: Remove default browser margin if needed */
+    font-family: sans-serif; /* Recommended: Ensure a font is set */
+}
+
+.profile-wrapper {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* --- The Card Container (Grid Layout) --- */
+.profile-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 320px 1fr; /* Sidebar | Content */
+    min-height: 600px;
+}
+
+/* --- Left Sidebar (Visuals) --- */
+.profile-sidebar {
+    background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+    border-right: 1px solid var(--border-color);
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.avatar-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.sidebar-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 10px 0 5px;
+    color: var(--text-main);
+}
+
+.sidebar-email {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+    word-break: break-all;
+}
+
+/* --- Right Content (Form) --- */
+.profile-content {
+    padding: 40px;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box; /* Critical for layout */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.file-input-wrapper {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px dashed var(--border-color);
+    border-radius: 6px;
+    background: #f9fafb;
+}
+
+/* --- Buttons --- */
+.btn-group {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+/* --- Alerts --- */
+.alert-success {
+    background-color: #ecfdf5;
+    color: #065f46;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #a7f3d0;
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .profile-card {
+        grid-template-columns: 1fr; /* Stack vertically */
+    }
+    .profile-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 30px;
+    }
+    .form-grid {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+    .profile-content {
+        padding: 25px;
+    }
 }
 
 /* =========================================
-   9. VIDEO & OVERLAY STYLES
-   For book video previews and play buttons.
+   8. FOOTER, NEWS, ABOUT & RESPONSIVE
    ========================================= */
-.video-thumb-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.3); z-index: 2;
+
+/* --- About Us / Promo Layout (Image Left) --- */
+.about-container, .promo-container { 
+    max-width: 1200px; margin: 3rem auto; display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; padding: 0 1rem;
+}
+.about-image, .promo-image { flex: 1 1 40%; min-width: 300px; }
+.about-content, .promo-content { flex: 1 1 50%; min-width: 300px; }
+.about-image img, .promo-image img { 
+    width: 100%; height: auto; object-fit: cover; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.about-content h2, .promo-content h2 { font-size: 2rem; margin-bottom: 1rem; color: #2c3e50; }
+
+/* News & Features Layout */
+.news-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.news-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: transform 0.3s; display: flex; flex-direction: column; }
+.news-card img { height: 180px; width: 100%; object-fit: cover; border-radius: 0; }
+.news-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+.news-content h3 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: bold; }
+.news-content button { margin-top: auto; background: transparent; color: #3498db; padding: 0; font-weight: bold; text-align: left; }
+
+footer, #footer-placeholder { background-color: #2c3e50; color: white; padding: 3rem 2rem 1rem; margin-top: auto; }
+.footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; max-width: 1200px; margin: 0 auto; }
+.footer-bottom { text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); opacity: 0.7; font-size: 0.9rem; }
+
+/* RESPONSIVE RULES */
+@media screen and (max-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .product-container { grid-template-columns: repeat(3, 1fr) !important; }
+    .news-container { grid-template-columns: repeat(2, 1fr); }
 }
 
-.play-triangle {
-    width: 0; height: 0; 
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid white; 
-    margin-left: 5px; 
+@media screen and (max-width: 768px) {
+    .header-container { flex-direction: column; gap: 1rem; }
+    .header-center { width: 100%; order: 2; }
+    .hamburger { display: block; order: 1; position: absolute; right: 2rem; top: 1rem; }
+    .nav-links { flex-direction: column; display: none; width: 100%; background-color: #2c3e50; }
+    .sub-menu { position: static; box-shadow: none; background-color: #243442; padding-left: 1rem; }
+    
+    .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 15px; }
+    .product-container { grid-template-columns: repeat(2, 1fr) !important; }
+    
+    .admin-container { flex-direction: column; }
+    .sidebar { width: 100%; }
+    
+    /* Stack horizontal sections vertically */
+    .about-container, .promo-container {
+        flex-direction: column; 
+        gap: 2rem;
+    }
 }
 
 /* =========================================
-   10. PAGINATION STYLES
-   Centers the page numbers and makes them easy to click
+   9. PAGINATION STYLES
    ========================================= */
 .pagination {
-    display: flex !important;
-    justify-content: center !important; /* Centers the pagination on the page */
-    align-items: center !important;
-    gap: 10px !important;              /* Adds space between the numbers */
-    margin: 40px 0 !important;         /* Space above and below the pagination area */
-    padding: 20px 0 !important;
+    /* Centers the pagination block and adds top margin */
+    margin-top: 2rem;
+    text-align: center;
 }
 
 .pagination a {
-    display: inline-flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    min-width: 40px !important;         /* Ensures a perfect square or circle shape */
-    height: 40px !important;
-    padding: 5px 10px !important;
-    background-color: white !important;
-    border: 1px solid #ddd !important;
-    border-radius: 6px !important;      /* Rounds the corners of the buttons */
-    color: #333 !important;
-    font-weight: bold !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
+    /* Styles for individual page number links */
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
 }
 
-/* 2. HOVER EFFECT: When the user moves their mouse over a number */
-.pagination a:hover {
-    background-color: #f3f4f6 !important;
-    border-color: #2563eb !important;   /* Changes border to blue on hover */
-    color: #2563eb !important;
-    transform: translateY(-2px) !important; /* Slight lift effect */
-}
-
-/* 3. ACTIVE PAGE: Styles for the page the user is currently on */
+/* Style for the currently active page */
 .pagination a.active {
-    background-color: #2563eb !important; /* Blue background for the current page */
-    color: white !important;
-    border-color: #2563eb !important;
-    cursor: default !important;           /* Shows the user they cannot click the current page */
+    background: #3498db; /* Blue background */
+    color: white;
+    border-color: #3498db;
 }
 
-/* 4. DISABLED LINKS: For 'Previous' or 'Next' when they aren't usable */
-.pagination a.disabled {
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
+/* Hover style for non-active links */
+.pagination a:hover:not(.active) {
+    background: #f0f0f0;
 }
+
+/* =========================================
+   FILTER CONTAINER STYLES (Search/Sort Area)
+   ========================================= */
+
+.filter-container {
+    /* 1. Layout: Use Flexbox to align elements horizontally */
+    display: flex;
+    justify-content: space-between; /* Spreads the search form and other elements */
+    align-items: center;
+    gap: 20px; /* Spacing between the main form and any separate elements */
+    margin-bottom: 30px; /* Space below the filter bar */
+    padding: 10px 0;
+    width: 100%;
+}
+
+/* The form itself, which contains input, select, and button */
+.filter-container .search-form {
+    /* Enables the form elements (input, select, button) to align horizontally */
+    display: flex;
+    flex-grow: 1; /* Allows the form to take up the available width */
+    max-width: 800px; /* Prevents the search bar from becoming too wide on large screens */
+    gap: 5px; /* Spacing between form controls */
+}
+
+/* Search Input Field */
+.filter-container input[type="text"] {
+    flex-grow: 2; /* Makes the search input field wider than the select box */
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.filter-container input[type="text"]:focus {
+    border-color: #3498db;
+}
+
+/* Sort Select Dropdown */
+.filter-container select {
+    flex-grow: 1; /* Takes up a reasonable amount of space */
+    min-width: 150px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Filter Button */
+.filter-container button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #3498db; 
+    color: white;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.filter-container button[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+
+/* =========================================
+   FILTER CONTAINER STYLES (Search/Sort Area)
+   ========================================= */
+
+
+.cart-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+        
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        
+.cart-table thead {
+    background-color: #2c3e50;
+    color: white;
+}        
+        
+.cart-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+        
+.cart-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+        
+.cart-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+        
+.cart-summary {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-top: 2rem;
+}
+        
+.cart-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+        
+.btn-secondary {
+    background-color: #5bc0de;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+        
+.btn-secondary:hover {
+    background-color: #46b8da;
+}
+        
+.btn-primary {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+        
+.btn-primary:hover {
+    background-color: #218838;
+}
+        
+.remove-link {
+    color: #d9534f;
+    text-decoration: none;
+    font-weight: 500;
+}
+        
+.remove-link:hover {
+    color: #c9302c;
+    text-decoration: underline;
+}
+        
+.empty-cart {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        
+.total-amount {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+/* =========================================
+   CHECKOUT PAGE STYLES
+   ========================================= */
+
+/* Checkout Container */
+.checkout-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Order Summary */
+.order-summary {
+    flex: 1;
+    border: 1px solid #ddd;
+    padding: 25px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    height: fit-content;
+}
+
+.order-summary h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.order-summary p {
+    margin: 15px 0;
+}
+
+.order-summary .subtotal {
+    font-size: 1.1em;
+    color: #2c3e50;
+}
+
+.order-summary .discount {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Total Section */
+.total-section {
+    border-top: 2px solid #eee;
+    margin: 20px 0;
+    padding-top: 15px;
+}
+
+.total-price {
+    color: #28a745;
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* Voucher Section */
+.voucher-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.voucher-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.voucher-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.voucher-btn {
+    padding: 12px 20px;
+    background: #555;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.voucher-btn:hover {
+    background: #444;
+}
+
+/* Shipping & Payment */
+.shipping-payment {
+    flex: 1.5;
+    border: 1px solid #ddd;
+    padding: 25px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.shipping-payment h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.shipping-payment .form-group {
+    margin-bottom: 20px;
+}
+
+.shipping-payment .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.shipping-payment .form-input,
+.shipping-payment .form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+
+.shipping-payment .form-input:focus,
+.shipping-payment .form-textarea:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.shipping-payment .form-textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+/* Payment Section */
+.payment-section {
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.payment-method input[type="radio"] {
+    margin: 0;
+}
+
+/* Confirm Button */
+.confirm-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+/* Message Styles */
+.message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .order-summary,
+    .shipping-payment {
+        flex: none;
+        width: 100%;
+    }
+    
+    .voucher-form {
+        flex-direction: column;
+    }
+    
+    .voucher-btn {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   LOGIN PAGE STYLES
+   ========================================= */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+        
+.login-box {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 450px;
+}
+        
+.login-box h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+        
+.login-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+        
+.login-tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+        
+.login-tab {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+        
+.login-tab.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+        
+.tab-content {
+    display: none;
+}
+        
+.tab-content.active {
+    display: block;
+}
+        
+.form-group {
+    margin-bottom: 1.2rem;
+}
+        
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+        
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+        
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+        
+.error {
+    background: #fed7d7;
+    color: #c53030;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+        
+.login-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 0.5rem;
+}
+
+.reset-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: #f56565;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 0.5rem;
+}
+        
+.login-btn:hover {
+    background: #5a67d8;
+}
+        
+.login-info {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #edf2f7;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #4a5568;
+}
+        
+.login-info strong {
+    color: #2d3748;
+}
+        
+.login-links {
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+        
+.login-links a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+        
+.login-links a:hover {
+    text-decoration: underline;
+}
+        
+.register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+        
+.register-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+        
+.register-link a:hover {
+    text-decoration: underline;
+}
+        
+.password-toggle {
+    position: relative;
+}
+        
+.password-toggle input {
+    padding-right: 40px;
+}
+        
+.password-toggle i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+}
+
+
+/* --- Responsive Rules --- */
+
+/* Tablet View (e.g., 1024px and below) */
+@media screen and (max-width: 1024px) {
+    /* Switch to 3 columns on tablets to save space */
+    .product-container { 
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+/* Mobile View (e.g., 768px and below) */
+@media screen and (max-width: 768px) {
+    /* Switch to 2 columns on mobile for better viewing */
+    .product-container { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px; 
+    }
+    
+    /* Ensure padding is applied to the section on smaller devices */
+    .product-section {
+        padding: 0 15px;
+    }
+}
+
+/* Small Mobile View (e.g., 480px and below) */
+@media screen and (max-width: 480px) {
+    /* Switch to 1 column for very small screens for maximum readability */
+    .product-container { 
+        grid-template-columns: 1fr; 
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-table {
+        font-size: 0.9rem;
+    }
+            
+    .cart-table th,
+    .cart-table td {
+        padding: 0.75rem 0.5rem;
+    }
+            
+    .cart-actions {
+        flex-direction: column;
+    }
+            
+    .cart-actions a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
