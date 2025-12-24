@@ -1,16 +1,18 @@
 <?php
 require './_base.php';
 
+//start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+//only admin can access this page
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
-// --- (A) BATCH DELETE LOGIC ---
+//handle batch delete action
 if (is_post()) {
     $ids = req('ids', []);
     if ($ids) {
@@ -20,10 +22,9 @@ if (is_post()) {
         $stm->execute($ids);
         temp('info', "$count record(s) deleted");
     }
-    redirect('?page=users'); // Reloads the correct page
+    redirect('?page=users');
 }
 
-// --- (B) SETTINGS ---
 $fields = [
     'user_id'      => 'Id',
     'username'     => 'Name',
@@ -33,25 +34,27 @@ $fields = [
     'user_role'    => 'Role',
 ];
 
+//sort field and direction
 $sort = req('sort');
 key_exists($sort, $fields) || $sort = 'user_id';
 
 $dir = req('dir');
 in_array($dir, ['asc', 'desc']) || $dir = 'asc';
 
+//search username
 $name = req('name', '');
-$pg = req('pg', 1); // Use $pg for page number
+$pg = req('pg', 1);
 
 require_once './lib/SimplePager.php';
 
-// --- (C) QUERY ---
+//initialize pager
 $p = new SimplePager(
     "SELECT * FROM users WHERE user_role IN ('customer', 'member') AND username LIKE ? ORDER BY $sort $dir",
     ["%$name%"],
-    10,
-    $pg
+    10, 
+    $pg  
 );
-$arr = $p->result;
+$arr = $p->result; //result rows for current page
 ?>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -113,10 +116,8 @@ $arr = $p->result;
 <script>
 $(document).ready(function() {
     
-    // --- MEMORY SYSTEM ---
     let selectedIds = new Set();
     
-    // Restore from memory
     try {
         const stored = sessionStorage.getItem('user_deletes');
         if (stored) selectedIds = new Set(JSON.parse(stored));
@@ -124,9 +125,8 @@ $(document).ready(function() {
         sessionStorage.removeItem('user_deletes'); 
     }
 
-    // --- FUNCTIONS ---
     function updateUI() {
-        // 1. Update Checkboxes
+        //update checkboxes and selection count
         $('.row-cb').each(function() {
             const id = $(this).val();
             const checked = selectedIds.has(id);
@@ -134,18 +134,16 @@ $(document).ready(function() {
             $(this).closest('tr').toggleClass('selected', checked);
         });
 
-        // 2. Update Master Checkbox
+        //update check all checkbox
         const total = $('.row-cb').length;
         const checked = $('.row-cb:checked').length;
         $('#checkAll').prop('checked', (total > 0 && total === checked));
 
-        // 3. Update Text
+        //update selection count
         $('#selection-count').text(selectedIds.size);
     }
 
-    // --- EVENTS ---
-
-    // A. Check All Click
+    //checkbox event handlers
     $('#checkAll').change(function(e) {
         e.stopPropagation();
         const isChecked = $(this).prop('checked');
@@ -157,7 +155,7 @@ $(document).ready(function() {
         saveAndRefresh();
     });
 
-    // B. Single Checkbox Click
+    //single row checkbox
     $(document).on('change', '.row-cb', function(e) {
         e.stopPropagation();
         const id = $(this).val();
@@ -171,17 +169,17 @@ $(document).ready(function() {
         updateUI();
     }
 
-    // C. Row Click (Go to details)
+    //row click to redirect
     $('tr[data-href]').click(function(e) {
-        // Don't redirect if clicking checkbox or checkbox cell
+        //dont redirect if click checkbox or checkbox cell
         if (!$(e.target).is('input') && !$(e.target).hasClass('cb-cell')) {
             window.location = $(this).data('href');
         }
     });
 
-    // D. Delete Button
+    //batch delete button
     $('#btnDelete').click(function(e) {
-        e.preventDefault(); // Stop default submit
+        e.preventDefault(); 
         
         if (selectedIds.size === 0) {
             alert('No items selected!');
@@ -190,29 +188,25 @@ $(document).ready(function() {
 
         if (confirm('Delete ' + selectedIds.size + ' items?')) {
             const form = $('#batchForm');
-            // Inject hidden inputs for ALL selected IDs (even those on other pages)
             selectedIds.forEach(id => {
                 if (form.find('input[value="'+id+'"]').length === 0) {
                     form.append('<input type="hidden" name="ids[]" value="'+id+'">');
                 }
             });
-            sessionStorage.removeItem('user_deletes'); // Clear memory
-            form.submit(); // Actually submit the form
+            sessionStorage.removeItem('user_deletes'); 
+            form.submit(); 
         }
     });
 
-    // E. AUTO-FIX PAGER LINKS (Safety Patch)
-    // If SimplePager.php wasn't edited correctly, this JS fixes the links automatically.
+    //adjust pager links
     $('#pager-container a').each(function() {
         let href = $(this).attr('href');
         if (href && href.includes('?page=') && !href.includes('users')) {
-            // Convert ?page=2 to ?page=users&pg=2
+            //insert users page param
             href = href.replace('?page=', '?page=users&pg=');
             $(this).attr('href', href);
         }
     });
-
-    // Initialize
     updateUI();
 });
 </script>

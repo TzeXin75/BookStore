@@ -5,63 +5,64 @@ include '../_base.php';
 $_title = 'My Profile';
 include '../head.php'; 
 
-// Authentication Check
+//Authentication 
 if (!isset($_user['user_id'])) {
     header("Location: login.php"); 
     exit();
 }
 
-// Always load fresh user data from database (critical for photo update fix)
-$stm = $_db->prepare('
-    SELECT username, email, user_photo, user_phone, user_address, reward_points 
-    FROM users 
-    WHERE user_id = ?
-');
+//latest profile edit
+$stm = $_db->prepare(
+    'SELECT username, email, user_photo, user_phone, user_address, reward_points FROM users WHERE user_id = ?'
+);
 $stm->execute([$_user['user_id']]);
 $u = $stm->fetch(PDO::FETCH_ASSOC);
 
+//if user not found, redirect to home
 if (!$u) {
     redirect('/');
 }
 
-// Set variables from fresh database data
-$username     = $u['username'] ?? '';
-$email        = $u['email'] ?? '';
-$photo        = $u['user_photo'] ?? '';
-$user_phone   = $u['user_phone'] ?? '';
-$user_address = $u['user_address'] ?? '';
+$username      = $u['username'] ?? '';
+$email         = $u['email'] ?? '';
+$photo         = $u['user_photo'] ?? '';
+$user_phone    = $u['user_phone'] ?? '';
+$user_address  = $u['user_address'] ?? '';
 $reward_points = $u['reward_points'] ?? 0;
 
-// Sync session with latest data
 $_user['username']     = $username;
 $_user['email']        = $email;
 $_user['user_photo']   = $photo;
 $_user['user_phone']   = $user_phone;
 $_user['user_address'] = $user_address;
 
-// Handle form submission (POST)
+//validation messages
 $_err = [];
 
+//determine Reward Tier and Progress 
 $points = (int)$reward_points;
 $tiers = [
-    ['name' => 'Iron', 'min' => 0,   'max' => 99,  'color' => '#9ca3af'],
-    ['name' => 'Bronze',  'min' => 100,  'max' => 299, 'color' => '#cd7f32'],
-    ['name' => 'Silver',  'min' => 300, 'max' => 599, 'color' => '#C0C0C0'],
-    ['name' => 'Gold',    'min' => 600, 'max' => PHP_INT_MAX, 'color' => '#ffd700'],
+    ['name' => 'Iron',   'min' => 0,   'max' => 99,  'color' => '#9ca3af'],
+    ['name' => 'Bronze', 'min' => 100, 'max' => 299, 'color' => '#cd7f32'],
+    ['name' => 'Silver', 'min' => 300, 'max' => 599, 'color' => '#C0C0C0'],
+    ['name' => 'Gold',   'min' => 600, 'max' => PHP_INT_MAX, 'color' => '#ffd700'],
 ];
 
 $current_tier = $tiers[0];
 $current_index = 0;
 foreach ($tiers as $i => $t) {
+    //find current tier based on points
     if ($points >= $t['min'] && $points <= $t['max']) {
         $current_tier = $t;
         $current_index = $i;
         break;
     }
 }
+
+//calculate progress towards next tier
 if ($current_tier['max'] === PHP_INT_MAX) {
-    $next_threshold = null;
-    $progress = 100;
+    $next_threshold = null; 
+    $progress = 100;        
     $next_name = null;
 } else {
     $next_threshold = $current_tier['max'] + 1;
@@ -71,6 +72,7 @@ if ($current_tier['max'] === PHP_INT_MAX) {
     if ($progress > 100) $progress = 100;
 }
 
+//handle profile update submission
 if (is_post()) {
     $username     = req('username');
     $email        = req('email');
@@ -78,7 +80,7 @@ if (is_post()) {
     $user_address = req('user_address');
     $f            = get_file('photo');
 
-    // Validation
+    //validation checks
     if ($username === '') {
         $_err['username'] = 'Required';
     } elseif (strlen($username) > 100) {
@@ -111,6 +113,7 @@ if (is_post()) {
         $_err['user_address'] = 'Maximum 255 characters';
     }
 
+    // uploaded file validation (optional)
     if ($f) {
         if (!str_starts_with($f->type, 'image/')) {
             $_err['photo'] = 'Must be an image';
@@ -119,25 +122,23 @@ if (is_post()) {
         }
     }
 
-    // If no errors, update database
+    //if no validation errors, proceed to save
     if (!$_err) {
         if ($f) {
-            // Delete old photo if exists and not default
+            //delete old photo if exists
             if (!empty($photo) && $photo !== 'default.jpg') {
                 @unlink("../photos/" . $photo);
             }
             $photo = save_photo($f, '../photos/');
         }
-        // If no new photo, keep current $photo (already loaded from DB)
 
-        $stm = $_db->prepare('
-            UPDATE users
-            SET email = ?, username = ?, user_photo = ?, user_phone = ?, user_address = ?
-            WHERE user_id = ?
-        ');
+        //update user record
+        $stm = $_db->prepare(
+            'UPDATE users SET email = ?, username = ?, user_photo = ?, user_phone = ?, user_address = ? WHERE user_id = ?'
+        );
         $stm->execute([$email, $username, $photo, $user_phone, $user_address, $_user['user_id']]);
 
-        // Update session
+        //update session user info
         $_user['email']        = $email;
         $_user['username']     = $username;
         $_user['user_photo']   = $photo;
@@ -152,13 +153,6 @@ if (is_post()) {
 
 <div class="profile-wrapper">
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <?php if ($msg = temp('info')): ?>
-        <div class="alert-success">
-            <i class="fa fa-check-circle"></i> <?= htmlspecialchars($msg) ?>
-        </div>
-    <?php endif; ?>
 
     <form method="post" enctype="multipart/form-data" class="profile-card">
         <div class="profile-sidebar">
@@ -226,7 +220,7 @@ if (is_post()) {
                     <span class="error-text"><?= $_err['user_address'] ?? '' ?></span>
                 </div>
 
-                <!-- PHOTO UPLOAD WITH PREVIEW -->
+
                 <div class="form-group full-width">
                     <label class="form-label" for="photo">Update Profile Photo</label>
                     <div class="file-upload-wrapper" id="uploadWrapper">
@@ -239,7 +233,6 @@ if (is_post()) {
                         Supported: JPG, PNG, GIF (Max 1MB)
                     </small>
 
-                    <!-- Preview Container -->
                     <div id="previewContainer" style="display: none; margin-top: 20px; text-align: center;">
                         <img id="photoPreview" src="" alt="New Photo Preview" 
                              style="max-width: 220px; max-height: 220px; border-radius: 50%; box-shadow: 0 6px 15px rgba(0,0,0,0.15);">
@@ -267,12 +260,11 @@ if (is_post()) {
 <div id="footer-placeholder"></div>
 
 <script>
-// Load footer
+
 fetch('../footer.html')
     .then(r => r.text())
     .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
 
-// Photo preview functionality
 document.getElementById('photo').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const previewContainer = document.getElementById('previewContainer');
@@ -293,13 +285,13 @@ document.getElementById('photo').addEventListener('change', function(e) {
             photoPreview.src = event.target.result;
             previewContainer.style.display = 'block';
 
-            // Update main avatar preview too
+         
             currentAvatar.src = event.target.result;
 
-            // Success styling
+           
             uploadWrapper.style.borderColor = '#28a745';
             uploadWrapper.style.backgroundColor = '#f0fff4';
-            uploadLabel.innerHTML = '<i class="fas fa-check"></i> New photo selected';
+            uploadLabel.innerHTML = 'New photo selected';
             uploadLabel.style.color = '#28a745';
         };
         reader.readAsDataURL(file);
@@ -308,7 +300,7 @@ document.getElementById('photo').addEventListener('change', function(e) {
     }
 });
 
-// Remove new photo
+
 document.getElementById('removePhoto').addEventListener('click', function() {
     document.getElementById('photo').value = '';
     resetUpload();
@@ -320,16 +312,16 @@ function resetUpload() {
     const uploadWrapper = document.getElementById('uploadWrapper');
     const uploadLabel = document.getElementById('uploadLabel');
 
-    // Reset preview
+
     previewContainer.style.display = 'none';
 
-    // Restore original avatar
+   
     currentAvatar.src = "<?= !empty($photo) ? '../photos/' . htmlspecialchars($photo) : 'https://ui-avatars.com/api/?name=' . urlencode($username) . '&background=random&size=200' ?>";
 
-    // Reset upload box
+
     uploadWrapper.style.borderColor = '#ccc';
     uploadWrapper.style.backgroundColor = '#f8f9fa';
-    uploadLabel.innerHTML = '<i class="fas fa-upload"></i> Choose New Photo (Max 1MB)';
+    uploadLabel.innerHTML = 'Choose New Photo (Max 1MB)';
     uploadLabel.style.color = '#667eea';
 }
 </script>

@@ -1,40 +1,41 @@
 <?php
 include './_base.php';
 
-// 1. GET ID & FETCH USER
 $id = req('id');
+//if no id provided, redirect back to userslist
 if (!$id) redirect('?page=users');
 
-// 2. HANDLE UPDATES
+//when the page receives a POST request we handle different update actions
 if (is_post()) {
     $action = req('action'); 
 
-    // A. Update Role
+    //updates user role
     if ($action == 'update_role') {
         $new_role = req('role');
         $stm = $_db->prepare('UPDATE users SET user_role = ? WHERE user_id = ?');
         $stm->execute([$new_role, $id]);
     }
 
-    // B. Update Profile Info
+    //updates user profile details
     if ($action == 'update_profile') {
         $email   = req('email');
         $phone   = req('phone');
         $address = req('address');
         $dob     = req('dob');
-        $status  = req('status'); // Will receive '1' or '0'
+        $status  = req('status'); //1 = active, 0 = inactive
 
-        // Update database
+        //database record 
         $stm = $_db->prepare('UPDATE users SET email=?, user_phone=?, user_address=?, user_dob=?, user_status=? WHERE user_id=?');
         $stm->execute([$email, $phone, $address, $dob, $status, $id]);
     }
 }
 
-// 3. FETCH USER DATA
+//fetch user details
 $stm = $_db->prepare('SELECT * FROM users WHERE user_id = ?');
 $stm->execute([$id]);
 $u = $stm->fetch();
 
+//if user not found, show error message
 if (!$u) {
     echo "<div class='error-box'>User not found. <a href='?page=users'>Go Back</a></div>";
     return;
@@ -78,6 +79,8 @@ if (!$u) {
         <div class="card-header-visual">
             <div class="avatar-wrapper">
                 <?php 
+
+                    //uploaded photo if present & generate image
                     $photo = !empty($u->user_photo) ? './photos/' . $u->user_photo : "https://ui-avatars.com/api/?name=" . urlencode($u->username) . "&background=random&size=128"; 
                 ?>
                 <img src="<?= $photo ?>" alt="Profile" class="avatar-lg">
@@ -87,6 +90,7 @@ if (!$u) {
             <p class="profile-email"><?= htmlspecialchars($u->email) ?></p>
             
             <div class="role-badge-display">
+                <!-- show user role member/admin -->
                 <span class="badge-pill role-<?= $u->user_role ?>">
                     <?= ucfirst($u->user_role) ?>
                 </span>
@@ -95,7 +99,6 @@ if (!$u) {
         
         <div class="card-actions">
             <h4 class="action-title">Admin Controls</h4>
-            
             <form method="post" class="role-form">
                 <input type="hidden" name="action" value="update_role">
                 
@@ -103,7 +106,6 @@ if (!$u) {
                     <label class="input-label">Assign Role</label>
                     <div class="select-wrapper">
                         <select name="role" onchange="this.form.submit()" class="custom-select">
-                            <option value="customer" <?= $u->user_role == 'customer' ? 'selected' : '' ?>>Customer</option>
                             <option value="member"   <?= $u->user_role == 'member'   ? 'selected' : '' ?>>Member</option>
                             <option value="admin"    <?= $u->user_role == 'admin'    ? 'selected' : '' ?>>Admin</option>
                         </select>
@@ -133,8 +135,8 @@ if (!$u) {
         </div>
         
         <form method="post" id="profileForm">
+            <!-- main profile edit form -->
             <input type="hidden" name="action" value="update_profile">
-            
             <table class="info-table">
                 <tr>
                     <th style="width: 30%;">User ID</th>
@@ -170,25 +172,26 @@ if (!$u) {
                     <th>Account Status</th>
                     <td>
                         <?php 
-                            // BOOLEAN LOGIC: Check if user_status is 1
+                            //determine if user is active or inactive
                             $is_active = ($u->user_status == 1);
 
-                            // Set Colors and Label based on 1 or 0
                             if ($is_active) {
-                                $bg_color = '#d1fae5'; $text_color = '#065f46'; // Green
+                                $bg_color = '#d1fae5'; $text_color = '#065f46'; 
                                 $label = 'Active';
                             } else {
-                                $bg_color = '#fee2e2'; $text_color = '#991b1b'; // Red
+                                $bg_color = '#fee2e2'; $text_color = '#991b1b'; 
                                 $label = 'Inactive';
                             }
                         ?>
-                        
+
+                        <!-- colored badge show current status -->
                         <span class="view-mode-field">
                             <span class="badge" style="background:<?= $bg_color ?>; color:<?= $text_color ?>;">
                                 <?= $label ?>
                             </span>
                         </span>
                         
+                        <!-- radio buttons to toggle status -->
                         <div class="edit-mode-field">
                             <div class="radio-group">
                                 <label class="radio-label">
@@ -214,6 +217,7 @@ if (!$u) {
                 <tr>
                     <th>Address</th>
                     <td>
+                        <!-- show address, allow editing -->
                         <span class="view-mode-field"><?= nl2br(htmlspecialchars($u->user_address ?: 'Not provided')) ?></span>
                         <textarea name="address" class="edit-mode-field" rows="3"><?= htmlspecialchars($u->user_address) ?></textarea>
                     </td>
@@ -225,12 +229,15 @@ if (!$u) {
 </div>
 
 <script>
+
+/*toggles the edit mode for the personal information card*/
 function toggleEditMode(enable) {
     const card = document.getElementById('personalInfoCard');
     if (enable) {
         card.classList.add('is-editing');
     } else {
         card.classList.remove('is-editing');
+        //reset form to original loaded / discard unsaved edits
         document.getElementById('profileForm').reset();
     }
 }
