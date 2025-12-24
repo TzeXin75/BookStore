@@ -6,7 +6,14 @@ $_title = 'My Profile';
 include '../head.php'; 
 
 // 2. Authentication Check
-auth('member');
+if (isset($_SESSION['user']['user_id'])) {
+    $user_id = $_SESSION['user']['user_id'];
+} elseif (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    header("Location: login.php"); exit();
+}
+
 
 // 3. GET Request
 if (is_get()) {
