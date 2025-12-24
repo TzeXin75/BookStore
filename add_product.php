@@ -1,32 +1,13 @@
 <?php
-require_once 'db_connet.php';
-
-if ($_SESSION['user_role'] !== 'admin') {
-    header("Location: login.php");
-    exit();
-}
-
-// Allowed categories
+//  $pdo is inherited from admin.php
+$errors = [];
+$success = '';
 $categories = [
     'Fiction' => ['Novel','Comic'],
     'Non-Fiction' => ['Biography','Self-help'],
     'Education' => ['Textbook'],
     'Children' => ['Color Book']
 ];
-
-$errors = [];
-$success = '';
-
-// Initialize variables to keep form data if error occurs
-$title = '';
-$description = '';
-$author = '';
-$publisher = '';
-$cat_val = '';
-$sub_val = '';
-$language = '';
-$price = '';
-$stock = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
@@ -35,250 +16,181 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $publisher = trim($_POST['publisher'] ?? '');
     $cat_val = $_POST['category'] ?? '';
     $sub_val = $_POST['subcategory'] ?? '';
-    $language = trim($_POST['language'] ?? '');
+    $language = $_POST['language'] ?? ''; 
     $price = floatval($_POST['price'] ?? 0);
     $stock = intval($_POST['stock'] ?? 0);
 
-    // --- IMAGE UPLOAD LOGIC (MODIFIED for 4-image limit) ---
-    $imageNames = [];
-    if (isset($_FILES['images'])) {
-        
-        // 1. Get the total number of files attempted for upload
-        $totalFilesToProcess = count($_FILES['images']['tmp_name']);
+    $coverName = ''; $imageNames = []; $videoName = '';
 
-        // 2. CHECK LIMIT: If more than 4 images are uploaded, add an error and skip processing
-        if ($totalFilesToProcess > 4) {
-            $errors[] = "You can only upload a maximum of 4 images.";
-            
-            // Skip the file processing loop below and keep $imageNames empty.
-            // The main PHP logic will halt the database insert due to the error.
-            
-        } else {
-            // 3. Process the files since the count is within the limit (0 to 4)
-            foreach ($_FILES['images']['tmp_name'] as $k => $tmp_name) {
-                
-                // Check for file-specific errors (e.g., file size limit)
-                if ($_FILES['images']['error'][$k] === UPLOAD_ERR_OK) {
-                    
-                    // Get extension and generate a unique filename
-                    $ext = pathinfo($_FILES['images']['name'][$k], PATHINFO_EXTENSION);
-                    $filename = uniqid() . '.' . $ext;
-                    
-                    // Create folder if not exists
-                    if (!is_dir('uploads')) mkdir('uploads', 0777, true);
+    // A. Handle Cover (Required)
+    if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+        $coverName = uniqid('cover_') . '.' . pathinfo($_FILES['cover_image']['name'], PATHINFO_EXTENSION);
+        move_uploaded_file($_FILES['cover_image']['tmp_name'], "uploads/$coverName");
+    } else { $errors[] = "Main Cover is required."; }
 
-                    // Move the temporary file to the final destination
-                    if (move_uploaded_file($tmp_name, "uploads/$filename")) {
-                        $imageNames[] = $filename;
-                    }
-                }
+    // B. Handle Gallery (Max 4)
+    if (isset($_FILES['images']) && count(array_filter($_FILES['images']['tmp_name'])) > 4) {
+        $errors[] = "Max 4 gallery images allowed.";
+    } else {
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp) {
+            if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
+                $fn = uniqid('img_') . '.' . pathinfo($_FILES['images']['name'][$key], PATHINFO_EXTENSION);
+                move_uploaded_file($tmp, "uploads/$fn");
+                $imageNames[] = $fn;
             }
         }
     }
-    $imagesStr = implode(',', $imageNames);
-    // --- END IMAGE LOGIC ---
-
-    // Validation
-    if (!$title) $errors[] = "Title is required.";
-    if (!isset($categories[$cat_val])) $errors[] = "Invalid category.";
-    if ($sub_val && !in_array($sub_val, $categories[$cat_val])) $errors[] = "Invalid subcategory.";
-    if ($price <= 0) $errors[] = "Price must be greater than 0.";
-    if ($stock < 0) $errors[] = "Stock cannot be negative.";
+    
+    // C. Handle Video
+    if (isset($_FILES['video']) && $_FILES['video']['error'] === UPLOAD_ERR_OK) {
+        $videoName = uniqid('vid_') . '.' . pathinfo($_FILES['video']['name'], PATHINFO_EXTENSION);
+        if (!is_dir('uploads/')) mkdir('uploads/', 0777, true);
+        move_uploaded_file($_FILES['video']['tmp_name'], "uploads/$videoName");
+    }
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO book (title, description, author, publisher, category, subcategory, language, price, stock, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $description, $author, $publisher, $cat_val, $sub_val, $language, $price, $stock, $imagesStr]);
-            
-            $success = "✅ Product added successfully!";
-            
-            // Clear form after success
-            $title = $description = $author = $publisher = $cat_val = $sub_val = $language = $price = $stock = '';
-        } catch (PDOException $e) {
-            $errors[] = "Database Error: " . $e->getMessage();
-        }
+            $sql = "INSERT INTO book (title, description, author, publisher, category, subcategory, language, price, stock, cover_image, images, video) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $pdo->prepare($sql)->execute([$title, $description, $author, $publisher, $cat_val, $sub_val, $language, $price, $stock, $coverName, implode(',', $imageNames), $videoName]);
+            $success = "Product added successfully!";
+        } catch (PDOException $e) { $errors[] = "DB Error: " . $e->getMessage(); }
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
-    <link rel="stylesheet" href="style.css"> 
-    <style>
-        /* Extra styling for image preview matching edit page */
-        .current-images {
-            display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;
-        }
-        .current-images img {
-            width: 80px; height: 100px; object-fit: cover;
-            border-radius: 5px; border: 1px solid #ddd;
-        }
-        .preview-label {
-            font-size: 0.85rem; color: #6b7280; margin-top: 5px; display: block;
-        }
-    </style>
-</head>
-<body>
+<style>
+    /* DESIGN MATCHING PRODUCT_DIR */
+    .product-form { display: flex; gap: 20px; align-items: flex-start; }
+    .product-left { flex: 1.5; display: flex; flex-direction: column; gap: 15px; }
+    .product-right { flex: 1; display: flex; flex-direction: column; gap: 15px; position: sticky; top: 10px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card h3 { margin-top: 0; margin-bottom: 10px; font-size: 1rem; border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; color: #2563eb; }
+    .product-form label { display: block; font-weight: 600; font-size: 0.85rem; margin-top: 8px; }
+    .product-form input, .product-form select, .product-form textarea { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; }
+    .btn-primary { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: bold; cursor: pointer; }
 
-
+    /* PREVIEW STYLING */
+    .preview-container { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .preview-container img { width: 80px; height: 110px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; }
+    .video-preview { width: 100%; margin-top: 10px; border-radius: 4px; display: none; }
+</style>
 
 <div class="product-page">
     <h2>Add New Product</h2>
+    <?php if ($success): ?><div style="color:green; padding:10px;"><?= $success ?></div><?php endif; ?>
+    <?php if ($errors): ?><div style="color:red; padding:10px;"><?php foreach($errors as $e) echo $e."<br>"; ?></div><?php endif; ?>
 
-    <?php if ($errors): ?>
-        <div class="error-box">
-            <?php foreach ($errors as $err): ?>
-                <p><?= htmlspecialchars($err) ?></p>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($success): ?>
-        <div class="success-box"><?= htmlspecialchars($success) ?></div>
-    <?php endif; ?>
-
-    <form method="POST" enctype="multipart/form-data" class="product-form">
+    <form method="POST" action="admin.php?page=add_product" enctype="multipart/form-data" class="product-form">
         <div class="product-left">
             <div class="card">
-                <h3>Basic Info</h3>
-                <label>Title</label>
-                <input type="text" name="title" value="<?= htmlspecialchars($title) ?>" required>
-
+                <h3>Basic Information</h3>
+                <label>Book Title</label>
+                <input type="text" name="title" required>
                 <label>Description</label>
-                <textarea name="description" rows="5"><?= htmlspecialchars($description) ?></textarea>
+                <textarea name="description" rows="5"></textarea>
             </div>
-
             <div class="card">
                 <h3>Author & Publisher</h3>
                 <label>Author</label>
-                <input type="text" name="author" value="<?= htmlspecialchars($author) ?>">
-
+                <input type="text" name="author">
                 <label>Publisher</label>
-                <input type="text" name="publisher" value="<?= htmlspecialchars($publisher) ?>">
+                <input type="text" name="publisher">
             </div>
-
             <div class="card">
                 <h3>Category</h3>
-                <label>Category</label>
-                <select name="category" id="categorySelect" required>
-                    <option value="">Select Category</option>
-                    <?php foreach ($categories as $cat => $subs): ?>
-                        <option value="<?= $cat ?>" <?= $cat_val==$cat?'selected':'' ?>><?= $cat ?></option>
-                    <?php endforeach; ?>
+                <select name="category" id="catSel" required>
+                    <option value="">-- Select --</option>
+                    <?php foreach($categories as $c => $s): ?><option value="<?= $c ?>"><?= $c ?></option><?php endforeach; ?>
                 </select>
-
                 <label>Subcategory</label>
-                <select name="subcategory" id="subcategorySelect">
-                    <option value="">Select Subcategory</option>
-                </select>
+                <select name="subcategory" id="subSel" required></select>
             </div>
         </div>
 
         <div class="product-right">
             <div class="card">
-                <h3>Other Info</h3>
+                <h3>Pricing & Stock</h3>
                 <label>Language</label>
-                <?php $allowed_languages = ['English', 'Chinese', 'Malay'];?>
                 <select name="language" required>
-                    <option value="">Select Language</option>
-                    
-                    <?php foreach ($allowed_languages as $lang): ?>
-                        <?php $selected = ($language === $lang) ? 'selected' : ''; ?>
-                        
-                        <option value="<?= htmlspecialchars($lang) ?>" <?= $selected ?>>
-                            <?= htmlspecialchars($lang) ?>
-                        </option>
-                    <?php endforeach; ?>
+                    <option value="English">English</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Malay">Malay</option>
                 </select>
-
                 <label>Price (RM)</label>
-                <input type="number" step="0.01" name="price" value="<?= htmlspecialchars($price) ?>">
-
+                <input type="number" step="0.01" name="price">
                 <label>Stock</label>
-                <input type="number" name="stock" value="<?= htmlspecialchars($stock) ?>">
+                <input type="number" name="stock">
             </div>
 
             <div class="card">
-                <h3>Images</h3>
-                
-                <label>Upload Images</label>
-                <input type="file" name="images[]" multiple id="imagesInput">
-                <p class="preview-label">Selected images will be uploaded.</p>
-                
-                <div id="new-preview" class="current-images"></div>
+                <h3>Media Upload</h3>
+                <label>Main Cover</label>
+                <input type="file" name="cover_image" id="coverInput" accept="image/*" required>
+                <div id="coverPreview" class="preview-container"></div>
+
+                <label>Gallery (Max 4)</label>
+                <input type="file" name="images[]" id="galleryInput" accept="image/*" multiple>
+                <div id="galleryPreview" class="preview-container"></div>
+
+                <label>Product Video</label>
+                <input type="file" name="video" id="videoInput" accept="video/*">
+                <video id="videoPreview" class="video-preview" controls></video>
             </div>
 
-            <div class="actions">
-                <button type="submit" class="btn primary">Add Product</button>
-            </div>
+            <button type="submit" class="btn-primary">Save Product</button>
         </div>
     </form>
 </div>
 
+
+
 <script>
-// --- 1. Dynamic Subcategories ---
-const categories = <?= json_encode($categories) ?>;
-const categorySelect = document.getElementById('categorySelect');
-const subcategorySelect = document.getElementById('subcategorySelect');
-
-function updateSubcategories(selected=null) {
-    const cat = categorySelect.value;
-    subcategorySelect.innerHTML = '';
-    
-    if (!cat || !categories[cat]) {
-        subcategorySelect.disabled = true;
-        subcategorySelect.innerHTML = '<option value="">Select Category First</option>';
-        return;
-    }
-    
-    subcategorySelect.disabled = false;
-    categories[cat].forEach(sub => {
-        const opt = document.createElement('option');
-        opt.value = sub;
-        opt.text = sub;
-        if (selected && selected === sub) opt.selected = true;
-        subcategorySelect.appendChild(opt);
+    // 1. Dynamic Subcategory Logic
+    const catsData = <?= json_encode($categories) ?>;
+    document.getElementById('catSel').addEventListener('change', function() {
+        const sub = document.getElementById('subSel');
+        sub.innerHTML = '';
+        if(this.value) catsData[this.value].forEach(v => {
+            let o = document.createElement('option'); o.value = o.text = v; sub.appendChild(o);
+        });
     });
-}
 
-// Initialize on load (if validation failed, keep selection)
-updateSubcategories("<?= $sub_val ?>");
-
-// Update on change
-categorySelect.addEventListener('change', () => {
-    updateSubcategories();
-});
-
-// --- 2. New Image Preview ---
-const imagesInput = document.getElementById('imagesInput');
-const previewContainer = document.getElementById('new-preview');
-
-if(imagesInput) {
-    imagesInput.addEventListener('change', () => {
-        previewContainer.innerHTML = ''; 
-        const files = imagesInput.files;
-        
-        if (files.length > 0) {
-            Array.from(files).forEach(file => {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                previewContainer.appendChild(img);
-            });
+    // 2. Cover Image Preview
+    document.getElementById('coverInput').addEventListener('change', function(e) {
+        const container = document.getElementById('coverPreview');
+        container.innerHTML = '';
+        if (this.files[0]) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(this.files[0]);
+            container.appendChild(img);
         }
     });
-}
 
-updateSubcategories("<?= $sub_val ?>"); 
+    // 3. Gallery Images Preview (Allow up to 4)
+    document.getElementById('galleryInput').addEventListener('change', function(e) {
+        const container = document.getElementById('galleryPreview');
+        container.innerHTML = '';
+        if (this.files.length > 4) {
+            alert("Maximum 4 images allowed for gallery.");
+            this.value = "";
+            return;
+        }
+        Array.from(this.files).forEach(file => {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            container.appendChild(img);
+        });
+    });
 
-// Update on change
-categorySelect.addEventListener('change', () => {
-    updateSubcategories();
-});
+    // 4. Video Preview
+    document.getElementById('videoInput').addEventListener('change', function(e) {
+        const video = document.getElementById('videoPreview');
+        if (this.files[0]) {
+            video.src = URL.createObjectURL(this.files[0]);
+            video.style.display = 'block';
+            video.play();
+        } else {
+            video.style.display = 'none';
+        }
+    });
 </script>
-
-</body>
-</html>

@@ -1,9 +1,11 @@
 <?php
+// admin.php
 session_start();
 require_once 'config/db_connect.php';
 
-if ($_SESSION['user_role'] !== 'admin') {
-    header("Location: login.php");
+// GLOBAL SECURITY CHECK: If not admin, kick them out immediately
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
+    header('Location: login.php'); // Redirect to login page
     exit();
 }
 ?>
@@ -16,27 +18,30 @@ if ($_SESSION['user_role'] !== 'admin') {
 </head>
 <body>
     <div class="admin-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Admin Panel</h2>
             <ul>
                 <li><a href="?page=dashboard">Dashboard</a></li>
-                <li><a href="?page=products">Products</a></li>
+                <li><a href="?page=product_dir">Products</a></li>
+                <li><a href="?page=batch_insert">Batch Add Products</a></li>
                 <li><a href="?page=users">Users</a></li>
                 <li><a href="?page=manage orders">Manage Orders</a></li>
                 <li><a href="?page=logout">Logout</a></li>
             </ul>
         </aside>
 
-        <!-- Main content area -->
         <main class="main-content">
             <?php
-            $page = $_GET['page'] ?? 'dashboard'; // Default page
+            $page = $_GET['page'] ?? 'dashboard';
 
-            if ($page === 'products') {
-                include 'products.php';
+            if ($page === 'product_dir') {
+                include 'product_dir.php';
             } elseif ($page === 'add_product') {
                 include 'add_product.php';
+            } elseif ($page === 'batch_insert') {
+            include 'batch_insert.php';
+            } elseif ($page === 'process_batch_insert') {
+            include 'process_batch_insert.php';
             } elseif ($page === 'edit_product') {
                 include 'edit_product.php';
             } elseif ($page === 'users') {
@@ -46,10 +51,10 @@ if ($_SESSION['user_role'] !== 'admin') {
             } elseif ($page === 'manage orders') {
                 include 'admin_orders.php';
             } elseif ($page === 'logout') {
-            $_SESSION = array();
-            session_destroy();
-            header('Location: index.php');
-            exit();
+                $_SESSION = array();
+                session_destroy();
+                header('Location: index.php');
+                exit();
             } else {
                 include 'dashboard.php';
             }
