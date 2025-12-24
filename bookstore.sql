@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2025 at 04:23 PM
+-- Generation Time: Dec 23, 2025 at 07:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -198,6 +198,19 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `token`
+--
+
+CREATE TABLE `token` (
+  `id` varchar(100) NOT NULL,
+  `expire` datetime NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -312,6 +325,13 @@ ALTER TABLE `order_details`
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`payment_id`),
   ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `token`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
