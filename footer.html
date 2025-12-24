@@ -21,7 +21,7 @@
         padding: 0 20px !important;
     }
 
-    .footer-about, .footer-links, .footer-social {
+    .footer-about, .footer-contact, .footer-info {
         flex: 1 !important;
         min-width: 200px !important;
     }
@@ -37,51 +37,28 @@
         font-size: 0.85rem !important; /* Smaller text */
         line-height: 1.4 !important;
         color: #bdc3c7 !important;
-        margin: 0 !important;
+        margin: 0 0 5px 0 !important;
     }
 
-    .footer-links ul {
+    .footer-info ul {
         list-style: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
 
-    .footer-links ul li {
+    .footer-info ul li {
         margin-bottom: 6px !important; /* Tighter list spacing */
     }
 
-    .footer-links ul li a {
+    .footer-info ul li a {
         font-size: 0.85rem !important;
         color: #bdc3c7 !important;
         text-decoration: none !important;
         transition: color 0.3s ease !important;
     }
 
-    .footer-links ul li a:hover {
+    .footer-info ul li a:hover {
         color: white !important;
-    }
-
-    .social-icons {
-        display: flex !important;
-        gap: 10px !important;
-        align-items: center !important;
-    }
-
-    .social-icons a {
-        color: #bdc3c7 !important;
-        text-decoration: none !important;
-        border: 1px solid #bdc3c7 !important;
-        padding: 2px 6px !important; /* Smaller icon boxes */
-        border-radius: 4px !important;
-        font-size: 0.75rem !important;
-        font-weight: bold !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .social-icons a:hover {
-        color: white !important;
-        border-color: white !important;
-        background-color: rgba(255, 255, 255, 0.1) !important;
     }
 
     .footer-bottom {
@@ -99,35 +76,23 @@
             text-align: center !important;
             gap: 15px !important;
         }
-        .social-icons {
-            justify-content: center !important;
-        }
     }
 </style>
 
 <footer>
     <div class="footer-container">
+        <!-- Column 1: Description -->
         <div class="footer-about">
             <h3>BookStore</h3>
-            <p>Your one-stop shop for stories. Discover, read, and enjoy.</p>
+            <p>Your premier destination for literature and learning. We offer a curated selection of books across all genres to inspire your next reading adventure.</p>
         </div>
 
-        <div class="footer-links">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-social">
-            <h3>Follow Us</h3>
-            <div class="social-icons">
-                <a href="#" title="Facebook">FB</a>
-                <a href="#" title="Twitter">𝕏</a>
-                <a href="#" title="Instagram">IG</a>
-            </div>
+        <!-- Column 2: Customer Service -->
+        <div class="footer-contact">
+            <h3>Customer Service</h3>
+            <p><strong>Hotline:</strong> +60 3-1234 5678</p>
+            <p><strong>Email:</strong> support@bookstore.com</p>
+            <p><strong>Mon-Fri:</strong> 9:00 AM - 6:00 PM</p>
         </div>
     </div>
 
