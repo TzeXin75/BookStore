@@ -46,6 +46,29 @@ try {
     $stmt_pay = $pdo->prepare("INSERT INTO payments (order_id, payment_method, transaction_ref, amount, status) VALUES (?, ?, ?, ?, 'Success')");
     $stmt_pay->execute([$order_id, $pay_method, $pay_ref, $total]);
 
+    // If user redeemed points in checkout, deduct them now
+    if (!empty($_SESSION['redeemed_points'])) {
+        $redeem = (int)$_SESSION['redeemed_points'];
+        $stmt_deduct = $pdo->prepare("UPDATE users SET reward_points = GREATEST(COALESCE(reward_points,0) - ?, 0) WHERE user_id = ?");
+        $stmt_deduct->execute([$redeem, $user_id]);
+        unset($_SESSION['redeemed_points']);
+    }
+
+    // Award reward points: simple rule = 1 point per whole currency unit spent
+    $points_awarded = (int)floor($total / 10);
+    if ($points_awarded > 0) {
+        $stmt_points = $pdo->prepare("UPDATE users SET reward_points = COALESCE(reward_points,0) + ? WHERE user_id = ?");
+        $stmt_points->execute([$points_awarded, $user_id]);
+    }
+
+    // Refresh user's points in session (best-effort)
+    $stmt_get = $pdo->prepare("SELECT COALESCE(reward_points,0) FROM users WHERE user_id = ?");
+    $stmt_get->execute([$user_id]);
+    $new_points = $stmt_get->fetchColumn();
+    if ($new_points !== false) {
+        $_SESSION['user']['reward_points'] = (int)$new_points;
+    }
+
     $pdo->prepare("DELETE FROM cart WHERE user_id = ?")->execute([$user_id]);
     $pdo->commit();
     unset($_SESSION['discount_amount'], $_SESSION['voucher_code']);
@@ -65,6 +88,9 @@ try {
     <main style="text-align: center; padding: 100px 20px; min-height: 60vh;">
         <h1 style="color: #28a745;">Payment Successful!</h1>
         <p>Order <strong>#<?= $order_id ?></strong> has been processed successfully.</p>
+        <?php if (!empty($points_awarded) || isset($new_points)): ?>
+            <p style="margin-top:12px;">You earned <strong><?= intval($points_awarded ?? 0) ?></strong> reward points. Your balance: <strong><?= intval($new_points ?? 0) ?></strong></p>
+        <?php endif; ?>
         <div style="margin-top: 40px;">
             <a href="my_orders.php" style="background: #3498db; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 10px;">My Orders</a>
             <a href="index.php" style="background: #95a5a6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Return Home</a>

@@ -22,6 +22,13 @@ if (isset($_POST['remove_voucher'])) {
     $msg = "Voucher removed."; $msg_type = "success";
 }
 
+// allow removing redeemed points
+if (isset($_POST['remove_points'])) {
+    unset($_SESSION['discount_amount']);
+    unset($_SESSION['redeemed_points']);
+    $msg = "Redeemed points removed."; $msg_type = "success";
+}
+
 //check if applied voucher is valid or not
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voucher_code'])) {
     $code = trim($_POST['voucher_code']);
@@ -52,6 +59,25 @@ foreach ($cart_items as $item) { $base_total += $item['price'] * $item['quantity
 $discount = $_SESSION['discount_amount'] ?? 0;
 $final_total = max(0, $base_total - $discount);
 $checkout_ref = "REF" . time();
+
+// Fetch user's reward points (for redeem option)
+$stmt_pts = $pdo->prepare("SELECT COALESCE(reward_points,0) FROM users WHERE user_id = ?");
+$stmt_pts->execute([$user_id]);
+$user_points = (int)$stmt_pts->fetchColumn();
+
+// If user submitted redeem points, apply them (1 point = 1 currency unit)
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_points'])) {
+    $redeem = min($user_points, $base_total);
+    if ($redeem > 0) {
+        $_SESSION['discount_amount'] = $redeem;
+        $_SESSION['redeemed_points'] = $redeem;
+        $discount = $redeem;
+        $final_total = max(0, $base_total - $discount);
+        $msg = "Points applied!"; $msg_type = "success";
+    } else {
+        $msg = "No points available to redeem."; $msg_type = "error";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,10 +124,32 @@ $checkout_ref = "REF" . time();
                 <!--display the voucher code and reduced price-->
             <?php if ($discount > 0): ?>
                 <div class="summary-item" style="color: green; font-weight: bold;">
-                    <span>Discount (<?= $_SESSION['voucher_code'] ?>):</span> 
+                    <span>
+                        <?php if (!empty($_SESSION['voucher_code'])): ?>
+                            Discount (<?= htmlspecialchars($_SESSION['voucher_code']) ?>):
+                        <?php else: ?>
+                            Discount:
+                        <?php endif; ?>
+                    </span>
                     <span>-$<?= number_format($discount, 2) ?></span>
                 </div>
-                <form action="checkout.php" method="POST"><button type="submit" name="remove_voucher" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8em; padding:0; margin-bottom:10px;">[Remove Voucher]</button></form>
+                <?php if (!empty($_SESSION['voucher_code'])): ?>
+                    <form action="checkout.php" method="POST"><button type="submit" name="remove_voucher" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8em; padding:0; margin-bottom:10px;">[Remove Voucher]</button></form>
+                <?php endif; ?>
+            <?php endif; ?>
+            
+            <!-- Reward points redeem -->
+            <?php if (!empty($user_points)): ?>
+                <?php if (!empty($_SESSION['redeemed_points'])): ?>
+                    <div class="summary-item" style="color:orange; font-weight:bold;">
+                        <span>Redeemed Points:</span>
+                        <span>-$<?= number_format($_SESSION['redeemed_points'], 2) ?></span>
+                    </div>
+                    <form action="checkout.php" method="POST"><button type="submit" name="remove_points" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8em; padding:0; margin-bottom:10px;">[Remove Points]</button></form>
+                <?php else: ?>
+                    <div style="margin-top:8px; font-size:0.95em;">You have <strong><?= $user_points ?></strong> reward points (1 point = $1)</div>
+                    <form action="checkout.php" method="POST" style="margin-top:6px;"><button type="submit" name="use_points" style="background:#f39c12; color:white; border:none; padding:8px 12px; border-radius:4px; cursor:pointer;">Redeem Points</button></form>
+                <?php endif; ?>
             <?php endif; ?>
             <h2 style="color: #28a745; display: flex; justify-content: space-between;"><span>Total:</span> <span>$<?= number_format($final_total, 2) ?></span></h2>
             <!--promo code form-->

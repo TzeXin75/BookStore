@@ -338,7 +338,7 @@ if (is_post()) {
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" maxlength="20" 
-                               placeholder="e.g., 012-3456789" required
+                               placeholder="e.g., 0123456789" required
                                value="<?= encode($_POST['phone'] ?? '') ?>">
                         <?php if ($_err['phone'] ?? false): ?>
                             <span class="error-msg"><?= $_err['phone'] ?></span>

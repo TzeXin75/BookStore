@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2025 at 07:08 PM
+-- Generation Time: Dec 24, 2025 at 05:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,9 @@ CREATE TABLE `book` (
   `language` varchar(50) DEFAULT NULL,
   `price` decimal(10,2) NOT NULL DEFAULT 0.00,
   `stock` int(11) NOT NULL DEFAULT 0,
+  `cover_image` varchar(255) DEFAULT NULL,
   `images` varchar(500) DEFAULT NULL,
+  `video` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -46,41 +48,41 @@ CREATE TABLE `book` (
 -- Dumping data for table `book`
 --
 
-INSERT INTO `book` (`id`, `title`, `description`, `author`, `publisher`, `category`, `subcategory`, `language`, `price`, `stock`, `images`, `created_at`) VALUES
-(1, 'The Great Gatsby', 'A classic novel about the American Dream in the Jazz Age.\nFeatures Jay Gatsby and his obsession with Daisy Buchanan.\nExplores themes of wealth, class, and the American Dream.', 'F. Scott Fitzgerald', 'Scribner', 'Fiction', 'Novel', 'English', 15.50, 94, 'book1.jpg', '2025-12-16 15:36:48'),
-(2, 'PHP Programming for Beginners', 'Learn PHP from scratch with practical examples.\nCovers PHP 8 features and best practices.\nIncludes MySQL database integration.', 'John Smith', 'Tech Press', 'Education', 'Textbook', 'English', 45.00, 16, 'book2.jpg', '2025-12-16 15:36:48'),
-(3, 'Web Development Mastery', 'Complete guide to modern web development.\nCovers HTML5, CSS3, JavaScript, and frameworks.\nIncludes responsive design and SEO optimization.', 'Jane Doe', 'Web Publishers', 'Education', 'Textbook', 'English', 120.00, 4, 'book3.jpg', '2025-12-16 15:36:48'),
-(4, 'Harry Potter and the Sorcerer Stone', 'First book in the Harry Potter series.\nFollows Harry\'s first year at Hogwarts.\nIntroduces magical world and characters.', 'J.K. Rowling', 'Bloomsbury', 'Fiction', 'Novel', 'English', 35.90, 50, 'book4.jpg', '2025-12-16 15:36:48'),
-(5, 'Database Design Guide', 'Learn database design principles and normalization.\nCovers SQL queries, indexing, and optimization.\nIncludes real-world case studies.', 'Michael Chen', 'Database Press', 'Education', 'Textbook', 'English', 55.00, 0, 'book5.jpg', '2025-12-16 15:36:48'),
-(6, 'Spider-Man: Homecoming', 'Amazing Spider-Man comic collection.\nFeatures classic storylines and villains.\nFull-color illustrations throughout.', 'Stan Lee', 'Marvel Comics', 'Fiction', 'Comic', 'English', 12.99, 25, 'book6.jpg', '2025-12-16 15:36:48'),
-(7, 'The Art of War', 'Ancient Chinese military treatise.\nTimeless strategies for conflict resolution.\nApplies to business and personal life.', 'Sun Tzu', 'Penguin Classics', 'Non-Fiction', 'Self-help', 'Chinese', 9.99, 30, 'book7.jpg', '2025-12-16 15:36:48'),
-(8, 'Malay Grammar Guide', 'Comprehensive Malay language guide.\nCovers grammar, vocabulary, and usage.\nSuitable for beginners to advanced learners.', 'Ahmad Hassan', 'Dewan Bahasa', 'Education', 'Textbook', 'Malay', 28.50, 15, 'book8.jpg', '2025-12-16 15:36:48'),
-(9, 'My First Coloring Book', 'Fun coloring book for children ages 3-6.\nFeatures animals, vehicles, and shapes.\nDevelops fine motor skills and creativity.', 'Sarah Johnson', 'Kids Press', 'Children', 'Color Book', 'English', 8.99, 99, 'book9.jpg', '2025-12-16 15:36:48'),
-(10, 'Steve Jobs Biography', 'The life story of Apple co-founder.\nDetailed account of his career and innovations.\nInsights into his leadership style.', 'Walter Isaacson', 'Simon & Schuster', 'Non-Fiction', 'Biography', 'English', 18.99, 40, 'book10.jpg', '2025-12-16 15:36:48'),
-(11, 'To Kill a Mockingbird', 'Classic novel about racial injustice.\nSet in the American South during the 1930s.\nTold from a child\'s perspective.', 'Harper Lee', 'J.B. Lippincott', 'Fiction', 'Novel', 'English', 14.99, 75, 'book11.jpg', '2025-12-16 15:36:48'),
-(12, 'Batman: The Dark Knight Returns', 'Iconic Batman graphic novel.\nFeatures aging Bruce Wayne returning as Batman.\nDark and gritty storyline.', 'Frank Miller', 'DC Comics', 'Fiction', 'Comic', 'English', 19.99, 20, 'book12.jpg', '2025-12-16 15:36:48'),
-(13, 'Atomic Habits', 'Guide to building good habits and breaking bad ones.\nPractical strategies for behavior change.\nBased on scientific research.', 'James Clear', 'Avery', 'Non-Fiction', 'Self-help', 'English', 16.99, 60, 'book13.jpg', '2025-12-16 15:36:48'),
-(14, 'Mathematics for Engineers', 'Advanced mathematics textbook for engineering students.\nCovers calculus, differential equations, and linear algebra.\nIncludes practice problems with solutions.', 'Dr. Robert Chang', 'Engineering Press', 'Education', 'Textbook', 'English', 89.99, 12, 'book14.jpg', '2025-12-16 15:36:48'),
-(15, 'Mandarin Chinese for Beginners', 'Complete Mandarin Chinese language course.\nIncludes pronunciation guide and basic characters.\nComes with audio CD for practice.', 'Li Wei', 'Language World', 'Education', 'Textbook', 'Chinese', 34.99, 25, 'book15.jpg', '2025-12-16 15:36:48'),
-(16, 'Animal Friends Coloring Book', 'Coloring book with cute animal illustrations.\nIncludes jungle, farm, and ocean animals.\nThick paper prevents bleed-through.', 'Emily Brown', 'Creative Kids', 'Children', 'Color Book', 'English', 7.99, 150, 'book16.jpg', '2025-12-16 15:36:48'),
-(17, 'Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future', 'Biography of Elon Musk and his companies.\nCovers his vision for sustainable energy and space exploration.\nInsider look at his work ethic and challenges.', 'Ashlee Vance', 'Ecco', 'Non-Fiction', 'Biography', 'English', 17.99, 35, 'book17.jpg', '2025-12-16 15:36:48'),
-(18, 'X-Men: Days of Future Past', 'Classic X-Men comic storyline.\nFeatures time travel and alternate futures.\nIncludes Wolverine, Storm, and other mutants.', 'Chris Claremont', 'Marvel Comics', 'Fiction', 'Comic', 'English', 15.99, 18, 'book18.jpg', '2025-12-16 15:36:48'),
-(19, 'How to Win Friends and Influence People', 'Timeless classic on interpersonal skills.\nPrinciples for effective communication and leadership.\nReal-world examples and applications.', 'Dale Carnegie', 'Simon & Schuster', 'Non-Fiction', 'Self-help', 'English', 12.99, 85, 'book19.jpg', '2025-12-16 15:36:48'),
-(20, 'Physics for Scientists and Engineers', 'Comprehensive physics textbook.\nCovers mechanics, thermodynamics, electromagnetism, and optics.\nIncludes laboratory experiments and problem sets.', 'Raymond Serway', 'Cengage Learning', 'Education', 'Textbook', 'English', 125.00, 8, 'book20.jpg', '2025-12-16 15:36:48'),
-(21, 'Pride and Prejudice', 'Classic romance novel about Elizabeth Bennet and Mr. Darcy.\nExplores themes of love, reputation, and class in Georgian England.\nWitty social commentary and memorable characters.', 'Jane Austen', 'T. Egerton', 'Fiction', 'Novel', 'English', 12.99, 44, 'book21.jpg', '2025-12-16 15:36:48'),
-(22, 'The Silent Patient', 'Psychological thriller about a woman who shoots her husband and stops speaking.\nTherapist becomes obsessed with uncovering the truth.\nTwist ending that surprises readers.', 'Alex Michaelides', 'Celadon Books', 'Fiction', 'Novel', 'English', 14.99, 30, 'book22.jpg', '2025-12-16 15:36:48'),
-(23, 'Superman: Red Son', 'Alternate history where Superman lands in Soviet Ukraine instead of Kansas.\nExplores political ideologies and moral dilemmas.\nUnique take on the Superman mythos.', 'Mark Millar', 'DC Comics', 'Fiction', 'Comic', 'English', 17.99, 15, 'book23.jpg', '2025-12-16 15:36:48'),
-(24, 'Watchmen', 'Groundbreaking graphic novel about retired superheroes.\nComplex narrative with philosophical themes.\nDeconstruction of the superhero genre.', 'Alan Moore', 'DC Comics', 'Fiction', 'Comic', 'English', 22.99, 12, 'book24.jpg', '2025-12-16 15:36:48'),
-(25, 'Becoming', 'Memoir by former First Lady Michelle Obama.\nCovers her childhood, career, and time in the White House.\nPersonal insights and inspiring journey.', 'Michelle Obama', 'Crown Publishing', 'Non-Fiction', 'Biography', 'English', 21.99, 55, 'book25.jpg', '2025-12-16 15:36:48'),
-(26, 'Born a Crime', 'Trevor Noah\'s memoir about growing up in apartheid South Africa.\nHumorous and poignant stories about race and identity.\nInsights into his journey to becoming a comedian.', 'Trevor Noah', 'Spiegel & Grau', 'Non-Fiction', 'Biography', 'English', 16.99, 40, 'book26.jpg', '2025-12-16 15:36:48'),
-(27, 'The 7 Habits of Highly Effective People', 'Classic self-help book about personal and professional effectiveness.\nPrinciples for achieving goals and building relationships.\nTimeless advice for personal development.', 'Stephen R. Covey', 'Free Press', 'Non-Fiction', 'Self-help', 'English', 15.99, 70, 'book27.jpg', '2025-12-16 15:36:48'),
-(28, 'Thinking, Fast and Slow', 'Explores two systems of thinking: fast, intuitive, and slow, deliberate.\nNobel Prize-winning insights into human psychology.\nChallenges assumptions about decision-making.', 'Daniel Kahneman', 'Farrar, Straus and Giroux', 'Non-Fiction', 'Self-help', 'English', 18.99, 25, 'book28.jpg', '2025-12-16 15:36:48'),
-(29, 'Chemistry for High School Students', 'Comprehensive chemistry textbook aligned with national curriculum.\nClear explanations with diagrams and examples.\nPractice questions and experiments included.', 'Dr. Susan Wong', 'Academic Press', 'Education', 'Textbook', 'English', 65.00, 20, 'book29.jpg', '2025-12-16 15:36:48'),
-(30, 'Business Management Principles', 'Essential guide to modern business management.\nCovers leadership, strategy, operations, and finance.\nCase studies from successful companies.', 'Peter Drucker', 'Harvard Business Review', 'Education', 'Textbook', 'English', 85.00, 18, 'book30.jpg', '2025-12-16 15:36:48'),
-(31, 'English-Malay Dictionary', 'Comprehensive bilingual dictionary with over 50,000 entries.\nIncludes idioms, phrases, and cultural notes.\nUseful for students and professionals.', 'Dewan Bahasa Team', 'Dewan Bahasa', 'Education', 'Textbook', 'Malay', 45.00, 35, 'book31.jpg', '2025-12-16 15:36:48'),
-(32, 'Advanced Chinese Characters', 'Guide to mastering complex Chinese characters.\nStroke order, radicals, and vocabulary building.\nSuitable for intermediate to advanced learners.', 'Professor Zhang Wei', 'Beijing Language Press', 'Education', 'Textbook', 'Chinese', 38.99, 22, 'book32.jpg', '2025-12-16 15:36:48'),
-(33, 'Dinosaur Adventures Coloring Book', 'Coloring book featuring various dinosaurs in prehistoric scenes.\nEducational facts about each dinosaur included.\nFun way to learn about paleontology.', 'Tommy Lee', 'Dino Press', 'Children', 'Color Book', 'English', 9.99, 120, 'book33.jpg', '2025-12-16 15:36:48'),
-(34, 'Princess Castle Activity Book', 'Activity book with princess-themed puzzles, mazes, and coloring pages.\nIncludes stickers and cut-out crowns.\nEncourages creativity and problem-solving.', 'Princess Publishing', 'Fairy Tale Books', 'Children', 'Color Book', 'English', 8.50, 95, 'book34.jpg', '2025-12-16 15:36:48');
+INSERT INTO `book` (`id`, `title`, `description`, `author`, `publisher`, `category`, `subcategory`, `language`, `price`, `stock`, `cover_image`, `images`, `video`, `created_at`) VALUES
+(1, 'The Great Gatsby', 'A classic novel about the American Dream in the Jazz Age.\nFeatures Jay Gatsby and his obsession with Daisy Buchanan.\nExplores themes of wealth, class, and the American Dream.', 'F. Scott Fitzgerald', 'Scribner', 'Fiction', 'Novel', 'English', 15.50, 94, NULL, 'book1.jpg', NULL, '2025-12-16 15:36:48'),
+(2, 'PHP Programming for Beginners', 'Learn PHP from scratch with practical examples.\nCovers PHP 8 features and best practices.\nIncludes MySQL database integration.', 'John Smith', 'Tech Press', 'Education', 'Textbook', 'English', 45.00, 16, NULL, 'book2.jpg', NULL, '2025-12-16 15:36:48'),
+(3, 'Web Development Mastery', 'Complete guide to modern web development.\nCovers HTML5, CSS3, JavaScript, and frameworks.\nIncludes responsive design and SEO optimization.', 'Jane Doe', 'Web Publishers', 'Education', 'Textbook', 'English', 120.00, 1, NULL, 'book3.jpg', NULL, '2025-12-16 15:36:48'),
+(4, 'Harry Potter and the Sorcerer Stone', 'First book in the Harry Potter series.\nFollows Harry\'s first year at Hogwarts.\nIntroduces magical world and characters.', 'J.K. Rowling', 'Bloomsbury', 'Fiction', 'Novel', 'English', 35.90, 50, NULL, 'book4.jpg', NULL, '2025-12-16 15:36:48'),
+(5, 'Database Design Guide', 'Learn database design principles and normalization.\nCovers SQL queries, indexing, and optimization.\nIncludes real-world case studies.', 'Michael Chen', 'Database Press', 'Education', 'Textbook', 'English', 55.00, 0, NULL, 'book5.jpg', NULL, '2025-12-16 15:36:48'),
+(6, 'Spider-Man: Homecoming', 'Amazing Spider-Man comic collection.\nFeatures classic storylines and villains.\nFull-color illustrations throughout.', 'Stan Lee', 'Marvel Comics', 'Fiction', 'Comic', 'English', 12.99, 25, NULL, 'book6.jpg', NULL, '2025-12-16 15:36:48'),
+(7, 'The Art of War', 'Ancient Chinese military treatise.\nTimeless strategies for conflict resolution.\nApplies to business and personal life.', 'Sun Tzu', 'Penguin Classics', 'Non-Fiction', 'Self-help', 'Chinese', 9.99, 30, NULL, 'book7.jpg', NULL, '2025-12-16 15:36:48'),
+(8, 'Malay Grammar Guide', 'Comprehensive Malay language guide.\nCovers grammar, vocabulary, and usage.\nSuitable for beginners to advanced learners.', 'Ahmad Hassan', 'Dewan Bahasa', 'Education', 'Textbook', 'Malay', 28.50, 15, NULL, 'book8.jpg', NULL, '2025-12-16 15:36:48'),
+(9, 'My First Coloring Book', 'Fun coloring book for children ages 3-6.\nFeatures animals, vehicles, and shapes.\nDevelops fine motor skills and creativity.', 'Sarah Johnson', 'Kids Press', 'Children', 'Color Book', 'English', 8.99, 98, NULL, 'book9.jpg', NULL, '2025-12-16 15:36:48'),
+(10, 'Steve Jobs Biography', 'The life story of Apple co-founder.\nDetailed account of his career and innovations.\nInsights into his leadership style.', 'Walter Isaacson', 'Simon & Schuster', 'Non-Fiction', 'Biography', 'English', 18.99, 40, NULL, 'book10.jpg', NULL, '2025-12-16 15:36:48'),
+(11, 'To Kill a Mockingbird', 'Classic novel about racial injustice.\nSet in the American South during the 1930s.\nTold from a child\'s perspective.', 'Harper Lee', 'J.B. Lippincott', 'Fiction', 'Novel', 'English', 14.99, 75, NULL, 'book11.jpg', NULL, '2025-12-16 15:36:48'),
+(12, 'Batman: The Dark Knight Returns', 'Iconic Batman graphic novel.\nFeatures aging Bruce Wayne returning as Batman.\nDark and gritty storyline.', 'Frank Miller', 'DC Comics', 'Fiction', 'Comic', 'English', 19.99, 20, NULL, 'book12.jpg', NULL, '2025-12-16 15:36:48'),
+(13, 'Atomic Habits', 'Guide to building good habits and breaking bad ones.\nPractical strategies for behavior change.\nBased on scientific research.', 'James Clear', 'Avery', 'Non-Fiction', 'Self-help', 'English', 16.99, 60, NULL, 'book13.jpg', NULL, '2025-12-16 15:36:48'),
+(14, 'Mathematics for Engineers', 'Advanced mathematics textbook for engineering students.\nCovers calculus, differential equations, and linear algebra.\nIncludes practice problems with solutions.', 'Dr. Robert Chang', 'Engineering Press', 'Education', 'Textbook', 'English', 89.99, 12, NULL, 'book14.jpg', NULL, '2025-12-16 15:36:48'),
+(15, 'Mandarin Chinese for Beginners', 'Complete Mandarin Chinese language course.\nIncludes pronunciation guide and basic characters.\nComes with audio CD for practice.', 'Li Wei', 'Language World', 'Education', 'Textbook', 'Chinese', 34.99, 25, NULL, 'book15.jpg', NULL, '2025-12-16 15:36:48'),
+(16, 'Animal Friends Coloring Book', 'Coloring book with cute animal illustrations.\nIncludes jungle, farm, and ocean animals.\nThick paper prevents bleed-through.', 'Emily Brown', 'Creative Kids', 'Children', 'Color Book', 'English', 7.99, 150, NULL, 'book16.jpg', NULL, '2025-12-16 15:36:48'),
+(17, 'Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future', 'Biography of Elon Musk and his companies.\nCovers his vision for sustainable energy and space exploration.\nInsider look at his work ethic and challenges.', 'Ashlee Vance', 'Ecco', 'Non-Fiction', 'Biography', 'English', 17.99, 35, NULL, 'book17.jpg', NULL, '2025-12-16 15:36:48'),
+(18, 'X-Men: Days of Future Past', 'Classic X-Men comic storyline.\nFeatures time travel and alternate futures.\nIncludes Wolverine, Storm, and other mutants.', 'Chris Claremont', 'Marvel Comics', 'Fiction', 'Comic', 'English', 15.99, 18, NULL, 'book18.jpg', NULL, '2025-12-16 15:36:48'),
+(19, 'How to Win Friends and Influence People', 'Timeless classic on interpersonal skills.\nPrinciples for effective communication and leadership.\nReal-world examples and applications.', 'Dale Carnegie', 'Simon & Schuster', 'Non-Fiction', 'Self-help', 'English', 12.99, 85, NULL, 'book19.jpg', NULL, '2025-12-16 15:36:48'),
+(20, 'Physics for Scientists and Engineers', 'Comprehensive physics textbook.\nCovers mechanics, thermodynamics, electromagnetism, and optics.\nIncludes laboratory experiments and problem sets.', 'Raymond Serway', 'Cengage Learning', 'Education', 'Textbook', 'English', 125.00, 8, NULL, 'book20.jpg', NULL, '2025-12-16 15:36:48'),
+(21, 'Pride and Prejudice', 'Classic romance novel about Elizabeth Bennet and Mr. Darcy.\nExplores themes of love, reputation, and class in Georgian England.\nWitty social commentary and memorable characters.', 'Jane Austen', 'T. Egerton', 'Fiction', 'Novel', 'English', 12.99, 43, NULL, 'book21.jpg', NULL, '2025-12-16 15:36:48'),
+(22, 'The Silent Patient', 'Psychological thriller about a woman who shoots her husband and stops speaking.\nTherapist becomes obsessed with uncovering the truth.\nTwist ending that surprises readers.', 'Alex Michaelides', 'Celadon Books', 'Fiction', 'Novel', 'English', 14.99, 30, NULL, 'book22.jpg', NULL, '2025-12-16 15:36:48'),
+(23, 'Superman: Red Son', 'Alternate history where Superman lands in Soviet Ukraine instead of Kansas.\nExplores political ideologies and moral dilemmas.\nUnique take on the Superman mythos.', 'Mark Millar', 'DC Comics', 'Fiction', 'Comic', 'English', 17.99, 15, NULL, 'book23.jpg', NULL, '2025-12-16 15:36:48'),
+(24, 'Watchmen', 'Groundbreaking graphic novel about retired superheroes.\nComplex narrative with philosophical themes.\nDeconstruction of the superhero genre.', 'Alan Moore', 'DC Comics', 'Fiction', 'Comic', 'English', 22.99, 12, NULL, 'book24.jpg', NULL, '2025-12-16 15:36:48'),
+(25, 'Becoming', 'Memoir by former First Lady Michelle Obama.\nCovers her childhood, career, and time in the White House.\nPersonal insights and inspiring journey.', 'Michelle Obama', 'Crown Publishing', 'Non-Fiction', 'Biography', 'English', 21.99, 55, NULL, 'book25.jpg', NULL, '2025-12-16 15:36:48'),
+(26, 'Born a Crime', 'Trevor Noah\'s memoir about growing up in apartheid South Africa.\nHumorous and poignant stories about race and identity.\nInsights into his journey to becoming a comedian.', 'Trevor Noah', 'Spiegel & Grau', 'Non-Fiction', 'Biography', 'English', 16.99, 40, NULL, 'book26.jpg', NULL, '2025-12-16 15:36:48'),
+(27, 'The 7 Habits of Highly Effective People', 'Classic self-help book about personal and professional effectiveness.\nPrinciples for achieving goals and building relationships.\nTimeless advice for personal development.', 'Stephen R. Covey', 'Free Press', 'Non-Fiction', 'Self-help', 'English', 15.99, 70, NULL, 'book27.jpg', NULL, '2025-12-16 15:36:48'),
+(28, 'Thinking, Fast and Slow', 'Explores two systems of thinking: fast, intuitive, and slow, deliberate.\nNobel Prize-winning insights into human psychology.\nChallenges assumptions about decision-making.', 'Daniel Kahneman', 'Farrar, Straus and Giroux', 'Non-Fiction', 'Self-help', 'English', 18.99, 25, NULL, 'book28.jpg', NULL, '2025-12-16 15:36:48'),
+(29, 'Chemistry for High School Students', 'Comprehensive chemistry textbook aligned with national curriculum.\nClear explanations with diagrams and examples.\nPractice questions and experiments included.', 'Dr. Susan Wong', 'Academic Press', 'Education', 'Textbook', 'English', 65.00, 20, NULL, 'book29.jpg', NULL, '2025-12-16 15:36:48'),
+(30, 'Business Management Principles', 'Essential guide to modern business management.\nCovers leadership, strategy, operations, and finance.\nCase studies from successful companies.', 'Peter Drucker', 'Harvard Business Review', 'Education', 'Textbook', 'English', 85.00, 18, NULL, 'book30.jpg', NULL, '2025-12-16 15:36:48'),
+(31, 'English-Malay Dictionary', 'Comprehensive bilingual dictionary with over 50,000 entries.\nIncludes idioms, phrases, and cultural notes.\nUseful for students and professionals.', 'Dewan Bahasa Team', 'Dewan Bahasa', 'Education', 'Textbook', 'Malay', 45.00, 35, NULL, 'book31.jpg', NULL, '2025-12-16 15:36:48'),
+(32, 'Advanced Chinese Characters', 'Guide to mastering complex Chinese characters.\nStroke order, radicals, and vocabulary building.\nSuitable for intermediate to advanced learners.', 'Professor Zhang Wei', 'Beijing Language Press', 'Education', 'Textbook', 'Chinese', 38.99, 22, NULL, 'book32.jpg', NULL, '2025-12-16 15:36:48'),
+(33, 'Dinosaur Adventures Coloring Book', 'Coloring book featuring various dinosaurs in prehistoric scenes.\nEducational facts about each dinosaur included.\nFun way to learn about paleontology.', 'Tommy Lee', 'Dino Press', 'Children', 'Color Book', 'English', 9.99, 120, NULL, 'book33.jpg', NULL, '2025-12-16 15:36:48'),
+(34, 'Princess Castle Activity Book', 'Activity book with princess-themed puzzles, mazes, and coloring pages.\r\nIncludes stickers and cut-out crowns.\r\nEncourages creativity and problem-solving.', 'Princess Publishing', 'Fairy Tale Books', 'Children', 'Color Book', 'English', 8.50, 95, NULL, 'book34.jpg', NULL, '2025-12-16 15:36:48');
 
 -- --------------------------------------------------------
 
@@ -95,6 +97,14 @@ CREATE TABLE `cart` (
   `quantity` int(11) NOT NULL DEFAULT 1,
   `added_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `user_id`, `id`, `quantity`, `added_at`) VALUES
+(26, 51, 28, 1, '2025-12-23 13:48:34'),
+(32, 59, 22, 1, '2025-12-25 00:26:06');
 
 -- --------------------------------------------------------
 
@@ -127,7 +137,10 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `total_amount`, `orde
 (9, 1, '2025-12-12 15:31:53', 0.00, 'Pending', '123'),
 (10, 1, '2025-12-12 15:35:05', 31.00, 'Pending', '12345'),
 (12, 1, '2025-12-20 23:33:31', 0.00, 'Pending', 'Desa Aman Puri\r\n'),
-(13, 1, '2025-12-20 23:44:52', 19.99, 'Cancelled', 'Lorong Bukit Pantai, Pantai Hills, Bangsar, Kuala Lumpur, 59100, Malaysia');
+(13, 1, '2025-12-20 23:44:52', 19.99, 'Cancelled', 'Lorong Bukit Pantai, Pantai Hills, Bangsar, Kuala Lumpur, 59100, Malaysia'),
+(14, 59, '2025-12-24 17:49:56', 120.00, 'Pending', 'Kuala Lumpur Bird Park, 920, Jalan Cenderawasih, Kuala Lumpur, 50480, Malaysia'),
+(15, 59, '2025-12-24 18:02:38', 21.98, 'Pending', '洪成路, Brickfields, Kuala Lumpur, 50470, Malaysia'),
+(16, 59, '2025-12-24 18:11:42', 120.00, 'Pending', 'Jalan Damansara, Brickfields, Kuala Lumpur, 50460, Malaysia');
 
 -- --------------------------------------------------------
 
@@ -159,7 +172,12 @@ INSERT INTO `order_details` (`detail_id`, `order_id`, `id`, `quantity`, `unit_pr
 (9, 8, 1, 1, 15.50),
 (10, 10, 1, 2, 15.50),
 (11, 12, 9, 1, 8.99),
-(12, 13, 12, 1, 19.99);
+(12, 13, 12, 1, 19.99),
+(13, 14, 3, 1, 120.00),
+(14, 15, 3, 1, 120.00),
+(15, 15, 9, 1, 8.99),
+(16, 15, 21, 1, 12.99),
+(17, 16, 3, 1, 120.00);
 
 -- --------------------------------------------------------
 
@@ -193,7 +211,10 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 (9, 9, 'Credit Card', '1234123412341234', '2025-12-12 15:31:53', 0.00, 'Success'),
 (10, 10, 'Credit Card', '1234123412341234', '2025-12-12 15:35:05', 31.00, 'Success'),
 (11, 12, 'Credit Card', '1234567812345678', '2025-12-20 23:33:31', 0.00, 'Success'),
-(12, 13, 'Credit Card', '1234567812345678', '2025-12-20 23:44:52', 19.99, 'Success');
+(12, 13, 'Credit Card', '1234567812345678', '2025-12-20 23:44:52', 19.99, 'Success'),
+(13, 14, 'E-Wallet', '', '2025-12-24 17:49:56', 120.00, 'Success'),
+(14, 15, 'E-Wallet', '', '2025-12-24 18:02:38', 21.98, 'Success'),
+(15, 16, 'E-Wallet', '', '2025-12-24 18:11:42', 120.00, 'Success');
 
 -- --------------------------------------------------------
 
@@ -206,7 +227,6 @@ CREATE TABLE `token` (
   `expire` datetime NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 -- --------------------------------------------------------
 
@@ -225,48 +245,54 @@ CREATE TABLE `users` (
   `user_role` enum('admin','member') DEFAULT 'member',
   `user_address` varchar(255) DEFAULT NULL,
   `user_registrationDate` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_status` tinyint(1) NOT NULL DEFAULT 1
+  `user_status` tinyint(1) NOT NULL DEFAULT 1,
+  `reward_points` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_dob`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`) VALUES
-(21, 'ahmad_ali', 'ahmad.ali88@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Jalan Tun Razak, 50400 Kuala Lumpur, Wilayah Persekutuan', '2025-12-22 07:06:48', 1),
-(22, 'siti_nurhaliza', 'siti.nur90@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '45, Lorong Bahagia, Taman Melawati, 53100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(23, 'tan_wei_ming', 'tan.weiming@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '88, Jalan SS2/24, 47300 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
-(24, 'subramaniam_k', 'subra.k@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Gasing, 46000 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
-(25, 'lee_chong_wei', 'lee.chongwei@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '101, Jalan Burma, 10050 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
-(26, 'nor_azman', 'azman.nor@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '23, Jalan Skudai, 81300 Skudai, Johor', '2025-12-22 07:06:48', 1),
-(27, 'lim_mei_ling', 'lim.meiling@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'B-12-3, Kondominium Indah, Jalan Ampang, 50450 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(28, 'rajesh_kumar', 'rajesh.kumar@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '7, Lebuhraya Persekutuan, 40000 Shah Alam, Selangor', '2025-12-22 07:06:48', 1),
-(29, 'fatimah_yusof', 'fatimah.y@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '15, Jalan Sultan Ismail, 20200 Kuala Terengganu, Terengganu', '2025-12-22 07:06:48', 1),
-(30, 'wong_kah_seng', 'wong.kahseng@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '99, Jalan Sultan Azlan Shah, 31400 Ipoh, Perak', '2025-12-22 07:06:48', 1),
-(31, 'nurul_ain', 'nurul.ain@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '', '2025-12-22 07:06:48', 1),
-(32, 'ganesh_m', 'ganesh.m@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '21, Jalan Tengku Kelana, 41000 Klang, Selangor', '2025-12-22 07:06:48', 1),
-(33, 'sarah_lee', 'sarah.lee@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Lorong Selamat, 10400 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
-(34, 'mohammad_zaki', 'm.zaki@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '56, Jalan Long Yunus, 15200 Kota Bharu, Kelantan', '2025-12-22 07:06:48', 1),
-(35, 'chin_xiao_wei', 'chin.xw@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Tebrau, 80250 Johor Bahru, Johor', '2025-12-22 07:06:48', 1),
-(36, 'kavita_devi', 'kavita.devi@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '44, Jalan Brickfields, 50470 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(37, 'zainal_abidin', 'zainal.a@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '77, Jalan Tunku Abdul Rahman, 93100 Kuching, Sarawak', '2025-12-22 07:06:48', 1),
-(38, 'ng_kok_leong', 'ng.kokleong@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '3, Jalan Gaya, 88000 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1),
-(39, 'aishah_binti_omar', 'aishah.omar@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '19, Jalan Meru, 41050 Klang, Selangor', '2025-12-22 07:06:48', 1),
-(40, 'vincent_tan', 'vincent.tan@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Persiaran Gurney, 10250 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1),
-(41, 'siti_sarah', 'siti.sarah@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Hang Tuah, 75300 Melaka, Melaka', '2025-12-22 07:06:48', 1),
-(42, 'jason_lim', 'jason.lim@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '22, Jalan Templer, 46050 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1),
-(43, 'thirumalai_r', 'thiru.r@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '11, Jalan Silibin, 30100 Ipoh, Perak', '2025-12-22 07:06:48', 1),
-(44, 'hazwan_hashim', 'hazwan.h@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '67, Jalan Beserah, 25300 Kuantan, Pahang', '2025-12-22 07:06:48', 1),
-(45, 'chan_yee_ling', 'chan.yl@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '33, Jalan Cheras, 56100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(46, 'amanda_wong', 'amanda.wong@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'Lot 45, Jalan Penampang, 88300 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1),
-(47, 'faizal_hussein', 'faizal.h@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Satok, 93400 Kuching, Sarawak', '2025-12-22 07:06:48', 1),
-(48, 'devan_nair', 'devan.nair@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '14, Jalan Sungai Besi, 57100 Kuala Lumpur', '2025-12-22 07:06:48', 1),
-(49, 'koh_li_ann', 'koh.liann@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '9, Jalan Molek 2/1, Taman Molek, 81100 Johor Bahru, Johor', '2025-12-22 07:06:48', 1),
-(50, 'syed_mokhtar', 'syed.mokhtar@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '50, Jalan Putra, 05150 Alor Setar, Kedah', '2025-12-22 07:06:48', 1),
-(51, 'jason', 'jason@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1),
-(52, 'lim', 'lim@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '88, Jalan Seremban 2, 70300 Seremban, Negeri Sembilan', '2025-12-22 07:13:13', 1),
-(53, 'test_member', 'member@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Batu Caves, 68100 Batu Caves, Selangor', '2025-12-22 07:13:13', 1),
-(54, 'test_admin', 'admin@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '12, Jalan Tanjung Bungah, 11200 Tanjung Bungah, Pulau Pinang', '2025-12-22 07:13:13', 1);
+INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_dob`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`, `reward_points`) VALUES
+(21, 'ahmad_ali', 'ahmad.ali88@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Jalan Tun Razak, 50400 Kuala Lumpur, Wilayah Persekutuan', '2025-12-22 07:06:48', 1, 0),
+(22, 'siti_nurhaliza', 'siti.nur90@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '45, Lorong Bahagia, Taman Melawati, 53100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
+(23, 'tan_wei_ming', 'tan.weiming@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '88, Jalan SS2/24, 47300 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1, 0),
+(24, 'subramaniam_k', 'subra.k@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Gasing, 46000 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1, 0),
+(25, 'lee_chong_wei', 'lee.chongwei@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '101, Jalan Burma, 10050 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1, 0),
+(26, 'nor_azman', 'azman.nor@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '23, Jalan Skudai, 81300 Skudai, Johor', '2025-12-22 07:06:48', 1, 0),
+(27, 'lim_mei_ling', 'lim.meiling@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'B-12-3, Kondominium Indah, Jalan Ampang, 50450 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
+(28, 'rajesh_kumar', 'rajesh.kumar@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '7, Lebuhraya Persekutuan, 40000 Shah Alam, Selangor', '2025-12-22 07:06:48', 1, 0),
+(29, 'fatimah_yusof', 'fatimah.y@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '15, Jalan Sultan Ismail, 20200 Kuala Terengganu, Terengganu', '2025-12-22 07:06:48', 1, 0),
+(30, 'wong_kah_seng', 'wong.kahseng@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '99, Jalan Sultan Azlan Shah, 31400 Ipoh, Perak', '2025-12-22 07:06:48', 1, 0),
+(31, 'nurul_ain', 'nurul.ain@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '', '2025-12-22 07:06:48', 1, 0),
+(32, 'ganesh_m', 'ganesh.m@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '21, Jalan Tengku Kelana, 41000 Klang, Selangor', '2025-12-22 07:06:48', 1, 0),
+(33, 'sarah_lee', 'sarah.lee@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Lorong Selamat, 10400 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1, 0),
+(34, 'mohammad_zaki', 'm.zaki@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '56, Jalan Long Yunus, 15200 Kota Bharu, Kelantan', '2025-12-22 07:06:48', 1, 0),
+(35, 'chin_xiao_wei', 'chin.xw@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Tebrau, 80250 Johor Bahru, Johor', '2025-12-22 07:06:48', 1, 0),
+(36, 'kavita_devi', 'kavita.devi@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '44, Jalan Brickfields, 50470 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
+(37, 'zainal_abidin', 'zainal.a@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '77, Jalan Tunku Abdul Rahman, 93100 Kuching, Sarawak', '2025-12-22 07:06:48', 1, 0),
+(38, 'ng_kok_leong', 'ng.kokleong@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '3, Jalan Gaya, 88000 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1, 0),
+(39, 'aishah_binti_omar', 'aishah.omar@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '19, Jalan Meru, 41050 Klang, Selangor', '2025-12-22 07:06:48', 1, 0),
+(40, 'vincent_tan', 'vincent.tan@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Persiaran Gurney, 10250 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1, 0),
+(41, 'siti_sarah', 'siti.sarah@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Hang Tuah, 75300 Melaka, Melaka', '2025-12-22 07:06:48', 1, 0),
+(42, 'jason_lim', 'jason.lim@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '22, Jalan Templer, 46050 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1, 0),
+(43, 'thirumalai_r', 'thiru.r@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '11, Jalan Silibin, 30100 Ipoh, Perak', '2025-12-22 07:06:48', 1, 0),
+(44, 'hazwan_hashim', 'hazwan.h@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '67, Jalan Beserah, 25300 Kuantan, Pahang', '2025-12-22 07:06:48', 1, 0),
+(45, 'chan_yee_ling', 'chan.yl@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '33, Jalan Cheras, 56100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
+(46, 'amanda_wong', 'amanda.wong@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'Lot 45, Jalan Penampang, 88300 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1, 0),
+(47, 'faizal_hussein', 'faizal.h@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Satok, 93400 Kuching, Sarawak', '2025-12-22 07:06:48', 1, 0),
+(48, 'devan_nair', 'devan.nair@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '14, Jalan Sungai Besi, 57100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
+(49, 'koh_li_ann', 'koh.liann@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '9, Jalan Molek 2/1, Taman Molek, 81100 Johor Bahru, Johor', '2025-12-22 07:06:48', 1, 0),
+(50, 'syed_mokhtar', 'syed.mokhtar@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '50, Jalan Putra, 05150 Alor Setar, Kedah', '2025-12-22 07:06:48', 1, 0),
+(51, 'jason', 'jason@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1, 0),
+(52, 'lim', 'lim@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '88, Jalan Seremban 2, 70300 Seremban, Negeri Sembilan', '2025-12-22 07:13:13', 1, 0),
+(53, 'test_member', 'member@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Batu Caves, 68100 Batu Caves, Selangor', '2025-12-22 07:13:13', 1, 0),
+(54, 'test_admin', 'admin@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '12, Jalan Tanjung Bungah, 11200 Tanjung Bungah, Pulau Pinang', '2025-12-22 07:13:13', 1, 0),
+(56, 'haha', 'haha@gmail.com', 1136599975, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '69497664be49e.jpg', 'member', 'hahaha', '2025-12-23 00:48:36', 1, 0),
+(57, 'Marcus', 'marcus@gmail.com', 112345678, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '694a2f8f8b94a.jpg', '', 'marcus', '2025-12-23 13:58:39', 1, 0),
+(58, 'lina', 'lina@gmail.com', 123456789, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '694bb398bcdee.jpg', '', 'lina', '2025-12-24 17:34:16', 1, 100),
+(59, 'lili', 'lili@gmail.com', 1823456789, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '694bb70f4cab6.jpg', '', 'lili', '2025-12-24 17:49:03', 1, 14),
+(60, 'test', 'lim974818@gmail.com', 112704599, NULL, '601f1889667efaebb33b8c12572835da3f027f78', '694c189dde1d0.jpg', '', 'test', '2025-12-25 00:45:18', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -354,31 +380,31 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `vouchers`

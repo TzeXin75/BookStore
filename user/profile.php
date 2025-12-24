@@ -143,6 +143,7 @@ if (is_post()) {
             </div>
             <h2 class="sidebar-name"><?= htmlspecialchars($username) ?></h2>
             <p class="sidebar-email"><?= htmlspecialchars($email) ?></p>
+            <p style="margin-top:6px; font-weight:600; color:#2b6cb0;">Reward Points: <?= htmlspecialchars($reward_points ?? 0) ?></p>
         </div>
 
         <div class="profile-content">
