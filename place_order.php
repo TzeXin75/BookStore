@@ -56,7 +56,7 @@ try {
     }
 
     // Award reward points: simple rule = 1 point per whole currency unit spent
-    $points_awarded = (int)floor($total / 10);
+    $points_awarded = (int)floor($total);
     if ($points_awarded > 0) {
         $stmt_points = $pdo->prepare("UPDATE users SET reward_points = COALESCE(reward_points,0) + ? WHERE user_id = ?");
         $stmt_points->execute([$points_awarded, $user_id]);

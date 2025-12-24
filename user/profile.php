@@ -41,6 +41,36 @@ $_user['user_address'] = $user_address;
 
 // Handle form submission (POST)
 $_err = [];
+
+$points = (int)$reward_points;
+$tiers = [
+    ['name' => 'Iron', 'min' => 0,   'max' => 99,  'color' => '#9ca3af'],
+    ['name' => 'Bronze',  'min' => 100,  'max' => 299, 'color' => '#cd7f32'],
+    ['name' => 'Silver',  'min' => 300, 'max' => 599, 'color' => '#C0C0C0'],
+    ['name' => 'Gold',    'min' => 600, 'max' => PHP_INT_MAX, 'color' => '#ffd700'],
+];
+
+$current_tier = $tiers[0];
+$current_index = 0;
+foreach ($tiers as $i => $t) {
+    if ($points >= $t['min'] && $points <= $t['max']) {
+        $current_tier = $t;
+        $current_index = $i;
+        break;
+    }
+}
+if ($current_tier['max'] === PHP_INT_MAX) {
+    $next_threshold = null;
+    $progress = 100;
+    $next_name = null;
+} else {
+    $next_threshold = $current_tier['max'] + 1;
+    $next_name = isset($tiers[$current_index + 1]) ? $tiers[$current_index + 1]['name'] : null;
+    $progress = ($points - $current_tier['min']) / ($next_threshold - $current_tier['min']) * 100;
+    if ($progress < 0) $progress = 0;
+    if ($progress > 100) $progress = 100;
+}
+
 if (is_post()) {
     $username     = req('username');
     $email        = req('email');
@@ -147,6 +177,21 @@ if (is_post()) {
             <p style="margin-top:6px; font-weight:600; color:#2b6cb0;">
                 Reward Points: <?= htmlspecialchars($reward_points) ?>
             </p>
+            <div class="reward-tier" style="margin-top:8px;">
+                <span class="tier-badge" style="background: <?= htmlspecialchars($current_tier['color']) ?>;">
+                    <?= htmlspecialchars($current_tier['name']) ?>
+                </span>
+                <div class="tier-progress" style="margin-top:8px; background:#e6e6e6; border-radius:6px; height:12px; overflow:hidden;">
+                    <div class="tier-progress-bar" style="width: <?= round($progress) ?>%; background: <?= htmlspecialchars($current_tier['color']) ?>; height:100%;"></div>
+                </div>
+                <?php if ($next_threshold !== null): ?>
+                    <small style="display:block; margin-top:6px; color:#6b7280;">
+                        <?= max(0, $next_threshold - $points) ?> points to reach <?= htmlspecialchars($next_name) ?>
+                    </small>
+                <?php else: ?>
+                    <small style="display:block; margin-top:6px; color:#6b7280;">You have reached the highest tier. Great!</small>
+                <?php endif; ?>
+            </div>
         </div>
 
         <div class="profile-content">
