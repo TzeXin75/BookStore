@@ -14,16 +14,14 @@ $user_role = $_SESSION['user_role'] ?? 'guest'; // Default to 'guest' if not log
             <a href="../index.php" class="logo">BookStore</a>
         </div>
 
+
         <div class="header-right">
             <?php if ($user_role !== 'admin'): ?>
-                <a href="../index.php" class="home-btn">
-                    <i class="fas fa-home"></i>
+                <a href="../cart.php" class="nav-icon-link" title="Cart">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 </a>
-                <a href="../cart.php" class="cart-btn">
-                    <i class="fas fa-shopping-cart"></i>
-                </a>
-                <a href="../my_orders.php" class="order-btn">
-                    <i class="fas fa-history"></i>
+                <a href="../my_orders.php" class="nav-icon-link" title="My Orders">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 </a>
             <?php endif; ?>
         </div>

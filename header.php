@@ -1,15 +1,15 @@
 <?php require '_base.php'; ?>
 
-<<<<<<< HEAD
+
 <header class="site-header">
-=======
+
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 <header>
     <div id="info"><?= temp('info') ?></div>
->>>>>>> 0bd7f90c8553e0a71cfd2f8f3d5b1c88bb5140f0
+
     <div class="header-container">
         <div class="header-left">
             <a href="index.php" class="logo">BookStore</a>
