@@ -115,7 +115,6 @@ if (is_post()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         html, body {
-            /* height: 100%; */
             margin: 0;
             padding: 0;
         }
@@ -210,6 +209,7 @@ if (is_post()) {
             text-align: center;
             padding: 20px;
             cursor: pointer;
+            transition: all 0.3s;
         }
         .file-upload-label {
             color: #667eea;
@@ -354,15 +354,29 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
+                    <!-- PHOTO UPLOAD WITH PREVIEW -->
                     <div class="form-group">
                         <label for="photo">Profile Photo</label>
-                        <div class="file-upload-wrapper">
+                        <div class="file-upload-wrapper" id="uploadWrapper">
                             <input type="file" id="photo" name="photo" accept="image/*">
-                            <span class="file-upload-label">
+                            <span class="file-upload-label" id="uploadLabel">
                                 <i class="fas fa-upload"></i> Upload Photo (Max 1MB)
                             </span>
                         </div>
                         <p class="file-hint">JPG, PNG, GIF - 1MB max</p>
+
+                        <!-- Preview Area -->
+                        <div id="previewContainer" style="display: none; margin-top: 15px; text-align: center;">
+                            <img id="photoPreview" src="" alt="Photo Preview" 
+                                 style="max-width: 200px; max-height: 200px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <p style="color: #28a745; font-weight: bold; margin-top: 10px;">
+                                <i class="fas fa-check-circle"></i> Upload successful!
+                            </p>
+                            <button type="button" id="removePhoto" style="margin-top: 8px; color: #dc3545; background: none; border: none; font-size: 0.9rem; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Remove photo
+                            </button>
+                        </div>
+
                         <?php if ($_err['photo'] ?? false): ?>
                             <span class="error-msg"><?= $_err['photo'] ?></span>
                         <?php endif; ?>
@@ -379,11 +393,65 @@ if (is_post()) {
     </div>
 
     <div id="footer-placeholder"></div>
+
     <script>
+    // Load footer
     fetch('../footer.html')
-    .then(r => r.text())
-    .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
+        .then(r => r.text())
+        .then(data => { document.getElementById('footer-placeholder').innerHTML = data; });
+
+    // Photo preview and success feedback
+    document.getElementById('photo').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const previewContainer = document.getElementById('previewContainer');
+        const photoPreview = document.getElementById('photoPreview');
+        const uploadLabel = document.getElementById('uploadLabel');
+        const uploadWrapper = document.getElementById('uploadWrapper');
+
+        if (file) {
+            // Client-side size validation
+            if (file.size > 1 * 1024 * 1024) {
+                alert('Photo must be less than 1MB');
+                e.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                photoPreview.src = event.target.result;
+                previewContainer.style.display = 'block';
+
+                // Success styling
+                uploadWrapper.style.borderColor = '#28a745';
+                uploadWrapper.style.backgroundColor = '#f0fff4';
+                uploadLabel.innerHTML = '<i class="fas fa-check"></i> Photo selected';
+                uploadLabel.style.color = '#28a745';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            resetUpload();
+        }
+    });
+
+    // Remove photo
+    document.getElementById('removePhoto').addEventListener('click', function() {
+        document.getElementById('photo').value = '';
+        resetUpload();
+    });
+
+    function resetUpload() {
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadWrapper = document.getElementById('uploadWrapper');
+        const uploadLabel = document.getElementById('uploadLabel');
+
+        previewContainer.style.display = 'none';
+        uploadWrapper.style.borderColor = '#ccc';
+        uploadWrapper.style.backgroundColor = '#f8f9fa';
+        uploadLabel.innerHTML = '<i class="fas fa-upload"></i> Upload Photo (Max 1MB)';
+        uploadLabel.style.color = '#667eea';
+    }
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
