@@ -33,6 +33,17 @@ function getBooks($pdo, $column, $value, $limit = 4) {
 $comics = getBooks($pdo, 'subcategory', 'Comic', 4);
 $education = getBooks($pdo, 'category', 'Education', 4); 
 
+// --- TOP 5 SELLING PRODUCTS ---
+$topSellingStmt = $pdo->query("
+    SELECT b.*, SUM(od.quantity) as total_sold
+    FROM book b
+    JOIN order_details od ON b.id = od.id
+    GROUP BY b.id
+    ORDER BY total_sold DESC
+    LIMIT 5
+");
+$topSellingBooks = $topSellingStmt->fetchAll(PDO::FETCH_ASSOC); 
+
 // --- HELPER: DEFAULT IMAGE ---
 function getBookImage($book) {
     $defaultImage = "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f3f4f6%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2240%25%22%20font-size%3D%2250%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3E%F0%9F%93%96%3C%2Ftext%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2260%25%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2220%22%20fill%3D%22%23555%22%20font-weight%3D%22bold%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3EBookstore%3C%2Ftext%3E%3C%2Fsvg%3E";
@@ -80,6 +91,37 @@ function getBookImage($book) {
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+
+        <!-- TOP 5 BEST SELLERS SECTION -->
+        <section class="product-section bestsellers-section">
+            <div class="section-header">
+                <h2 class="section-title">🔥 Top 5 Best Sellers</h2>
+            </div>
+            <div class="product-container bestsellers-container">
+                <?php if (count($topSellingBooks) > 0): ?>
+                    <?php foreach ($topSellingBooks as $book): ?>
+                        <div class="product-card">
+                            <a href="product.php?id=<?= $book['id'] ?>">
+                                <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
+                            </a>
+                            <h3><?= htmlspecialchars($book['title']) ?></h3>
+                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <h5><p style="font-size: 0.9rem; color: #e74c3c; font-weight: bold;">Sold: <?= $book['total_sold'] ?> copies</p>
+                            <?php if ($book['stock'] > 0): ?>
+                                <p>Stock: <?= $book['stock'] ?></p>
+                                <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display:inline-block; background:#2c3e50; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;">Add to Cart</a>
+                            <?php else: ?>
+                                <p style="color:red;">Out of Stock</p>
+                            <?php endif; ?>
+                            </h5>
+                        </div>
+                    <?php endforeach; ?>
+           
+                <?php else: ?>
+                    <p style="padding: 20px;">No bestsellers yet.</p>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -162,5 +204,7 @@ function getBookImage($book) {
     </script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
+
+    
 </body>
 </html>
