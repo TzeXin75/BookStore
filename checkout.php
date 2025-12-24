@@ -201,7 +201,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_points'])) {
             <!--input bar for card/account numbers-->
                     <div id="standard-fields">
                         <label id="ref-label">Card Number</label>
-                        <input type="text" name="payment_ref" id="payment-input" required class="form-input" placeholder="0000 0000 0000 0000" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <!-- Added maxlength="16" for the length limit -->
+                        <input type="text" name="payment_ref" id="payment-input" required class="form-input" placeholder="0000 0000 0000 0000" maxlength="16" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         <div id="cvv-container"><label>CVV</label><input type="text" name="cvv" id="cvv-input" class="form-input" style="width:80px;" maxlength="3" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
                         <div id="bank-pass-container" style="display:none;"><label>Password</label><input type="password" name="bank_password" id="bank-pass-input" class="form-input"></div>
                     </div>
@@ -317,10 +318,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_points'])) {
     /*final validation for final form*/
     document.getElementById('checkoutForm').onsubmit = function(e) {
         const errorDiv = document.getElementById('payment-error');
+        const paymentVal = document.getElementById('payment-input').value; // Get account/card number
         const cvvVal = document.getElementById('cvv-input').value;
         const passVal = document.getElementById('bank-pass-input').value;
 
         errorDiv.style.display = "none";
+
+        // Validation for bank and card number length
+        if((document.getElementById('credit_card').checked || document.getElementById('online_banking').checked) && paymentVal.length !== 16) {
+            errorDiv.innerText = "Warning: Number must be exactly 16 digits";
+            errorDiv.style.display = "block";
+            return false;
+        }
 
         if(document.getElementById('credit_card').checked && !cvvVal) {
             errorDiv.innerText = "Warning: CVV required";
