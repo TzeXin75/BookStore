@@ -35,7 +35,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="orders-container">
     <div class="page-header">
         <h2>Active Order Management</h2>
-        <a href="cancelled_orders.php" class="archive-btn">View Cancelled Archive &rarr;</a>
+        <a href="admin.php?page=cancelled_orders" class="archive-btn">View Cancelled Archive &rarr;</a>
     </div>
 
     <div class="orders-card">
@@ -66,7 +66,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </td>
                             <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
                             <td>
-                                <a href="admin_order_details.php?id=<?php echo $order['order_id']; ?>" class="btn-manage">Manage</a>
+                                <a href="admin.php?page=order_details&id=<?php echo $order['order_id']; ?>" class="btn-manage">Manage</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -77,5 +77,3 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     </div>
 </div>
-
-<?php include 'includes/footer.php'; ?>

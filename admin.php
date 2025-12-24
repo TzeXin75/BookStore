@@ -21,12 +21,12 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
         <aside class="sidebar">
             <h2>Admin Panel</h2>
             <ul>
-                <li><a href="?page=dashboard">Dashboard</a></li>
-                <li><a href="?page=product_dir">Products</a></li>
-                <li><a href="?page=batch_insert">Batch Add Products</a></li>
-                <li><a href="?page=users">Users</a></li>
-                <li><a href="?page=manage orders">Manage Orders</a></li>
-                <li><a href="?page=logout">Logout</a></li>
+                <li><a href="admin.php?page=dashboard">Dashboard</a></li>
+                <li><a href="admin.php?page=product_dir">Products</a></li>
+                <li><a href="admin.php?page=batch_insert">Batch Add Products</a></li>
+                <li><a href="admin.php?page=users">Users</a></li>
+                <li><a href="admin.php?page=manage orders">Manage Orders</a></li>
+                <li><a href="admin.php?page=logout">Logout</a></li>
             </ul>
         </aside>
 
@@ -50,6 +50,10 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
                 include './userlist/user_details.php';
             } elseif ($page === 'manage orders') {
                 include 'admin_orders.php';
+            } elseif ($page === 'order_details') {
+                include 'admin_order_details.php';
+            } elseif ($page === 'cancelled_orders') {
+                include 'cancelled_orders.php';
             } elseif ($page === 'logout') {
                 $_SESSION = array();
                 session_destroy();
