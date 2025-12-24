@@ -38,9 +38,8 @@ function getBooks($pdo, $column, $value) {
 $comics = getBooks($pdo, 'subcategory', 'Comic');
 $education = getBooks($pdo, 'category', 'Education'); 
 
-<<<<<<< HEAD
-// --- 4. IMAGE HELPER ---
-=======
+
+
 // --- TOP 5 SELLING PRODUCTS ---
 $topSellingStmt = $pdo->query("
     SELECT b.*, SUM(od.quantity) as total_sold
@@ -53,7 +52,6 @@ $topSellingStmt = $pdo->query("
 $topSellingBooks = $topSellingStmt->fetchAll(PDO::FETCH_ASSOC); 
 
 // --- HELPER: DEFAULT IMAGE ---
->>>>>>> 0bd7f90c8553e0a71cfd2f8f3d5b1c88bb5140f0
 function getBookImage($book) {
     global $defaultBookImage;
     if (!empty($book['images'])) {
@@ -199,8 +197,6 @@ function getBookImage($book) {
                     </div>
                 </section>
 
-<<<<<<< HEAD
-=======
         <!-- TOP 5 BEST SELLERS SECTION -->
         <section class="product-section bestsellers-section">
             <div class="section-header">
@@ -233,7 +229,6 @@ function getBookImage($book) {
         </section>
 
         <!-- 1. FEATURED SECTION -->
->>>>>>> 0bd7f90c8553e0a71cfd2f8f3d5b1c88bb5140f0
         <section class="product-section">
             <div class="section-header">
                 <h2 class="section-title">Featured: <?= $featuredSubcategory ?></h2>
