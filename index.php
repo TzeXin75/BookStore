@@ -108,7 +108,7 @@ function getBookImage($book) {
                             </a>
                             <h3><?= htmlspecialchars($book['title']) ?></h3>
                             <p class="price">$<?= number_format($book['price'], 2) ?></p>
-                            <h5><p style="font-size: 0.9rem; color: #e74c3c; font-weight: bold;">Sold: <?= $book['total_sold'] ?> copies</p>
+                            <h5><p style="font-size: 0.9rem; color: #e74c3c; font-weight: bold;">Sold: <?= $book['total_sold'] ?></p>
                             <?php if ($book['stock'] > 0): ?>
                                 <p>Stock: <?= $book['stock'] ?></p>
                                 <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display:inline-block; background:#2c3e50; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;">Add to Cart</a>
