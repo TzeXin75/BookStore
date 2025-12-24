@@ -35,7 +35,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="orders-container">
     <div class="page-header">
         <h2>Active Order Management</h2>
-        <a href="cancelled_orders.php" class="archive-btn">View Cancelled Archive &rarr;</a>
+        <a href="admin.php?page=cancelled_orders" class="archive-btn">View Cancelled Archive &rarr;</a>
     </div>
 
     <div class="orders-card">
