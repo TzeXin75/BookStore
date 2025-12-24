@@ -1,17 +1,10 @@
 <?php require '_base.php'; ?>
 
-<header class="site-header">
-
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-<header>
-    <div id="info"><?= temp('info') ?></div>
-
-
 <header class="site-header">
-
     <div class="header-container">
         <div class="header-left">
             <a href="index.php" class="logo">BookStore</a>
@@ -87,6 +80,7 @@
             </div>
         </div>
     </nav>
+    <div id="info"><?= temp('info') ?></div>
 </header>
 
 <style>
