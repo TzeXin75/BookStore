@@ -52,11 +52,12 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!--display final price, continue shopping, and checkout link-->
             <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
                 <h3 style="color: #28a745;">Grand Total: RM<?= number_format($total_price, 2); ?></h3>
-                <div style="display: flex; gap: 10px;">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
                     <a href="index.php" style="padding: 12px 25px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Continue Shopping</a>
                     <a href="checkout.php" style="padding: 12px 25px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Proceed to Checkout</a>
                 </div>
-            </div>
+            
         <?php else: ?>
         <!--display when cart is empty-->
             <div style="text-align: center; padding: 80px 20px; background: #f9f9f9; border-radius: 10px; border: 2px dashed #ddd;">
