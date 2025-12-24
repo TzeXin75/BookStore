@@ -44,14 +44,14 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php foreach ($cart_items as $item):
                         //calculate subtotal of each row and add to total price
                         $sub = $item['price'] * $item['quantity']; $total_price += $sub; ?>
-                        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 15px;"><?= htmlspecialchars($item['title']); ?></td><td style="padding: 15px;">$<?= number_format($item['price'], 2); ?></td><td style="padding: 15px; font-weight: bold;"><?= $item['quantity']; ?></td><td style="padding: 15px;">$<?= number_format($sub, 2); ?></td><td style="padding: 15px;"><a href="remove_from_cart.php?id=<?= $item['cart_id']; ?>" style="color: #d9534f; text-decoration: none; font-weight: bold;"><i class="fa-solid fa-trash"></i></a></td></tr>
+                        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 15px;"><?= htmlspecialchars($item['title']); ?></td><td style="padding: 15px;">RM<?= number_format($item['price'], 2); ?></td><td style="padding: 15px; font-weight: bold;"><?= $item['quantity']; ?></td><td style="padding: 15px;">RM<?= number_format($sub, 2); ?></td><td style="padding: 15px;"><a href="remove_from_cart.php?id=<?= $item['cart_id']; ?>" style="color: #d9534f; text-decoration: none; font-weight: bold;"><i class="fa-solid fa-trash"></i></a></td></tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
 
                     <!--display final price and chekcout link-->
             <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="color: #28a745;">Grand Total: $<?= number_format($total_price, 2); ?></h3>
+                <h3 style="color: #28a745;">Grand Total: RM<?= number_format($total_price, 2); ?></h3>
                 <a href="checkout.php" style="padding: 12px 25px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Proceed to Checkout</a>
             </div>
         <?php else: ?>

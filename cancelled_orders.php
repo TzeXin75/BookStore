@@ -58,7 +58,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo htmlspecialchars($order['username']); ?></td>
                             <td><?php echo date('d M Y, H:i', strtotime($order['order_date'])); ?></td>
                             <td><span style="color: #c0392b; font-weight: bold;">Cancelled</span></td>
-                            <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                            <td>RM<?php echo number_format($order['total_amount'], 2); ?></td>
                             <td>
                                 <a href="admin.php?page=order_details&id=<?php echo $order['order_id']; ?>" class="btn-manage">View Details</a>
                             </td>

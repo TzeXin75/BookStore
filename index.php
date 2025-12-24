@@ -210,7 +210,7 @@ function getBookImage($book) {
                                 <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
                             </a>
                             <h3><?= htmlspecialchars($book['title']) ?></h3>
-                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <p class="price">RM<?= number_format($book['price'], 2) ?></p>
                             <h5 style="font-size: 0.9rem; color: #e74c3c; font-weight: bold;">Sold: <?= $book['total_sold'] ?></h5>
                             <?php if ($book['stock'] > 0): ?>
                                 <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" 
@@ -247,7 +247,7 @@ function getBookImage($book) {
                                 <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
                             </a>
                             <h3><?= htmlspecialchars($book['title']) ?></h3>
-                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <p class="price">RM<?= number_format($book['price'], 2) ?></p>
                             <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" 
                             style="display:inline-block; background:#2563eb; color:white; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold; font-size:0.85rem;">
                             Add to Cart
@@ -277,7 +277,7 @@ function getBookImage($book) {
                                 <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
                             </a>
                             <h3><?= htmlspecialchars($book['title']) ?></h3>
-                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <p class="price">RM<?= number_format($book['price'], 2) ?></p>
                             <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" 
                             style="display:inline-block; background:#2563eb; color:white; padding:10px 20px; text-decoration:none; border-radius:4px; font-weight:bold;">
                             Add to Cart
@@ -307,7 +307,7 @@ function getBookImage($book) {
                                 <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
                             </a>
                             <h3><?= htmlspecialchars($book['title']) ?></h3>
-                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <p class="price">RM<?= number_format($book['price'], 2) ?></p>
                             <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" 
                             style="display:inline-block; background:#2563eb; color:white; padding:10px 20px; text-decoration:none; border-radius:4px; font-weight:bold;">
                             Add to Cart

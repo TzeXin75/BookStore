@@ -207,7 +207,7 @@ function getBookDisplayImage($book) {
                             onerror="this.onerror=null; this.src='<?= $defaultBookImage ?>';">
                         </a>
                         <h3><?= htmlspecialchars($book['title']) ?></h3>
-                        <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                        <p class="price">RM<?= number_format($book['price'], 2) ?></p>
                         <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Stock: <?= $book['stock'] ?></p>
                         
                         <div style="margin-top: auto;">
