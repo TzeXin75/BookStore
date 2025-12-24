@@ -64,7 +64,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 ?>
                                 <span style="color: <?php echo $color; ?>; font-weight: bold;"><?php echo htmlspecialchars($status); ?></span>
                             </td>
-                            <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                            <td>RM<?= number_format($order['total_amount'], 2); ?></td>
                             <td>
                                 <a href="admin.php?page=order_details&id=<?php echo $order['order_id']; ?>" class="btn-manage">Manage</a>
                             </td>

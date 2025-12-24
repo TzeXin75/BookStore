@@ -44,7 +44,8 @@ try {
     }
 
     $stmt_pay = $pdo->prepare("INSERT INTO payments (order_id, payment_method, transaction_ref, amount, status) VALUES (?, ?, ?, ?, 'Success')");
-    $stmt_pay->execute([$order_id, $pay_method, $pay_ref, $total]);
+    // Change currency from $ to RM
+    $stmt_pay->execute([$order_id, $pay_method, $pay_ref, str_replace('$', 'RM', $total)]);
 
     // If user redeemed points in checkout, deduct them now
     if (!empty($_SESSION['redeemed_points'])) {

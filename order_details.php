@@ -58,9 +58,9 @@ $discount = $subtotal - $order['total_amount'];
                         <?php foreach ($items as $item): ?>
                         <tr style="border-bottom: 1px solid #eee;">
                             <td style="padding: 15px;"><?= htmlspecialchars($item['title']) ?></td>
-                            <td style="padding: 15px;">$<?= number_format($item['unit_price'], 2) ?></td>
+                            <td style="padding: 15px;">RM<?= number_format($item['unit_price'], 2) ?></td>
                             <td style="padding: 15px;"><?= $item['quantity'] ?></td>
-                            <td style="padding: 15px;">$<?= number_format($item['unit_price'] * $item['quantity'], 2) ?></td>
+                            <td style="padding: 15px;">RM<?= number_format($item['unit_price'] * $item['quantity'], 2) ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -72,11 +72,11 @@ $discount = $subtotal - $order['total_amount'];
                 <p style="margin-bottom: 8px;"><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;"><?= $order['order_status'] ?></span></p>
                 <p style="margin-bottom: 8px;"><strong>Date:</strong> <?= date('d M Y', strtotime($order['order_date'])) ?></p>
                 <hr style="margin: 15px 0;">
-                <p style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Subtotal:</span> <span>$<?= number_format($subtotal, 2) ?></span></p>
+                <p style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Subtotal:</span> <span>RM<?= number_format($subtotal, 2) ?></span></p>
                 <?php if ($discount > 0.01): ?>
-                    <p style="display: flex; justify-content: space-between; color: #dc3545; margin-bottom: 8px;"><span>Discount:</span> <span>-$<?= number_format($discount, 2) ?></span></p>
+                    <p style="display: flex; justify-content: space-between; color: #dc3545; margin-bottom: 8px;"><span>Discount:</span> <span>RM-<?= number_format($discount, 2) ?></span></p>
                 <?php endif; ?>
-                <h3 style="display: flex; justify-content: space-between; color: #2c3e50; margin-top: 15px;"><span>Grand Total:</span> <span>$<?= number_format($order['total_amount'], 2) ?></span></h3>
+                <h3 style="display: flex; justify-content: space-between; color: #2c3e50; margin-top: 15px;"><span>Grand Total:</span> <span>RM<?= number_format($order['total_amount'], 2) ?></span></h3>
                 <hr style="margin: 20px 0;">
                 <h4 style="margin-bottom: 10px;">Shipping Address:</h4>
                 <p style="font-size: 0.95rem; color: #555; line-height: 1.5;"><?= nl2br(htmlspecialchars($order['shipping_address'])) ?></p>

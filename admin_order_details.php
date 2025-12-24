@@ -30,6 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
         $pdo->commit();
         $_SESSION['status_msg'] = "Order status updated successfully.";
+        // Change currency from $ to RM
+        $_SESSION['status_msg'] = str_replace('$', 'RM', $_SESSION['status_msg']);
     } catch (Exception $e) {
         $pdo->rollBack();
         $_SESSION['status_error'] = "Error: " . $e->getMessage();
@@ -76,9 +78,9 @@ $items = $stmt->fetchAll();
                     <?php foreach ($items as $item): ?>
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 12px;"><?= htmlspecialchars($item['title']) ?></td>
-                        <td style="padding: 12px; text-align: center;">$<?= number_format($item['unit_price'], 2) ?></td>
+                        <td style="padding: 12px; text-align: center;">RM<?= number_format($item['unit_price'], 2) ?></td>
                         <td style="padding: 12px; text-align: center;"><?= $item['quantity'] ?></td>
-                        <td style="padding: 12px; text-align: right;">$<?= number_format($item['unit_price'] * $item['quantity'], 2) ?>&nbsp;&nbsp;</td>
+                        <td style="padding: 12px; text-align: right;">RM<?= number_format($item['unit_price'] * $item['quantity'], 2) ?>&nbsp;&nbsp;</td>
                     </tr>
                     <?php endforeach; ?>
                 </table>
@@ -97,7 +99,7 @@ $items = $stmt->fetchAll();
                 <h4>Financial Summary</h4>
                 <hr>
                 <h3 style="display: flex; justify-content: space-between; color: #2c3e50;">
-                    <span>Total Paid:</span> <span>$<?= number_format($order['total_amount'], 2) ?></span>
+                    <span>Total Paid:</span> <span>RM<?= number_format($order['total_amount'], 2) ?></span>
                 </h3>
             </div>
 

@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sub_val = $_POST['subcategory'] ?? '';
     $language = $_POST['language'] ?? ''; 
     $price = floatval($_POST['price'] ?? 0);
+    // Change currency from $ to RM
+    $price = str_replace('$', 'RM', $price);
     $stock = intval($_POST['stock'] ?? 0);
 
     $coverName = ''; $imageNames = []; $videoName = '';

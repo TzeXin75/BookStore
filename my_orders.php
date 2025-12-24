@@ -47,7 +47,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 ?>
                                 <span style="color: <?= $color; ?>; font-weight: bold;"><?= $status; ?></span>
                             </td>
-                            <td>$<?= number_format($order['total_amount'], 2); ?></td>
+                            <td>RM<?= number_format($order['total_amount'], 2); ?></td>
                             <td style="text-align: center;"><a href="order_details.php?id=<?= $order['order_id']; ?>" style="background: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-size: 0.9em;">View Details</a></td>
                         </tr>
                     <?php endforeach; ?>

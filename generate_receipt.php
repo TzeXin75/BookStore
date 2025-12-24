@@ -102,7 +102,7 @@ foreach ($items as $item) {
 
     $pdf->Cell(110, 10, ' ' . $title, 1);
     $pdf->Cell(30, 10, $item['quantity'], 1, 0, 'C');
-    $pdf->Cell(50, 10, '$' . number_format($line_total, 2) . ' ', 1, 1, 'R');
+    $pdf->Cell(50, 10, 'RM' . number_format($line_total, 2) . ' ', 1, 1, 'R');
 }
 
 $pdf->Ln(5);
@@ -112,18 +112,18 @@ $discount_val = $calculated_subtotal - $grand_total;
 
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(140, 8, 'Subtotal:', 0, 0, 'R');
-$pdf->Cell(50, 8, '$' . number_format($calculated_subtotal, 2), 0, 1, 'R');
+$pdf->Cell(50, 8, 'RM' . number_format($calculated_subtotal, 2), 0, 1, 'R');
 
 if ($discount_val > 0.01) {
     $pdf->SetTextColor(200, 0, 0);
     $pdf->Cell(140, 8, 'Voucher Discount:', 0, 0, 'R');
-    $pdf->Cell(50, 8, '-$' . number_format($discount_val, 2), 0, 1, 'R');
+    $pdf->Cell(50, 8, '-RM' . number_format($discount_val, 2), 0, 1, 'R');
     $pdf->SetTextColor(0, 0, 0);
 }
 
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(140, 10, 'Grand Total (Paid):', 0, 0, 'R');
-$pdf->Cell(50, 10, '$' . number_format($grand_total, 2), 1, 1, 'R');
+$pdf->Cell(50, 10, 'RM' . number_format($grand_total, 2), 1, 1, 'R');
 
 $pdf->Output('D', 'Receipt_Order_' . $order_id . '.pdf');
 ?>

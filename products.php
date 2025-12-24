@@ -83,7 +83,7 @@ include 'includes/header.php';
                 <tr style="border-bottom: 1px solid #ddd;">
                     <td style="padding: 12px;"><?= $book['id'] ?></td>
                     <td style="padding: 12px;"><strong><?= htmlspecialchars($book['title']) ?></strong></td>
-                    <td style="padding: 12px;">$<?= number_format($book['price'], 2) ?></td>
+                    <td style="padding: 12px;">RM<?= number_format($book['price'], 2) ?></td>
                     <td style="padding: 12px; color: <?= ($book['stock'] <= 5) ? 'red' : 'black' ?>;">
                         <?= $book['stock'] ?>
                     </td>

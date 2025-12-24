@@ -47,6 +47,8 @@ if ($book_id) {
         // Prevent adding more items into cart than available stock in database
         if ($new_total > $book['stock']) {
             $_SESSION['error_msg'] = "Warning: Cannot add more. You have $current_in_cart in cart. Total would exceed stock limit of " . $book['stock'] . ".";
+            // Change currency from $ to RM
+            $_SESSION['error_msg'] = str_replace('$', 'RM', $_SESSION['error_msg']);
             $pdo->rollBack();
             header("Location: cart.php");
             exit();
