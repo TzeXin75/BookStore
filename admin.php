@@ -26,6 +26,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
                 <li><a href="?page=batch_insert">Batch Add Products</a></li>
                 <li><a href="?page=users">Users</a></li>
                 <li><a href="?page=manage orders">Manage Orders</a></li>
+                <li><a href="index.php">Index</a></li>
                 <li><a href="?page=logout">Logout</a></li>
             </ul>
         </aside>
@@ -50,6 +51,10 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
                 include './userlist/user_details.php';
             } elseif ($page === 'manage orders') {
                 include 'admin_orders.php';
+            } elseif ($page === 'cancelled_orders') {
+                include 'cancelled_orders.php';
+            } elseif ($page === 'index') {
+                include 'index.php';
             } elseif ($page === 'logout') {
                 $_SESSION = array();
                 session_destroy();
