@@ -21,12 +21,6 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
         <aside class="sidebar">
             <h2>Admin Panel</h2>
             <ul>
-                <li><a href="admin.php?page=dashboard">Dashboard</a></li>
-                <li><a href="admin.php?page=product_dir">Products</a></li>
-                <li><a href="admin.php?page=batch_insert">Batch Add Products</a></li>
-                <li><a href="admin.php?page=users">Users</a></li>
-                <li><a href="admin.php?page=manage orders">Manage Orders</a></li>
-                <li><a href="admin.php?page=logout">Logout</a></li>
                 <li><a href="?page=dashboard">Dashboard</a></li>
                 <li><a href="?page=product_dir">Products</a></li>
                 <li><a href="?page=batch_insert">Batch Add Products</a></li>
