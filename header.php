@@ -1,5 +1,6 @@
 <?php require '_base.php'; ?>
 
+<<<<<<< HEAD
 
 <header class="site-header">
 
@@ -10,6 +11,9 @@
 <header>
     <div id="info"><?= temp('info') ?></div>
 
+=======
+<header class="site-header">
+>>>>>>> 75e3db36b2f04167169f238066b5a3f5beea1fff
     <div class="header-container">
         <div class="header-left">
             <a href="index.php" class="logo">BookStore</a>
