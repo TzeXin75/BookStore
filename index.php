@@ -38,7 +38,22 @@ function getBooks($pdo, $column, $value) {
 $comics = getBooks($pdo, 'subcategory', 'Comic');
 $education = getBooks($pdo, 'category', 'Education'); 
 
+<<<<<<< HEAD
 // --- 4. IMAGE HELPER ---
+=======
+// --- TOP 5 SELLING PRODUCTS ---
+$topSellingStmt = $pdo->query("
+    SELECT b.*, SUM(od.quantity) as total_sold
+    FROM book b
+    JOIN order_details od ON b.id = od.id
+    GROUP BY b.id
+    ORDER BY total_sold DESC
+    LIMIT 5
+");
+$topSellingBooks = $topSellingStmt->fetchAll(PDO::FETCH_ASSOC); 
+
+// --- HELPER: DEFAULT IMAGE ---
+>>>>>>> 0bd7f90c8553e0a71cfd2f8f3d5b1c88bb5140f0
 function getBookImage($book) {
     global $defaultBookImage;
     if (!empty($book['images'])) {
@@ -184,6 +199,41 @@ function getBookImage($book) {
                     </div>
                 </section>
 
+<<<<<<< HEAD
+=======
+        <!-- TOP 5 BEST SELLERS SECTION -->
+        <section class="product-section bestsellers-section">
+            <div class="section-header">
+                <h2 class="section-title">🔥 Top 5 Best Sellers</h2>
+            </div>
+            <div class="product-container bestsellers-container">
+                <?php if (count($topSellingBooks) > 0): ?>
+                    <?php foreach ($topSellingBooks as $book): ?>
+                        <div class="product-card">
+                            <a href="product.php?id=<?= $book['id'] ?>">
+                                <img src="<?= getBookImage($book) ?>" alt="<?= htmlspecialchars($book['title']) ?>">
+                            </a>
+                            <h3><?= htmlspecialchars($book['title']) ?></h3>
+                            <p class="price">$<?= number_format($book['price'], 2) ?></p>
+                            <h5><p style="font-size: 0.9rem; color: #e74c3c; font-weight: bold;">Sold: <?= $book['total_sold'] ?></p>
+                            <?php if ($book['stock'] > 0): ?>
+                                <p>Stock: <?= $book['stock'] ?></p>
+                                <a href="add_to_cart.php?id=<?= $book['id']; ?>" class="add-to-cart-btn" style="display:inline-block; background:#2c3e50; color:white; padding:10px 20px; text-decoration:none; border-radius:4px;">Add to Cart</a>
+                            <?php else: ?>
+                                <p style="color:red;">Out of Stock</p>
+                            <?php endif; ?>
+                            </h5>
+                        </div>
+                    <?php endforeach; ?>
+           
+                <?php else: ?>
+                    <p style="padding: 20px;">No bestsellers yet.</p>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <!-- 1. FEATURED SECTION -->
+>>>>>>> 0bd7f90c8553e0a71cfd2f8f3d5b1c88bb5140f0
         <section class="product-section">
             <div class="section-header">
                 <h2 class="section-title">Featured: <?= $featuredSubcategory ?></h2>
@@ -289,5 +339,7 @@ function getBookImage($book) {
     </script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
+
+    
 </body>
 </html>

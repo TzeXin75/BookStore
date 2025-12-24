@@ -94,6 +94,16 @@ function is_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
 }
 
+// Return local root path
+function root($path = '') {
+    return "$_SERVER[DOCUMENT_ROOT]/$path";
+}
+
+// Return base url (host + port)
+function base($path = '') {
+    return "http://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/$path";
+}
+
 // ============================================================================
 // HTML Helpers
 // ============================================================================
@@ -131,6 +141,19 @@ function html_number($key, $min = '', $max = '', $step = '', $attr = '') {
 function html_search($key, $attr = '') {
     $value = encode($GLOBALS[$key] ?? '');
     echo "<input type='search' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <textarea>
+function html_textarea($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<textarea id='$key' name='$key' $attr>$value</textarea>";
+}
+
+// Generate SINGLE <input type='checkbox'>
+function html_checkbox($key, $label = '', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    $status = $value == 1 ? 'checked' : '';
+    echo "<label><input type='checkbox' id='$key' name='$key' value='1' $status $attr>$label</label>";
 }
 
 // Generate <input type='radio'> list
@@ -234,6 +257,37 @@ function auth(...$roles) {
     }
     
     redirect('/login.php');
+}
+
+// ============================================================================
+// Email Functions
+// ============================================================================
+
+// Demo Accounts:
+// --------------
+// AACS3173@gmail.com           xxna ftdu plga hzxl
+// BAIT2173.email@gmail.com     ncom fsil wjzk ptre
+// liaw.casual@gmail.com        buvq yftx klma vezl
+// liawcv1@gmail.com            pztq znli gpjg tooe
+
+
+
+// Initialize and return mail object
+function get_mail() {
+    require_once 'lib/PHPMailer.php';
+    require_once 'lib/SMTP.php';
+
+    $m = new PHPMailer(true);
+    $m->isSMTP();
+    $m->SMTPAuth = true;
+    $m->Host = 'smtp.gmail.com';
+    $m->Port = 587;
+    $m->Username = 'AACS3173@gmail.com';
+    $m->Password = 'xxna ftdu plga hzxl';
+    $m->CharSet = 'utf-8';
+    $m->setFrom($m->Username, '😺 Admin');
+
+    return $m;
 }
 
 // ============================================================================
