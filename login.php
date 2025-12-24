@@ -113,7 +113,7 @@ if (is_post()) {
                 </div>
                 
                 <div class="login-links">
-                    <a href="#" id="forgot-password">Forgot Password?</a>
+                    <a href="user/reset.php" id="forgot-password">Forgot Password?</a>
                 </div>
 
                 <div class="register-link">
