@@ -25,7 +25,7 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8" />
     <title>Shopping Cart - Bookstore</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Removed Font Awesome link for restricted code compliance -->
 </head>
 <body>
     <!--display header and nav links-->
@@ -44,20 +44,22 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php foreach ($cart_items as $item):
                         //calculate subtotal of each row and add to total price
                         $sub = $item['price'] * $item['quantity']; $total_price += $sub; ?>
-                        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 15px;"><?= htmlspecialchars($item['title']); ?></td><td style="padding: 15px;">RM<?= number_format($item['price'], 2); ?></td><td style="padding: 15px; font-weight: bold;"><?= $item['quantity']; ?></td><td style="padding: 15px;">RM<?= number_format($sub, 2); ?></td><td style="padding: 15px;"><a href="remove_from_cart.php?id=<?= $item['cart_id']; ?>" style="color: #d9534f; text-decoration: none; font-weight: bold;"><i class="fa-solid fa-trash"></i></a></td></tr>
+                        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 15px;"><?= htmlspecialchars($item['title']); ?></td><td style="padding: 15px;">RM<?= number_format($item['price'], 2); ?></td><td style="padding: 15px; font-weight: bold;"><?= $item['quantity']; ?></td><td style="padding: 15px;">RM<?= number_format($sub, 2); ?></td><td style="padding: 15px;"><a href="remove_from_cart.php?id=<?= $item['cart_id']; ?>" style="color: #d9534f; text-decoration: none; font-weight: bold;">[Remove]</a></td></tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
 
-                    <!--display final price and chekcout link-->
+                    <!--display final price, continue shopping, and checkout link-->
             <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
                 <h3 style="color: #28a745;">Grand Total: RM<?= number_format($total_price, 2); ?></h3>
-                <a href="checkout.php" style="padding: 12px 25px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Proceed to Checkout</a>
+                <div style="display: flex; gap: 10px;">
+                    <a href="index.php" style="padding: 12px 25px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Continue Shopping</a>
+                    <a href="checkout.php" style="padding: 12px 25px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Proceed to Checkout</a>
+                </div>
             </div>
         <?php else: ?>
         <!--display when cart is empty-->
             <div style="text-align: center; padding: 80px 20px; background: #f9f9f9; border-radius: 10px; border: 2px dashed #ddd;">
-                <i class="fa-solid fa-cart-shopping" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
                 <p style="font-size: 1.3rem; color: #666; margin-bottom: 25px;">Your shopping cart is empty.</p>
                 <a href="index.php" style="padding: 15px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Browse Our Books</a>
             </div>
