@@ -43,9 +43,7 @@ if (is_post()) {
             temp('info', 'Login successfully');
 
             // Determine where to redirect based on role
-            if ($user['user_role'] === 'admin') {
-                login($user, 'admin.php');     
-            } else {
+            if ($user['user_role'] === 'admin'|| $user['user_role'] === 'member') {
                 login($user, 'index.php');     
             }
         }

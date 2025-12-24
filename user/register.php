@@ -97,7 +97,7 @@ if (is_post()) {
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ');
         $hashedPassword = sha1($password);       
-        $stm->execute([$email, $hashedPassword, $name, $photo, 'customer', $phone, $address]);
+        $stm->execute([$email, $hashedPassword, $name, $photo, 'member', $phone, $address]);
 
         temp('info', 'Registration successful! Please login.');
         redirect('/login.php');
