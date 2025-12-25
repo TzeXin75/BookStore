@@ -49,7 +49,7 @@ require_once './lib/SimplePager.php';
 
 //initialize pager
 $p = new SimplePager(
-    "SELECT * FROM users WHERE user_role IN ('customer', 'member') AND username LIKE ? ORDER BY $sort $dir",
+    "SELECT * FROM users WHERE user_role = 'member' AND username LIKE ? ORDER BY $sort $dir",
     ["%$name%"],
     10, 
     $pg  

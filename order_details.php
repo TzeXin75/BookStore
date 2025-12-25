@@ -30,7 +30,7 @@ $discount = $subtotal - $order['total_amount'];
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Order Details - Bookstore</title>
+    <title>Order Details - SIX SEVEN BS</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>

@@ -23,7 +23,7 @@ $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Shopping Cart - Bookstore</title>
+    <title>Shopping Cart - SIX SEVEN BS</title>
     <link rel="stylesheet" href="style.css" />
     <!-- Removed Font Awesome link for restricted code compliance -->
 </head>

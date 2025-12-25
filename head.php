@@ -11,7 +11,7 @@ $user_role = $_SESSION['user_role'] ?? 'guest'; // Default to 'guest' if not log
     <div id="info"><?= temp('info') ?></div>
     <div class="header-container">
         <div class="header-left">
-            <a href="../index.php" class="logo">BookStore</a>
+            <a href="../index.php" class="logo">SIX SEVEN BS</a>
         </div>
 
 
