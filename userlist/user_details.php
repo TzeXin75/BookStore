@@ -42,27 +42,45 @@ if (!$u) {
 ?>
 
 <style>
-    .radio-group {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        height: 38px;
-    }
-    .radio-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        margin: 0;
-        color: #333;
-    }
-    .radio-label input[type="radio"] {
-        margin: 0;
-        width: 18px;
-        height: 18px;
-        accent-color: #2563eb;
-        cursor: pointer;
+    .admin-layout {
+    display: flex; /* Forces sidebar and main content to be side-by-side */
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+}
+
+/* 2. Standardizing all Divs within the main area */
+.main-content div {
+    box-sizing: border-box; /* Prevents padding from breaking the width */
+}
+
+/* 3. The Main Content Wrapper */
+.main-content {
+    flex-grow: 1; /* Takes up all space to the right of the sidebar */
+    padding: 20px;
+    background-color: #f4f7f6; /* Light grey background for contrast */
+    display: flex;
+    flex-direction: column; /* Stacks search, header, and table vertically */
+    gap: 20px; /* Uniform spacing between all major sections */
+}
+
+/* 4. Page Header Div (The fix you requested) */
+.page-header {
+    display: flex;
+    justify-content: space-between; /* Title left, Button right */
+    align-items: center;
+    width: 100%;
+    padding: 15px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* 5. Section Divs (Search, Cards, Pager) */
+.search-section, .card, .stats-bar {
+    width: 100%; /* Ensures they don't collapse */
+    background: #ffffff;
+    border-radius: 8px;
+}
     }
 </style>
 
