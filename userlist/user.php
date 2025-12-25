@@ -49,7 +49,7 @@ require_once './lib/SimplePager.php';
 
 //initialize pager
 $p = new SimplePager(
-    "SELECT * FROM users WHERE user_role = 'member' AND username LIKE ? ORDER BY $sort $dir",
+    "SELECT * FROM users WHERE user_role IN ('member') AND username LIKE ? ORDER BY $sort $dir",
     ["%$name%"],
     10, 
     $pg  
@@ -60,57 +60,99 @@ $arr = $p->result; //result rows for current page
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
-    .search-bar { display: flex; gap: 5px; margin-bottom: 20px; }
-    .table th, .table td { vertical-align: middle; }
-    /* Highlight selected row */
-    tr.selected { background-color: #e3f2fd; }
+    /* Ensure the entire layout starts from the top */
+    .admin-layout {
+        display: flex;
+        align-items: stretch; /* Makes sidebar and content equal height */
+        min-height: 100vh;
+        width: 100%;
+        margin: 0;
+    }
+
+    /* This is the part that fixes the vertical centering */
+    .main-content {
+        flex-grow: 1;
+        padding: 25px;
+        background-color: #f4f7f6;
+        display: flex;
+        flex-direction: column; 
+        /* justify-content: flex-start ensures content stays at the top */
+        justify-content: flex-start; 
+        /* align-items: stretch ensures content fills the width, not the vertical center */
+        align-items: stretch; 
+        gap: 20px;
+    }
+
+    /* Ensure your page header doesn't have huge top margins */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 0; /* Remove any top gap */
+        padding-top: 0;
+        margin-bottom: 20px;
+    }
 </style>
 
-<form method="get" class="search-bar">
-    <input type="hidden" name="page" value="users">
-    
-    <input type="search" name="name" value="<?= htmlspecialchars($name) ?>" placeholder="Search username..." style="padding: 8px; border: 1px solid #ddd;">
-    <button type="submit">Search</button>
-</form>
+<div class="admin-layout">
 
-<p>
-    <?= $p->count ?> of <?= $p->item_count ?> record(s) |
-    Page <?= $p->page ?> of <?= $p->page_count ?>
-</p>
+    <main class="main-content">
 
-<form method="post" id="batchForm">
-    <button id="btnDelete" name="action" value="delete" type="button" style="border:none; background:none; cursor:pointer; font-size:1.5em;" title="Delete Selected">
-        🗑️
-    </button>
-    <strong style="margin-left: 10px;">Selected: <span id="selection-count">0</span></strong>
-    <br><br>
+        <div class="search-section">
+            <form method="get" class="search-bar">
+                <input type="hidden" name="page" value="users">
+                <input type="search" name="name" value="<?= htmlspecialchars($name) ?>" 
+                       placeholder="Search username..." 
+                       style="padding: 8px; border: 1px solid #ddd; width: 300px;">
+                <button type="submit" style="padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+            </form>
+        </div>
 
-    <table class="table">
-        <tr>
-            <th style="width: 30px;"><input type="checkbox" id="checkAll"></th>
-            <?= table_headers($fields, $sort, $dir, "page=users&name=" . urlencode($name)) ?>
-        </tr>
+        <div class="stats-bar">
+            <strong>Status:</strong> <?= $p->count ?> of <?= $p->item_count ?> record(s) | 
+            <strong>Page:</strong> <?= $p->page ?> of <?= $p->page_count ?>
+        </div>
 
-        <?php foreach ($arr as $s): ?>
-        <tr data-href="?page=user_details&id=<?= $s->user_id ?>">
-            <td class="cb-cell">
-                <input type="checkbox" name="ids[]" value="<?= $s->user_id ?>" class="row-cb">
-            </td>
-            <td><?= $s->user_id ?></td>
-            <td><?= $s->username ?></td>
-            <td><?= $s->email ?></td>
-            <td><?= $s->user_phone ?></td>
-            <td><?= $s->user_address ?></td>
-            <td><?= $s->user_role ?></td>
-        </tr>
-        <?php endforeach ?>
-    </table>
-</form>
+        <form method="post" id="batchForm">
+            <div style="margin-bottom: 10px; display: flex; align-items: center;">
+                <button id="btnDelete" name="action" value="delete" type="button" 
+                        style="border:none; background:none; cursor:pointer; font-size:1.5em;" title="Delete Selected">
+                    🗑️
+                </button>
+                <span style="margin-left: 10px;">Selected: <strong id="selection-count">0</strong></span>
+            </div>
 
-<br>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 30px;"><input type="checkbox" id="checkAll"></th>
+                        <?= table_headers($fields, $sort, $dir, "page=users&name=" . urlencode($name)) ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($arr as $s): ?>
+                    <tr data-href="?page=user_details&id=<?= $s->user_id ?>">
+                        <td class="cb-cell">
+                            <input type="checkbox" name="ids[]" value="<?= $s->user_id ?>" class="row-cb">
+                        </td>
+                        <td><?= $s->user_id ?></td>
+                        <td><?= $s->username ?></td>
+                        <td><?= $s->email ?></td>
+                        <td><?= $s->user_phone ?></td>
+                        <td><?= $s->user_address ?></td>
+                        <td><?= $s->user_role ?></td>
+                    </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </form>
 
-<div id="pager-container">
-    <?= $p->html("page=users&sort=$sort&dir=$dir&name=" . urlencode($name), "", "pg") ?>
+        <div id="pager-container" class="pager-section">
+            <?= $p->html("page=users&sort=$sort&dir=$dir&name=" . urlencode($name), "", "pg") ?>
+        </div>
+
+    </main>
 </div>
 
 <script>
