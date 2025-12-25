@@ -57,9 +57,6 @@ if (is_post()) {
     else if (strlen($phone) > 20) {
         $_err['phone'] = 'Maximum 20 characters';
     }
-    else if (!preg_match('/^[0-9\-\+\(\)\s]+$/', $phone)) {
-        $_err['phone'] = 'Invalid phone number';
-    }
     else if (!is_unique($phone, 'users', 'user_phone')) {
         $_err['phone'] = 'Duplicated';
     }
@@ -81,51 +78,55 @@ if (is_post()) {
             $_err['photo'] = 'Maximum 1MB';
         }
     }
-    // DB operation
-    if (!$_err) { 
+
+    // If no errors → store data in session, generate OTP, send email, redirect to OTP verification
+    if (!$_err) {
+        // Save uploaded photo (if any)
+        $photo = 'default.jpg';
         if ($f) {
             $photo = save_photo($f, '../photos');
         }
 
-        // Insert user as inactive
-        $stm = $_db->prepare('
-            INSERT INTO users (email, user_password, username, user_photo, user_role, user_phone, user_address, user_status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 0)
-        ');
+        // Hash password
         $hashedPassword = sha1($password);
-        $stm->execute([$email, $hashedPassword, $name, $photo, 'member', $phone, $address]);
-        $user_id = $_db->lastInsertId();
+
+        // Store all data in session (NO DB INSERT YET)
+        $_SESSION['pending_registration'] = [
+            'email'           => $email,
+            'hashed_password' => $hashedPassword,
+            'name'            => $name,
+            'photo'           => $photo,
+            'phone'           => $phone,
+            'address'         => $address,
+            'expires'         => time() + 900  // 15 minutes total session expiry
+        ];
 
         // Generate 6-digit OTP
         $otp = random_int(100000, 999999);
-
-        // Save OTP in session (with user data for verification)
-        $_SESSION['pending_user'] = [
-            'user_id' => $user_id,
-            'email'   => $email,
-            'otp'     => $otp,
-            'expires' => time() + 900 // 15 minutes
-        ];
+        $_SESSION['otp'] = $otp;
+        $_SESSION['otp_expires'] = time() + 900;  // 15 minutes
+        $_SESSION['last_resend'] = 0; // for resend cooldown
 
         // Send OTP email
         $mail = get_mail();
         $mail->addAddress($email, $name);
         $mail->isHTML(true);
-        $mail->Subject = 'Your SIX SEVEN BS Verification Code';
+        $mail->Subject = 'Your BookStore Registration OTP';
         $mail->Body = "
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
-                <h2 style='color: #667eea;'>Hello $name!</h2>
-                <p>Your verification code is:</p>
+                <h2 style='color: #667eea;'>Complete Your Registration</h2>
+                <p>Hello $name,</p>
+                <p>Your one-time verification code is:</p>
                 <h1 style='font-size: 2.5rem; letter-spacing: 10px; text-align: center; color: #667eea;'>$otp</h1>
                 <p>This code expires in 15 minutes.</p>
                 <p>If you didn't request this, please ignore this email.</p>
                 <hr>
-                <p style='color: #666; font-size: 0.9em;'>SIX SEVEN BS Team</p>
+                <p style='color: #666; font-size: 0.9em;'>BookStore Team</p>
             </div>
         ";
         $mail->send();
 
-        temp('info', 'Please check your email for the verification code.');
+        temp('info', 'OTP sent to your email. Please verify to complete registration.');
         redirect('otp_verify.php');
     }
 }
@@ -136,7 +137,7 @@ if (is_post()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - SIX SEVEN BS</title>
+    <title>Register - BookStore</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -149,11 +150,11 @@ if (is_post()) {
             <div class="register-card">
                 <div class="register-header">
                     <h1>Create Your Account</h1>
-                    <p>Join SIX SEVEN BS and explore endless stories!</p>
+                    <p>Join BookStore and explore endless stories!</p>
                 </div>
 
                 <form method="post" class="register-form" enctype="multipart/form-data">
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" maxlength="100" 
                                placeholder="Enter your email" required
@@ -163,7 +164,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" maxlength="100" 
                                placeholder="At least 5 characters" required>
@@ -172,7 +173,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="confirm">Confirm Password</label>
                         <input type="password" id="confirm" name="confirm" maxlength="100" 
                                placeholder="Re-enter password" required>
@@ -181,7 +182,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" maxlength="100" 
                                placeholder="Your full name" required
@@ -191,7 +192,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" maxlength="20" 
                                placeholder="e.g., 0123456789" required
@@ -201,7 +202,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="address">Address</label>
                         <textarea id="address" name="address" maxlength="255" 
                                   placeholder="Enter your full address" required><?= encode($_POST['address'] ?? '') ?></textarea>
@@ -211,7 +212,7 @@ if (is_post()) {
                     </div>
 
                     <!-- PHOTO UPLOAD WITH PREVIEW -->
-                    <div class="register-form-group">
+                    <div class="form-group">
                         <label for="photo">Profile Photo</label>
                         <div class="file-upload-wrapper" id="uploadWrapper">
                             <input type="file" id="photo" name="photo" accept="image/*">
