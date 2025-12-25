@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 24, 2025 at 05:54 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Dec 25, 2025 at 12:11 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -49,40 +49,46 @@ CREATE TABLE `book` (
 --
 
 INSERT INTO `book` (`id`, `title`, `description`, `author`, `publisher`, `category`, `subcategory`, `language`, `price`, `stock`, `cover_image`, `images`, `video`, `created_at`) VALUES
-(1, 'The Great Gatsby', 'A classic novel about the American Dream in the Jazz Age.\nFeatures Jay Gatsby and his obsession with Daisy Buchanan.\nExplores themes of wealth, class, and the American Dream.', 'F. Scott Fitzgerald', 'Scribner', 'Fiction', 'Novel', 'English', 15.50, 94, NULL, 'book1.jpg', NULL, '2025-12-16 15:36:48'),
-(2, 'PHP Programming for Beginners', 'Learn PHP from scratch with practical examples.\nCovers PHP 8 features and best practices.\nIncludes MySQL database integration.', 'John Smith', 'Tech Press', 'Education', 'Textbook', 'English', 45.00, 16, NULL, 'book2.jpg', NULL, '2025-12-16 15:36:48'),
-(3, 'Web Development Mastery', 'Complete guide to modern web development.\nCovers HTML5, CSS3, JavaScript, and frameworks.\nIncludes responsive design and SEO optimization.', 'Jane Doe', 'Web Publishers', 'Education', 'Textbook', 'English', 120.00, 1, NULL, 'book3.jpg', NULL, '2025-12-16 15:36:48'),
-(4, 'Harry Potter and the Sorcerer Stone', 'First book in the Harry Potter series.\nFollows Harry\'s first year at Hogwarts.\nIntroduces magical world and characters.', 'J.K. Rowling', 'Bloomsbury', 'Fiction', 'Novel', 'English', 35.90, 50, NULL, 'book4.jpg', NULL, '2025-12-16 15:36:48'),
-(5, 'Database Design Guide', 'Learn database design principles and normalization.\nCovers SQL queries, indexing, and optimization.\nIncludes real-world case studies.', 'Michael Chen', 'Database Press', 'Education', 'Textbook', 'English', 55.00, 0, NULL, 'book5.jpg', NULL, '2025-12-16 15:36:48'),
-(6, 'Spider-Man: Homecoming', 'Amazing Spider-Man comic collection.\nFeatures classic storylines and villains.\nFull-color illustrations throughout.', 'Stan Lee', 'Marvel Comics', 'Fiction', 'Comic', 'English', 12.99, 25, NULL, 'book6.jpg', NULL, '2025-12-16 15:36:48'),
-(7, 'The Art of War', 'Ancient Chinese military treatise.\nTimeless strategies for conflict resolution.\nApplies to business and personal life.', 'Sun Tzu', 'Penguin Classics', 'Non-Fiction', 'Self-help', 'Chinese', 9.99, 30, NULL, 'book7.jpg', NULL, '2025-12-16 15:36:48'),
-(8, 'Malay Grammar Guide', 'Comprehensive Malay language guide.\nCovers grammar, vocabulary, and usage.\nSuitable for beginners to advanced learners.', 'Ahmad Hassan', 'Dewan Bahasa', 'Education', 'Textbook', 'Malay', 28.50, 15, NULL, 'book8.jpg', NULL, '2025-12-16 15:36:48'),
-(9, 'My First Coloring Book', 'Fun coloring book for children ages 3-6.\nFeatures animals, vehicles, and shapes.\nDevelops fine motor skills and creativity.', 'Sarah Johnson', 'Kids Press', 'Children', 'Color Book', 'English', 8.99, 98, NULL, 'book9.jpg', NULL, '2025-12-16 15:36:48'),
-(10, 'Steve Jobs Biography', 'The life story of Apple co-founder.\nDetailed account of his career and innovations.\nInsights into his leadership style.', 'Walter Isaacson', 'Simon & Schuster', 'Non-Fiction', 'Biography', 'English', 18.99, 40, NULL, 'book10.jpg', NULL, '2025-12-16 15:36:48'),
-(11, 'To Kill a Mockingbird', 'Classic novel about racial injustice.\nSet in the American South during the 1930s.\nTold from a child\'s perspective.', 'Harper Lee', 'J.B. Lippincott', 'Fiction', 'Novel', 'English', 14.99, 75, NULL, 'book11.jpg', NULL, '2025-12-16 15:36:48'),
-(12, 'Batman: The Dark Knight Returns', 'Iconic Batman graphic novel.\nFeatures aging Bruce Wayne returning as Batman.\nDark and gritty storyline.', 'Frank Miller', 'DC Comics', 'Fiction', 'Comic', 'English', 19.99, 20, NULL, 'book12.jpg', NULL, '2025-12-16 15:36:48'),
-(13, 'Atomic Habits', 'Guide to building good habits and breaking bad ones.\nPractical strategies for behavior change.\nBased on scientific research.', 'James Clear', 'Avery', 'Non-Fiction', 'Self-help', 'English', 16.99, 60, NULL, 'book13.jpg', NULL, '2025-12-16 15:36:48'),
-(14, 'Mathematics for Engineers', 'Advanced mathematics textbook for engineering students.\nCovers calculus, differential equations, and linear algebra.\nIncludes practice problems with solutions.', 'Dr. Robert Chang', 'Engineering Press', 'Education', 'Textbook', 'English', 89.99, 12, NULL, 'book14.jpg', NULL, '2025-12-16 15:36:48'),
-(15, 'Mandarin Chinese for Beginners', 'Complete Mandarin Chinese language course.\nIncludes pronunciation guide and basic characters.\nComes with audio CD for practice.', 'Li Wei', 'Language World', 'Education', 'Textbook', 'Chinese', 34.99, 25, NULL, 'book15.jpg', NULL, '2025-12-16 15:36:48'),
-(16, 'Animal Friends Coloring Book', 'Coloring book with cute animal illustrations.\nIncludes jungle, farm, and ocean animals.\nThick paper prevents bleed-through.', 'Emily Brown', 'Creative Kids', 'Children', 'Color Book', 'English', 7.99, 150, NULL, 'book16.jpg', NULL, '2025-12-16 15:36:48'),
-(17, 'Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future', 'Biography of Elon Musk and his companies.\nCovers his vision for sustainable energy and space exploration.\nInsider look at his work ethic and challenges.', 'Ashlee Vance', 'Ecco', 'Non-Fiction', 'Biography', 'English', 17.99, 35, NULL, 'book17.jpg', NULL, '2025-12-16 15:36:48'),
-(18, 'X-Men: Days of Future Past', 'Classic X-Men comic storyline.\nFeatures time travel and alternate futures.\nIncludes Wolverine, Storm, and other mutants.', 'Chris Claremont', 'Marvel Comics', 'Fiction', 'Comic', 'English', 15.99, 18, NULL, 'book18.jpg', NULL, '2025-12-16 15:36:48'),
-(19, 'How to Win Friends and Influence People', 'Timeless classic on interpersonal skills.\nPrinciples for effective communication and leadership.\nReal-world examples and applications.', 'Dale Carnegie', 'Simon & Schuster', 'Non-Fiction', 'Self-help', 'English', 12.99, 85, NULL, 'book19.jpg', NULL, '2025-12-16 15:36:48'),
-(20, 'Physics for Scientists and Engineers', 'Comprehensive physics textbook.\nCovers mechanics, thermodynamics, electromagnetism, and optics.\nIncludes laboratory experiments and problem sets.', 'Raymond Serway', 'Cengage Learning', 'Education', 'Textbook', 'English', 125.00, 8, NULL, 'book20.jpg', NULL, '2025-12-16 15:36:48'),
-(21, 'Pride and Prejudice', 'Classic romance novel about Elizabeth Bennet and Mr. Darcy.\nExplores themes of love, reputation, and class in Georgian England.\nWitty social commentary and memorable characters.', 'Jane Austen', 'T. Egerton', 'Fiction', 'Novel', 'English', 12.99, 43, NULL, 'book21.jpg', NULL, '2025-12-16 15:36:48'),
-(22, 'The Silent Patient', 'Psychological thriller about a woman who shoots her husband and stops speaking.\nTherapist becomes obsessed with uncovering the truth.\nTwist ending that surprises readers.', 'Alex Michaelides', 'Celadon Books', 'Fiction', 'Novel', 'English', 14.99, 30, NULL, 'book22.jpg', NULL, '2025-12-16 15:36:48'),
-(23, 'Superman: Red Son', 'Alternate history where Superman lands in Soviet Ukraine instead of Kansas.\nExplores political ideologies and moral dilemmas.\nUnique take on the Superman mythos.', 'Mark Millar', 'DC Comics', 'Fiction', 'Comic', 'English', 17.99, 15, NULL, 'book23.jpg', NULL, '2025-12-16 15:36:48'),
-(24, 'Watchmen', 'Groundbreaking graphic novel about retired superheroes.\nComplex narrative with philosophical themes.\nDeconstruction of the superhero genre.', 'Alan Moore', 'DC Comics', 'Fiction', 'Comic', 'English', 22.99, 12, NULL, 'book24.jpg', NULL, '2025-12-16 15:36:48'),
-(25, 'Becoming', 'Memoir by former First Lady Michelle Obama.\nCovers her childhood, career, and time in the White House.\nPersonal insights and inspiring journey.', 'Michelle Obama', 'Crown Publishing', 'Non-Fiction', 'Biography', 'English', 21.99, 55, NULL, 'book25.jpg', NULL, '2025-12-16 15:36:48'),
-(26, 'Born a Crime', 'Trevor Noah\'s memoir about growing up in apartheid South Africa.\nHumorous and poignant stories about race and identity.\nInsights into his journey to becoming a comedian.', 'Trevor Noah', 'Spiegel & Grau', 'Non-Fiction', 'Biography', 'English', 16.99, 40, NULL, 'book26.jpg', NULL, '2025-12-16 15:36:48'),
-(27, 'The 7 Habits of Highly Effective People', 'Classic self-help book about personal and professional effectiveness.\nPrinciples for achieving goals and building relationships.\nTimeless advice for personal development.', 'Stephen R. Covey', 'Free Press', 'Non-Fiction', 'Self-help', 'English', 15.99, 70, NULL, 'book27.jpg', NULL, '2025-12-16 15:36:48'),
-(28, 'Thinking, Fast and Slow', 'Explores two systems of thinking: fast, intuitive, and slow, deliberate.\nNobel Prize-winning insights into human psychology.\nChallenges assumptions about decision-making.', 'Daniel Kahneman', 'Farrar, Straus and Giroux', 'Non-Fiction', 'Self-help', 'English', 18.99, 25, NULL, 'book28.jpg', NULL, '2025-12-16 15:36:48'),
-(29, 'Chemistry for High School Students', 'Comprehensive chemistry textbook aligned with national curriculum.\nClear explanations with diagrams and examples.\nPractice questions and experiments included.', 'Dr. Susan Wong', 'Academic Press', 'Education', 'Textbook', 'English', 65.00, 20, NULL, 'book29.jpg', NULL, '2025-12-16 15:36:48'),
-(30, 'Business Management Principles', 'Essential guide to modern business management.\nCovers leadership, strategy, operations, and finance.\nCase studies from successful companies.', 'Peter Drucker', 'Harvard Business Review', 'Education', 'Textbook', 'English', 85.00, 18, NULL, 'book30.jpg', NULL, '2025-12-16 15:36:48'),
-(31, 'English-Malay Dictionary', 'Comprehensive bilingual dictionary with over 50,000 entries.\nIncludes idioms, phrases, and cultural notes.\nUseful for students and professionals.', 'Dewan Bahasa Team', 'Dewan Bahasa', 'Education', 'Textbook', 'Malay', 45.00, 35, NULL, 'book31.jpg', NULL, '2025-12-16 15:36:48'),
-(32, 'Advanced Chinese Characters', 'Guide to mastering complex Chinese characters.\nStroke order, radicals, and vocabulary building.\nSuitable for intermediate to advanced learners.', 'Professor Zhang Wei', 'Beijing Language Press', 'Education', 'Textbook', 'Chinese', 38.99, 22, NULL, 'book32.jpg', NULL, '2025-12-16 15:36:48'),
-(33, 'Dinosaur Adventures Coloring Book', 'Coloring book featuring various dinosaurs in prehistoric scenes.\nEducational facts about each dinosaur included.\nFun way to learn about paleontology.', 'Tommy Lee', 'Dino Press', 'Children', 'Color Book', 'English', 9.99, 120, NULL, 'book33.jpg', NULL, '2025-12-16 15:36:48'),
-(34, 'Princess Castle Activity Book', 'Activity book with princess-themed puzzles, mazes, and coloring pages.\r\nIncludes stickers and cut-out crowns.\r\nEncourages creativity and problem-solving.', 'Princess Publishing', 'Fairy Tale Books', 'Children', 'Color Book', 'English', 8.50, 95, NULL, 'book34.jpg', NULL, '2025-12-16 15:36:48');
+(1, 'The Alchemist', 'A worldwide bestseller, this mystical story follows Santiago, an Andalusian shepherd boy who yearns to travel in search of a worldly treasure. His quest leads him to riches far different—and far more satisfying—than he ever imagined.', 'Paulo Coelho', 'HarperOne', 'Fiction', 'Novel', 'English', 35.00, 450, NULL, 'The alchemist.jpg', NULL, '2025-12-25 09:38:53'),
+(2, '1984', 'Set in a terrifyingly futuristic world where Big Brother is always watching, this classic dystopian novel explores the themes of government surveillance, totalitarianism, and the betrayal of the human spirit through the eyes of Winston Smith.', 'George Orwell', 'Secker & Warburg', 'Fiction', 'Novel', 'English', 28.00, 320, NULL, '1984.jpeg', NULL, '2025-12-25 09:38:53'),
+(3, 'Brave New World', 'A chilling prophecy of a high-tech future where humans are genetically bred and pharmaceutically anesthetized to serve a passive social order. This masterpiece remains one of the most impactful social satires ever written.', 'Aldous Huxley', 'Chatto & Windus', 'Fiction', 'Novel', 'English', 32.00, 280, NULL, 'Brave New World.jpg', NULL, '2025-12-25 09:38:53'),
+(4, 'The Kite Runner', 'An unforgettable story of a young boy from Kabul who betrays his closest friend, and the haunting guilt that follows him into adulthood. Set against the backdrop of a changing Afghanistan, it is a powerful tale of redemption.', 'Khaled Hosseini', 'Riverhead Books', 'Fiction', 'Novel', 'English', 38.00, 210, NULL, 'The Kite Runner.webp', NULL, '2025-12-25 09:38:53'),
+(5, 'The Book Thief', 'Narrated by Death, this is the story of Liesel Meminger, a young girl living in Nazi Germany who finds solace by stealing books. With the help of her accordion-playing foster father, she learns to read and shares her stolen books with neighbors.', 'Markus Zusak', 'Picador', 'Fiction', 'Novel', 'English', 34.00, 315, NULL, 'The Book Theif.jpg', NULL, '2025-12-25 09:38:53'),
+(6, 'Batman: Year One', 'Bruce Wayne returns to Gotham City after years of training, while Lieutenant James Gordon faces a corrupt police force. Witness the gritty origins of the Dark Knight and the alliance that would change Gotham forever.', 'Frank Miller', 'DC Comics', 'Fiction', 'Comic', 'English', 45.00, 180, NULL, 'Batman year one.webp', NULL, '2025-12-25 09:38:53'),
+(7, 'Spider-Man: Blue', 'A touching retrospective on Peter Parker\'s early life and his first love, Gwen Stacy. This volume captures the melancholy and romance of the Silver Age of comics with beautiful artwork and a heart-wrenching narrative.', 'Jeph Loeb', 'Marvel Comics', 'Fiction', 'Comic', 'English', 42.00, 150, NULL, 'Spider-Man Blue.jpg', NULL, '2025-12-25 09:38:53'),
+(8, 'Watchmen', 'The boundary-pushing graphic novel that redefined the superhero genre. In an alternate 1985, a group of retired heroes investigates the murder of one of their own, uncovering a conspiracy that threatens the world.', 'Alan Moore', 'DC Comics', 'Fiction', 'Comic', 'English', 55.00, 200, NULL, 'Watchmen.jpg', NULL, '2025-12-25 09:38:53'),
+(9, 'V for Vendetta', 'In a post-apocalyptic Britain ruled by a fascist regime, a mysterious anarchist known only as \"V\" begins a violent campaign to bring down the government and inspire the people to reclaim their freedom.', 'Alan Moore', 'DC Comics', 'Fiction', 'Comic', 'English', 48.00, 140, NULL, 'V for vendetta.jpg', NULL, '2025-12-25 09:38:53'),
+(10, 'Saga Vol 1', 'An epic space opera fantasy following two soldiers from opposite sides of a never-ending galactic war. They fall in love and risk everything to protect their newborn daughter from those who would see them destroyed.', 'Brian K. Vaughan', 'Image Comics', 'Fiction', 'Comic', 'English', 39.00, 220, NULL, 'Saga Vol 1.jpg', NULL, '2025-12-25 09:38:53'),
+(11, 'Modern PHP', 'PHP is undergoing a renaissance. Learn about modern features like namespaces, traits, and generators. This book covers best practices for application architecture, security, and performance in the PHP 8 ecosystem.\r\n', 'Josh Lockhart', 'O\'Reilly', 'Education', 'Textbook', 'English', 85.00, 250, NULL, 'Modern PHP.png', NULL, '2025-12-25 09:38:53'),
+(12, 'Clean Code', 'Even bad code can function. But if code isn\'t clean, it can bring a development organization to its knees. Learn how to write code that is readable, maintainable, and robust using agile software craftsmanship principles.', 'Robert C. Martin', 'Prentice Hall', 'Education', 'Textbook', 'English', 120.00, 190, NULL, 'Clean code.jpg', NULL, '2025-12-25 09:38:53'),
+(13, 'Biology: A Global Approach', 'The world\'s most successful biology textbook. It provides a comprehensive and accurate overview of the biological sciences, from the molecular level to entire ecosystems, with a focus on global scientific challenges.', 'Neil Campbell', 'Pearson', 'Education', 'Textbook', 'English', 150.00, 120, NULL, 'Biology- A Global Approach.jpg', NULL, '2025-12-25 09:38:53'),
+(14, 'Principles of Economics', 'A foundational guide to economic theory. This text explores micro and macroeconomics through real-world examples, helping students understand the trade-offs, market forces, and policy decisions that shape our world.', 'N. Gregory Mankiw', 'Cengage', 'Education', 'Textbook', 'English', 110.00, 160, NULL, 'Princeples of Economics.jpg', NULL, '2025-12-25 09:38:53'),
+(15, 'Malay Language Mastery', 'A comprehensive guide to the Malay language, covering formal grammar, local idioms, and advanced vocabulary. Perfect for university students and professionals looking to achieve fluency in Bahasa Melayu.', 'Zainal Abidin', 'DBP', 'Education', 'Textbook', 'Malay', 45.00, 300, NULL, 'Malay Language Mastery.webp', NULL, '2025-12-25 09:38:53'),
+(16, 'Modern Chinese Grammar', 'This innovative guide provides a systematic and accessible overview of Mandarin Chinese grammar. It focuses on the language as it is actually spoken today, with numerous examples and clear, non-technical explanations.', 'Claudia Ross', 'Routledge', 'Education', 'Textbook', 'Chinese', 75.00, 210, NULL, 'Modern Chinese Grammar.jpg', NULL, '2025-12-25 09:38:53'),
+(17, 'Calculus Early Transcendentals', 'The gold standard in calculus textbooks. It provides a rigorous introduction to limits, derivatives, and integrals, with thousands of exercises that challenge students to apply mathematical concepts to real-world engineering.', 'James Stewart', 'Cengage', 'Education', 'Textbook', 'English', 140.00, 130, NULL, 'Calculus Early Transcendentals.jpg', NULL, '2025-12-25 09:38:53'),
+(18, 'Atomic Habits', 'Small changes, remarkable results. James Clear reveals how to build good habits and break bad ones by focusing on tiny, consistent behaviors that lead to life-changing personal and professional transformations.', 'James Clear', 'Avery', 'Non-Fiction', 'Self-help', 'English', 42.00, 500, NULL, 'Atomic Habits.jpg', NULL, '2025-12-25 09:38:53'),
+(19, 'Deep Work', 'In an age of constant distraction, the ability to focus without interruption is a superpower. Learn how to master cognitive demanding tasks and achieve \"deep work\" to produce better results in less time.', 'Cal Newport', 'Grand Central', 'Non-Fiction', 'Self-help', 'English', 38.00, 350, NULL, 'Deep Work.jpg', NULL, '2025-12-25 09:38:53'),
+(20, 'The 48 Laws of Power', 'Amoral, cunning, ruthless, and instructive, this multi-million-copy New York Times bestseller is the definitive manual for anyone interested in gaining, observing, or defending against ultimate control.', 'Robert Greene', 'Viking', 'Non-Fiction', 'Self-help', 'English', 45.00, 240, NULL, 'The 48 Laws of Power.jpg', NULL, '2025-12-25 09:38:53'),
+(21, 'How to Win Friends', 'The most famous confidence-boosting book ever published. Learn the six ways to make people like you, the twelve ways to win people to your way of thinking, and the nine ways to change people without giving offense.', 'Dale Carnegie', 'Simon & Schuster', 'Non-Fiction', 'Self-help', 'English', 35.00, 480, NULL, 'How to Win Friends.jpg', NULL, '2025-12-25 09:38:53'),
+(22, 'Man\'s Search for Meaning', 'Psychiatrist Viktor Frankl\'s memoir has riveted generations of readers with its descriptions of life in Nazi death camps and its lessons for spiritual survival. Learn how to find meaning even in the face of suffering.', 'Viktor Frankl', 'Beacon Press', 'Non-Fiction', 'Self-help', 'English', 29.00, 320, NULL, 'Man\'s Search for Meaning.jpg', NULL, '2025-12-25 09:38:53'),
+(23, 'Sapiens', 'How did our species succeed in the battle for dominance? Yuval Noah Harari takes us on a journey through the history of humankind, exploring how biology and history have defined us and enhanced our understanding of what it means to be \"human.\"', 'Yuval Noah Harari', 'Harper', 'Non-Fiction', 'Self-help', 'English', 48.00, 410, NULL, 'Sapiens.jpg', NULL, '2025-12-25 09:38:53'),
+(24, 'The Power of Habit', 'Why do we do what we do in life and business? Pulitzer Prize–winning business reporter Charles Duhigg takes us to the thrilling edge of scientific discoveries that explain why habits exist and how they can be changed.', 'Charles Duhigg', 'Random House', 'Non-Fiction', 'Self-help', 'English', 36.00, 290, NULL, 'The Power of Habit.jpg', NULL, '2025-12-25 09:38:53'),
+(25, 'Mindset', 'World-renowned Stanford University psychologist Carol S. Dweck, Ph.D., discovered a simple but groundbreaking idea: the power of mindset. Learn how a fixed vs. growth mindset can influence every aspect of your life.', 'Carol Dweck', 'Ballantine Books', 'Non-Fiction', 'Self-help', 'English', 34.00, 360, NULL, 'Mindset.jpg', NULL, '2025-12-25 09:38:53'),
+(26, 'Steve Jobs', 'The exclusive biography of the creative entrepreneur whose passion for perfection and ferocious drive revolutionized six industries: personal computers, animated movies, music, phones, tablet computing, and digital publishing.', 'Walter Isaacson', 'Simon & Schuster', 'Non-Fiction', 'Biography', 'English', 55.00, 180, NULL, 'Steve Jobs.jpg', NULL, '2025-12-25 09:38:53'),
+(27, 'Elon Musk', 'A veteran technology journalist provides an inside look at the life and times of the most audacious entrepreneur of our age, exploring the rise of Tesla, SpaceX, and SolarCity, and the quest for a fantastic future.', 'Ashlee Vance', 'Ecco', 'Non-Fiction', 'Biography', 'English', 52.00, 210, NULL, 'Elon Musk.jpg', NULL, '2025-12-25 09:38:53'),
+(28, 'Becoming', 'An intimate, powerful, and inspiring memoir by the former First Lady of the United States. Michelle Obama invites readers into her world, chronicling the experiences that have shaped her—from her childhood to her time in the White House.', 'Michelle Obama', 'Crown', 'Non-Fiction', 'Biography', 'English', 58.00, 400, NULL, 'Becoming.jpg', NULL, '2025-12-25 09:38:53'),
+(29, 'The Diary of a Young Girl', 'Discovered in the attic where she spent the last years of her life, Anne Frank’s remarkable diary has since become a world classic—a powerful reminder of the horrors of war and an eloquent testament to the human spirit.', 'Anne Frank', 'Contact Publishing', 'Non-Fiction', 'Biography', 'English', 25.00, 450, NULL, 'The Diary of a Young Girl.jpg', NULL, '2025-12-25 09:38:53'),
+(30, 'Long Walk to Freedom', 'The autobiography of Nelson Mandela, one of the great moral and political leaders of our time. It chronicles his early life, his move to Johannesburg, his incarceration, and his eventual triumph as President of South Africa.', 'Nelson Mandela', 'Little, Brown', 'Non-Fiction', 'Biography', 'English', 45.00, 170, NULL, 'Long Walk to Freedom.jpg', NULL, '2025-12-25 09:38:53'),
+(31, 'Shoe Dog', 'In this candid and riveting memoir, Nike founder Phil Knight shares the inside story of the company’s early days as an intrepid start-up and its evolution into one of the world’s most iconic, game-changing, and profitable brands.', 'Phil Knight', 'Scribner', 'Non-Fiction', 'Biography', 'English', 42.00, 240, NULL, 'Shoe Dog.jpg', NULL, '2025-12-25 09:38:53'),
+(32, 'Educated', 'Born to survivalists in the mountains of Idaho, Tara Westover was seventeen the first time she set foot in a classroom. This is her story of the struggle for self-invention and the power of education to change a life.', 'Tara Westover', 'Random House', 'Non-Fiction', 'Biography', 'English', 39.00, 330, NULL, 'Educated.jpg', NULL, '2025-12-25 09:38:53'),
+(33, 'Einstein: His Life and Universe', 'Based on newly released personal letters of Albert Einstein, Isaacson explores how an imaginative, impertinent patent clerk unlocked the mysteries of the cosmos and the universe within.', 'Walter Isaacson', 'Simon & Schuster', 'Non-Fiction', 'Biography', 'English', 49.00, 150, NULL, 'Einstein- His Life and Universe.jpg', NULL, '2025-12-25 09:38:53'),
+(34, 'Ocean Wonders', 'Dive into an underwater world! This coloring book features intricate illustrations of majestic whales, playful dolphins, and colorful coral reefs, designed to spark creativity in children of all ages.', 'Sarah Miller', 'Kids Press', 'Children', 'Color Book', 'English', 15.00, 500, NULL, 'Ocean Wonders.jpg', NULL, '2025-12-25 09:38:53'),
+(35, 'Jungle Friends', 'Embark on a safari adventure with this delightful coloring book. Children will love bringing to life the lions, monkeys, and elephants that inhabit the lush jungles of our planet.', 'John Dean', 'Creative Kids', 'Children', 'Color Book', 'English', 15.00, 480, NULL, 'Jungle Friends.jpg', NULL, '2025-12-25 09:38:53'),
+(37, 'Space Explorer', 'Blast off into the cosmos! Color your way through galaxies, planets, and stars. This educational coloring book introduces children to the wonders of our solar system and the mysteries beyond.', 'Anna White', 'Sky Books', 'Children', 'Color Book', 'English', 16.00, 450, NULL, 'Space Explorer.jpg', NULL, '2025-12-25 09:38:53'),
+(38, 'Princess Tales', 'A magical coloring journey through enchanted forests and majestic castles. This book features beautiful princesses, brave knights, and fairy-tale scenes that will capture the imagination of every little dreamer.', 'Lucy Green', 'Fairy Books', 'Children', 'Color Book', 'English', 14.00, 390, NULL, 'Princess Tales.jpg', NULL, '2025-12-25 09:38:53'),
+(39, 'Farm Animals', 'Introduce your toddler to life on the farm! With simple, bold outlines, this coloring book is perfect for little hands to practice their motor skills while learning about cows, sheep, and friendly farm dogs.', 'Tom Brown', 'Barn Press', 'Children', 'Color Book', 'English', 12.00, 500, NULL, 'Farm Animals.jpg', NULL, '2025-12-25 09:38:53'),
+(40, 'The Beginning After the End: Vol. 9 Reckoning', 'Arthur Leywin continues his perilous journey in the land of Alacrya. Disguised as an ascender, he must master the mysteries of aether within the Relictombs to reclaim his lost power. As political tensions rise and ancient threats resurface, Arthur faces his most difficult trials yet in a desperate bid to return to his loved ones and save his homeland from total destruction.', 'TurtleMe', 'Tapas', 'Fiction', 'Novel', 'English', 32.00, 400, NULL, 'The Beginning after the End Vol 9.jpg', NULL, '2025-12-25 10:46:18'),
+(41, 'Omniscient Reader\'s Viewpoint: Vol. 5', 'The scenarios become increasingly lethal as Kim Dokja navigates the fifth trial. As the boundaries between the story and reality continue to blur, Dokja must use his exclusive knowledge of the original novel to protect his companions and stay one step ahead of the Constellations. In this volume, the stakes are higher than ever as the true nature of the Star Stream begins to reveal itself.', 'singNsong', 'Ize Press', 'Fiction', 'Novel', 'English', 35.00, 420, NULL, 'Omniscient Reader\'s Viewpoint Vol 5.jpg', NULL, '2025-12-25 10:46:18');
 
 -- --------------------------------------------------------
 
@@ -103,7 +109,6 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `user_id`, `id`, `quantity`, `added_at`) VALUES
-(26, 51, 28, 1, '2025-12-23 13:48:34'),
 (32, 59, 22, 1, '2025-12-25 00:26:06');
 
 -- --------------------------------------------------------
@@ -140,7 +145,9 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `total_amount`, `orde
 (13, 1, '2025-12-20 23:44:52', 19.99, 'Cancelled', 'Lorong Bukit Pantai, Pantai Hills, Bangsar, Kuala Lumpur, 59100, Malaysia'),
 (14, 59, '2025-12-24 17:49:56', 120.00, 'Pending', 'Kuala Lumpur Bird Park, 920, Jalan Cenderawasih, Kuala Lumpur, 50480, Malaysia'),
 (15, 59, '2025-12-24 18:02:38', 21.98, 'Pending', '洪成路, Brickfields, Kuala Lumpur, 50470, Malaysia'),
-(16, 59, '2025-12-24 18:11:42', 120.00, 'Pending', 'Jalan Damansara, Brickfields, Kuala Lumpur, 50460, Malaysia');
+(16, 59, '2025-12-24 18:11:42', 120.00, 'Shipped', 'Jalan Damansara, Brickfields, Kuala Lumpur, 50460, Malaysia'),
+(17, 52, '2025-12-25 03:03:46', 8.99, 'Pending', 'Desa Aman Puri'),
+(18, 51, '2025-12-25 03:21:16', 38.49, 'Cancelled', 'Desa Aman Puri');
 
 -- --------------------------------------------------------
 
@@ -177,7 +184,10 @@ INSERT INTO `order_details` (`detail_id`, `order_id`, `id`, `quantity`, `unit_pr
 (14, 15, 3, 1, 120.00),
 (15, 15, 9, 1, 8.99),
 (16, 15, 21, 1, 12.99),
-(17, 16, 3, 1, 120.00);
+(17, 16, 3, 1, 120.00),
+(18, 17, 9, 1, 8.99),
+(19, 18, 24, 1, 22.99),
+(20, 18, 1, 1, 15.50);
 
 -- --------------------------------------------------------
 
@@ -214,7 +224,9 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 (12, 13, 'Credit Card', '1234567812345678', '2025-12-20 23:44:52', 19.99, 'Success'),
 (13, 14, 'E-Wallet', '', '2025-12-24 17:49:56', 120.00, 'Success'),
 (14, 15, 'E-Wallet', '', '2025-12-24 18:02:38', 21.98, 'Success'),
-(15, 16, 'E-Wallet', '', '2025-12-24 18:11:42', 120.00, 'Success');
+(15, 16, 'E-Wallet', '', '2025-12-24 18:11:42', 120.00, 'Success'),
+(16, 17, 'Credit Card', '1234123412341234', '2025-12-25 03:03:46', 8.99, 'Success'),
+(17, 18, 'E-Wallet', '4123412341234123', '2025-12-25 03:21:16', 38.49, 'Success');
 
 -- --------------------------------------------------------
 
@@ -284,7 +296,7 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_dob`, `
 (48, 'devan_nair', 'devan.nair@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '14, Jalan Sungai Besi, 57100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
 (49, 'koh_li_ann', 'koh.liann@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '9, Jalan Molek 2/1, Taman Molek, 81100 Johor Bahru, Johor', '2025-12-22 07:06:48', 1, 0),
 (50, 'syed_mokhtar', 'syed.mokhtar@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '50, Jalan Putra, 05150 Alor Setar, Kedah', '2025-12-22 07:06:48', 1, 0),
-(51, 'jason', 'jason@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1, 0),
+(51, 'jason', 'jason@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1, 3),
 (52, 'lim', 'lim@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '88, Jalan Seremban 2, 70300 Seremban, Negeri Sembilan', '2025-12-22 07:13:13', 1, 0),
 (53, 'test_member', 'member@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Batu Caves, 68100 Batu Caves, Selangor', '2025-12-22 07:13:13', 1, 0),
 (54, 'test_admin', 'admin@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '12, Jalan Tanjung Bungah, 11200 Tanjung Bungah, Pulau Pinang', '2025-12-22 07:13:13', 1, 0),
@@ -321,6 +333,12 @@ INSERT INTO `vouchers` (`voucher_id`, `code`, `discount_amount`, `expiry_date`, 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `book`
+--
+ALTER TABLE `book`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `cart`
@@ -377,28 +395,34 @@ ALTER TABLE `vouchers`
 --
 
 --
+-- AUTO_INCREMENT for table `book`
+--
+ALTER TABLE `book`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+
+--
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `users`
