@@ -41,7 +41,7 @@ if (is_post() && isset($_POST['resend'])) {
                 <h1 style='font-size: 2.5rem; letter-spacing: 10px; text-align: center; color: #667eea;'>$otp</h1>
                 <p>It expires in 15 minutes.</p>
                 <hr>
-                <p style='color: #666; font-size: 0.9em;'>Six Seven BS Team</p>
+                <p style='color: #666; font-size: 0.9em;'>BookStore Team</p>
             </div>
         ";
         $mail->send();
@@ -111,7 +111,7 @@ if (is_post() && !isset($_POST['resend'])) {
                     <p>We sent a 6-digit code to <?= htmlspecialchars($pending['email']) ?></p>
                 </div>
 
-                <form method="post" class="register-form" id="otpForm">
+                <form method="post" class="register-form">
                     <div class="form-group">
                         <label for="otp">Enter Verification Code</label>
                         <input type="text" id="otp" name="otp" maxlength="6" placeholder="123456" required autocomplete="off">
@@ -121,23 +121,21 @@ if (is_post() && !isset($_POST['resend'])) {
                     </div>
 
                     <button type="submit" class="register-submit-btn">Verify & Complete Registration</button>
-
-                    <!-- Resend section moved here for better placement -->
-                    <div style="margin-top: 15px; text-align: center;">
-                        <button type="submit" name="resend" class="resend-btn" id="resendBtn" form="otpForm">
-                            Resend Code
-                        </button>
-
-                        <?php 
-                        $last_resend = $_SESSION['last_resend'] ?? 0;
-                        $cooldown_left = 60 - (time() - $last_resend);
-                        if ($cooldown_left > 0): ?>
-                            <p style="color:#dc3545; font-size:0.9rem; margin:8px 0 0 0;">
-                                Please wait <?= $cooldown_left ?> seconds
-                            </p>
-                        <?php endif; ?>
-                    </div>
                 </form>
+
+                <!-- Resend OTP -->
+                <form method="post" class="resend-form" style="text-align:center; margin-top:20px;">
+                    <button type="submit" name="resend" class="resend-btn" id="resendBtn">Resend Code</button>
+                </form>
+
+                <?php 
+                $last_resend = $_SESSION['last_resend'] ?? 0;
+                $cooldown_left = 60 - (time() - $last_resend);
+                if ($cooldown_left > 0): ?>
+                    <p class="cooldown" style="text-align:center; color:#dc3545; font-size:0.9rem; margin-top:10px;">
+                        Please wait <?= $cooldown_left ?> seconds
+                    </p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -157,12 +155,12 @@ if (is_post() && !isset($_POST['resend'])) {
 
     const interval = setInterval(() => {
         seconds--;
-        document.querySelector('div[style*="margin-top: 15px"] p').textContent = `Please wait ${seconds} seconds`;
+        document.querySelector('.cooldown').textContent = `Please wait ${seconds} seconds`;
 
         if (seconds <= 0) {
             clearInterval(interval);
             resendBtn.disabled = false;
-            document.querySelector('div[style*="margin-top: 15px"] p').style.display = 'none';
+            document.querySelector('.cooldown').style.display = 'none';
         }
     }, 1000);
     <?php endif; ?>
