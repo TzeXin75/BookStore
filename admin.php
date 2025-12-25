@@ -2,19 +2,24 @@
 // admin.php
 session_start();
 require_once 'config/db_connect.php';
+include '_base.php';
 
 // GLOBAL SECURITY CHECK: If not admin, kick them out immediately
 if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
     header('Location: login.php'); // Redirect to login page
     exit();
 }
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="style.css?v=<?= time(); ?>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="admin-container">
@@ -70,5 +75,6 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['user_role'] !== 'admin') {
             ?>
         </main>
     </div>
+    <div id="info"><?= temp('info') ?></div>
 </body>
 </html>

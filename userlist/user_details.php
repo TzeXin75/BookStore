@@ -1,5 +1,4 @@
 <?php
-include './_base.php';
 
 $id = req('id');
 //if no id provided, redirect back to userslist
