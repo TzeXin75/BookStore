@@ -81,7 +81,6 @@ if (!$u) {
     background: #ffffff;
     border-radius: 8px;
 }
-    }
 </style>
 
 <div class="page-header">
