@@ -1,7 +1,8 @@
 <?php require '_base.php'; ?>
 
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" href="uploads/favicon.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 <header class="site-header">
