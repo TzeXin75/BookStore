@@ -76,20 +76,24 @@ if (is_post()) {
     }
 
     // Validate: photo (file)
-    if (!$f) {
-        $_err['photo'] = 'Required';
+    if($f){
+        if (!str_starts_with($f->type, 'image/')) {
+            $_err['photo'] = 'Must be image';
+        }
+        else if ($f->size > 1 * 1024 * 1024) {
+            $_err['photo'] = 'Maximum 1MB';
+        }
     }
-    else if (!str_starts_with($f->type, 'image/')) {
-        $_err['photo'] = 'Must be image';
-    }
-    else if ($f->size > 1 * 1024 * 1024) {
-        $_err['photo'] = 'Maximum 1MB';
-    }
-
+    
     // DB operation
     if (!$_err) {
         // (1) Save photo
-        $photo = save_photo($f, '../photos');
+        $photo = 'default.jpg';
+
+        // Only save photo if one was actually uploaded
+        if ($f) {
+            $photo = save_photo($f, '../photos');
+        }
         
         // (2) Insert user (member)
         $stm = $_db->prepare('
@@ -360,7 +364,10 @@ if (is_post()) {
                         <div class="file-upload-wrapper" id="uploadWrapper">
                             <input type="file" id="photo" name="photo" accept="image/*">
                             <span class="file-upload-label" id="uploadLabel">
-                                <i class="fas fa-upload"></i> Upload Photo (Max 1MB)
+                                <i class="fas fa-upload"></i>
+                                Upload Photo (Max 1MB)
+                                <br>
+                                [Optional]
                             </span>
                         </div>
                         <p class="file-hint">JPG, PNG, GIF - 1MB max</p>
