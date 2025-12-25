@@ -1,9 +1,11 @@
 <?php
+//start session and connect to database
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
 $order_id = $_GET['id'] ?? 0;
 
+// Handle status update POST from the admin status form
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $target_id = intval($_POST['order_id']);
     $new_status = $_POST['status'];
@@ -14,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         $stmt_status->execute([$target_id]);
         $old_status = $stmt_status->fetchColumn();
 
+            // If admin marks order as Cancelled, return item quantities back to stock
         if ($new_status === 'Cancelled' && $old_status !== 'Cancelled') {
             $stmt_items = $pdo->prepare("SELECT id, quantity FROM order_details WHERE order_id = ?");
             $stmt_items->execute([$target_id]);
@@ -52,6 +55,7 @@ $items = $stmt->fetchAll();
 ?>
 
 <div class="container" style="max-width: 100%; padding: 10px;">
+    <!-- Shows order items, shipping address, financial summary and allows status updates -->
     <?php if(isset($_SESSION['status_msg'])): ?>
         <div style="background:#d4edda; color:#155724; padding:15px; border-radius:5px; margin-bottom:20px; border:1px solid #c3e6cb;">
             &#10003; <?= $_SESSION['status_msg']; unset($_SESSION['status_msg']); ?>
@@ -68,6 +72,7 @@ $items = $stmt->fetchAll();
     <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px;">
         <div>
             <div style="background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                <!-- Items Table: iterates over each ordered item and shows price, qty and line total -->
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr style="background: #34495e; color: white;">
                         <th style="padding: 12px; text-align: left;">Product</th>
@@ -87,6 +92,7 @@ $items = $stmt->fetchAll();
             </div>
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
                 <h4>Shipping Address</h4>
+                <!-- Shipping Address block: recipient name and full shipping address -->
                 <p style="margin-top: 10px; color: #333; line-height: 1.6;">
                     <strong>Recipient:</strong> <?= htmlspecialchars($order['username']) ?><br>
                     <?= nl2br(htmlspecialchars($order['shipping_address'])) ?>
@@ -106,7 +112,7 @@ $items = $stmt->fetchAll();
             <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
                 <h4>Status Management</h4>
                 <p>Current: <strong style="color: #e67e22;"><?= $order['order_status'] ?></strong></p>
-                
+                <!-- Status form: admin can change order status here. Cancelling will trigger restock in PHP handler. -->
                 <form action="admin.php?page=order_details&id=<?= $order['order_id'] ?>" method="POST">
                     <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
                     <select name="status" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc;">

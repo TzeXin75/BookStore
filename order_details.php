@@ -1,27 +1,37 @@
 <?php
+// Start session if not already started
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+// Database connection (PDO) used to query orders and order items
 require_once 'config/db_connect.php';
 
+// Determine the current logged-in user ID (supports two session shapes used in the app)
 if (isset($_SESSION['user']['user_id'])) {
     $user_id = $_SESSION['user']['user_id'];
 } elseif (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
+    // Not logged in -> redirect to login
     header("Location: login.php"); exit(); 
 }
 
+// Get requested order id from query string. Default to 0 if missing.
 $order_id = $_GET['id'] ?? 0;
 
+// Fetch the order row while ensuring it belongs to the logged-in user.
+// This prevents a user from viewing other users' orders.
 $stmt = $pdo->prepare("SELECT * FROM orders WHERE order_id = ? AND user_id = ?");
 $stmt->execute([$order_id, $user_id]);
 $order = $stmt->fetch();
 
 if (!$order) { die("Order not found."); }
 
+// Load order items and corresponding book titles for display
 $stmt = $pdo->prepare("SELECT od.*, b.title FROM order_details od JOIN book b ON od.id = b.id WHERE od.order_id = ?");
 $stmt->execute([$order_id]);
 $items = $stmt->fetchAll();
 
+// Compute subtotal (sum of unit_price * quantity) and infer any discount
 $subtotal = 0;
 foreach($items as $item) { $subtotal += ($item['unit_price'] * $item['quantity']); }
 $discount = $subtotal - $order['total_amount'];
@@ -45,6 +55,7 @@ $discount = $subtotal - $order['total_amount'];
 
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
             <div style="background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                <!-- Items table: each row shows book title, unit price, quantity and line subtotal -->
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: #f8f9fa; text-align: left; border-bottom: 2px solid #eee;">
@@ -68,6 +79,7 @@ $discount = $subtotal - $order['total_amount'];
             </div>
 
             <div style="background: #fdfdfd; padding: 25px; border: 1px solid #ddd; border-radius: 8px; height: fit-content;">
+                <!-- Summary panel: status, order date, subtotal, discount (if any), grand total and shipping address -->
                 <h4 style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Order Summary</h4>
                 <p style="margin-bottom: 8px;"><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;"><?= $order['order_status'] ?></span></p>
                 <p style="margin-bottom: 8px;"><strong>Date:</strong> <?= date('d M Y', strtotime($order['order_date'])) ?></p>
