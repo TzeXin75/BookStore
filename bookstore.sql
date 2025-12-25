@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Dec 25, 2025 at 12:11 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Dec 25, 2025 at 04:27 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -88,7 +88,7 @@ INSERT INTO `book` (`id`, `title`, `description`, `author`, `publisher`, `catego
 (38, 'Princess Tales', 'A magical coloring journey through enchanted forests and majestic castles. This book features beautiful princesses, brave knights, and fairy-tale scenes that will capture the imagination of every little dreamer.', 'Lucy Green', 'Fairy Books', 'Children', 'Color Book', 'English', 14.00, 390, NULL, 'Princess Tales.jpg', NULL, '2025-12-25 09:38:53'),
 (39, 'Farm Animals', 'Introduce your toddler to life on the farm! With simple, bold outlines, this coloring book is perfect for little hands to practice their motor skills while learning about cows, sheep, and friendly farm dogs.', 'Tom Brown', 'Barn Press', 'Children', 'Color Book', 'English', 12.00, 500, NULL, 'Farm Animals.jpg', NULL, '2025-12-25 09:38:53'),
 (40, 'The Beginning After the End: Vol. 9 Reckoning', 'Arthur Leywin continues his perilous journey in the land of Alacrya. Disguised as an ascender, he must master the mysteries of aether within the Relictombs to reclaim his lost power. As political tensions rise and ancient threats resurface, Arthur faces his most difficult trials yet in a desperate bid to return to his loved ones and save his homeland from total destruction.', 'TurtleMe', 'Tapas', 'Fiction', 'Novel', 'English', 32.00, 400, NULL, 'The Beginning after the End Vol 9.jpg', NULL, '2025-12-25 10:46:18'),
-(41, 'Omniscient Reader\'s Viewpoint: Vol. 5', 'The scenarios become increasingly lethal as Kim Dokja navigates the fifth trial. As the boundaries between the story and reality continue to blur, Dokja must use his exclusive knowledge of the original novel to protect his companions and stay one step ahead of the Constellations. In this volume, the stakes are higher than ever as the true nature of the Star Stream begins to reveal itself.', 'singNsong', 'Ize Press', 'Fiction', 'Novel', 'English', 35.00, 420, NULL, 'Omniscient Reader\'s Viewpoint Vol 5.jpg', NULL, '2025-12-25 10:46:18');
+(41, 'Omniscient Reader\'s Viewpoint: Vol. 5', 'The scenarios become increasingly lethal as Kim Dokja navigates the fifth trial. As the boundaries between the story and reality continue to blur, Dokja must use his exclusive knowledge of the original novel to protect his companions and stay one step ahead of the Constellations. In this volume, the stakes are higher than ever as the true nature of the Star Stream begins to reveal itself.', 'singNsong', 'Ize Press', 'Fiction', 'Novel', 'English', 35.00, 419, NULL, 'Omniscient Reader\'s Viewpoint Vol 5.jpg', NULL, '2025-12-25 10:46:18');
 
 -- --------------------------------------------------------
 
@@ -109,7 +109,8 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `user_id`, `id`, `quantity`, `added_at`) VALUES
-(32, 59, 22, 1, '2025-12-25 00:26:06');
+(32, 59, 22, 1, '2025-12-25 00:26:06'),
+(44, 65, 29, 1, '2025-12-25 22:48:27');
 
 -- --------------------------------------------------------
 
@@ -147,7 +148,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `total_amount`, `orde
 (15, 59, '2025-12-24 18:02:38', 21.98, 'Pending', '洪成路, Brickfields, Kuala Lumpur, 50470, Malaysia'),
 (16, 59, '2025-12-24 18:11:42', 120.00, 'Shipped', 'Jalan Damansara, Brickfields, Kuala Lumpur, 50460, Malaysia'),
 (17, 52, '2025-12-25 03:03:46', 8.99, 'Pending', 'Desa Aman Puri'),
-(18, 51, '2025-12-25 03:21:16', 38.49, 'Cancelled', 'Desa Aman Puri');
+(18, 51, '2025-12-25 03:21:16', 38.49, 'Cancelled', 'Desa Aman Puri'),
+(19, 61, '2025-12-25 21:18:38', 35.00, 'Pending', 'Eto, 170, Jalan Tun H.S. Lee, Bukit Bintang, Kuala Lumpur, 50000, Malaysia');
 
 -- --------------------------------------------------------
 
@@ -187,7 +189,8 @@ INSERT INTO `order_details` (`detail_id`, `order_id`, `id`, `quantity`, `unit_pr
 (17, 16, 3, 1, 120.00),
 (18, 17, 9, 1, 8.99),
 (19, 18, 24, 1, 22.99),
-(20, 18, 1, 1, 15.50);
+(20, 18, 1, 1, 15.50),
+(21, 19, 41, 1, 35.00);
 
 -- --------------------------------------------------------
 
@@ -226,7 +229,8 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 (14, 15, 'E-Wallet', '', '2025-12-24 18:02:38', 21.98, 'Success'),
 (15, 16, 'E-Wallet', '', '2025-12-24 18:11:42', 120.00, 'Success'),
 (16, 17, 'Credit Card', '1234123412341234', '2025-12-25 03:03:46', 8.99, 'Success'),
-(17, 18, 'E-Wallet', '4123412341234123', '2025-12-25 03:21:16', 38.49, 'Success');
+(17, 18, 'E-Wallet', '4123412341234123', '2025-12-25 03:21:16', 38.49, 'Success'),
+(18, 19, 'E-Wallet', '', '2025-12-25 21:18:38', 35.00, 'Success');
 
 -- --------------------------------------------------------
 
@@ -240,6 +244,13 @@ CREATE TABLE `token` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `token`
+--
+
+INSERT INTO `token` (`id`, `expire`, `user_id`) VALUES
+('8c7ad2668d1ddeefa0c8e69559ba74c14aebcb3f', '2025-12-25 21:30:14', 61);
+
 -- --------------------------------------------------------
 
 --
@@ -251,7 +262,6 @@ CREATE TABLE `users` (
   `username` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `user_phone` int(11) DEFAULT NULL,
-  `user_dob` date DEFAULT NULL,
   `user_password` varchar(255) DEFAULT NULL,
   `user_photo` varchar(255) DEFAULT NULL,
   `user_role` enum('admin','member') DEFAULT 'member',
@@ -265,46 +275,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_dob`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`, `reward_points`) VALUES
-(21, 'ahmad_ali', 'ahmad.ali88@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Jalan Tun Razak, 50400 Kuala Lumpur, Wilayah Persekutuan', '2025-12-22 07:06:48', 1, 0),
-(22, 'siti_nurhaliza', 'siti.nur90@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '45, Lorong Bahagia, Taman Melawati, 53100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
-(23, 'tan_wei_ming', 'tan.weiming@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '88, Jalan SS2/24, 47300 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1, 0),
-(24, 'subramaniam_k', 'subra.k@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Gasing, 46000 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1, 0),
-(25, 'lee_chong_wei', 'lee.chongwei@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '101, Jalan Burma, 10050 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1, 0),
-(26, 'nor_azman', 'azman.nor@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '23, Jalan Skudai, 81300 Skudai, Johor', '2025-12-22 07:06:48', 1, 0),
-(27, 'lim_mei_ling', 'lim.meiling@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'B-12-3, Kondominium Indah, Jalan Ampang, 50450 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
-(28, 'rajesh_kumar', 'rajesh.kumar@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '7, Lebuhraya Persekutuan, 40000 Shah Alam, Selangor', '2025-12-22 07:06:48', 1, 0),
-(29, 'fatimah_yusof', 'fatimah.y@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '15, Jalan Sultan Ismail, 20200 Kuala Terengganu, Terengganu', '2025-12-22 07:06:48', 1, 0),
-(30, 'wong_kah_seng', 'wong.kahseng@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '99, Jalan Sultan Azlan Shah, 31400 Ipoh, Perak', '2025-12-22 07:06:48', 1, 0),
-(31, 'nurul_ain', 'nurul.ain@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '', '2025-12-22 07:06:48', 1, 0),
-(32, 'ganesh_m', 'ganesh.m@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '21, Jalan Tengku Kelana, 41000 Klang, Selangor', '2025-12-22 07:06:48', 1, 0),
-(33, 'sarah_lee', 'sarah.lee@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Lorong Selamat, 10400 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1, 0),
-(34, 'mohammad_zaki', 'm.zaki@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '56, Jalan Long Yunus, 15200 Kota Bharu, Kelantan', '2025-12-22 07:06:48', 1, 0),
-(35, 'chin_xiao_wei', 'chin.xw@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Tebrau, 80250 Johor Bahru, Johor', '2025-12-22 07:06:48', 1, 0),
-(36, 'kavita_devi', 'kavita.devi@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '44, Jalan Brickfields, 50470 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
-(37, 'zainal_abidin', 'zainal.a@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '77, Jalan Tunku Abdul Rahman, 93100 Kuching, Sarawak', '2025-12-22 07:06:48', 1, 0),
-(38, 'ng_kok_leong', 'ng.kokleong@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '3, Jalan Gaya, 88000 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1, 0),
-(39, 'aishah_binti_omar', 'aishah.omar@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '19, Jalan Meru, 41050 Klang, Selangor', '2025-12-22 07:06:48', 1, 0),
-(40, 'vincent_tan', 'vincent.tan@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Persiaran Gurney, 10250 Georgetown, Pulau Pinang', '2025-12-22 07:06:48', 1, 0),
-(41, 'siti_sarah', 'siti.sarah@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Hang Tuah, 75300 Melaka, Melaka', '2025-12-22 07:06:48', 1, 0),
-(42, 'jason_lim', 'jason.lim@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '22, Jalan Templer, 46050 Petaling Jaya, Selangor', '2025-12-22 07:06:48', 1, 0),
-(43, 'thirumalai_r', 'thiru.r@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '11, Jalan Silibin, 30100 Ipoh, Perak', '2025-12-22 07:06:48', 1, 0),
-(44, 'hazwan_hashim', 'hazwan.h@gmail.com', 13, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '67, Jalan Beserah, 25300 Kuantan, Pahang', '2025-12-22 07:06:48', 1, 0),
-(45, 'chan_yee_ling', 'chan.yl@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '33, Jalan Cheras, 56100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
-(46, 'amanda_wong', 'amanda.wong@gmail.com', 18, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', 'Lot 45, Jalan Penampang, 88300 Kota Kinabalu, Sabah', '2025-12-22 07:06:48', 1, 0),
-(47, 'faizal_hussein', 'faizal.h@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '8, Jalan Satok, 93400 Kuching, Sarawak', '2025-12-22 07:06:48', 1, 0),
-(48, 'devan_nair', 'devan.nair@gmail.com', 14, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '14, Jalan Sungai Besi, 57100 Kuala Lumpur', '2025-12-22 07:06:48', 1, 0),
-(49, 'koh_li_ann', 'koh.liann@gmail.com', 10, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '9, Jalan Molek 2/1, Taman Molek, 81100 Johor Bahru, Johor', '2025-12-22 07:06:48', 1, 0),
-(50, 'syed_mokhtar', 'syed.mokhtar@gmail.com', 19, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '50, Jalan Putra, 05150 Alor Setar, Kedah', '2025-12-22 07:06:48', 1, 0),
-(51, 'jason', 'jason@gmail.com', 12, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '10, Jalan Kiara 3, Mont Kiara, 50480 Kuala Lumpur', '2025-12-22 07:13:13', 1, 3),
-(52, 'lim', 'lim@gmail.com', 17, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '88, Jalan Seremban 2, 70300 Seremban, Negeri Sembilan', '2025-12-22 07:13:13', 1, 0),
-(53, 'test_member', 'member@gmail.com', 16, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Jalan Batu Caves, 68100 Batu Caves, Selangor', '2025-12-22 07:13:13', 1, 0),
-(54, 'test_admin', 'admin@gmail.com', 11, NULL, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '12, Jalan Tanjung Bungah, 11200 Tanjung Bungah, Pulau Pinang', '2025-12-22 07:13:13', 1, 0),
-(56, 'haha', 'haha@gmail.com', 1136599975, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '69497664be49e.jpg', 'member', 'hahaha', '2025-12-23 00:48:36', 1, 0),
-(57, 'Marcus', 'marcus@gmail.com', 112345678, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '694a2f8f8b94a.jpg', '', 'marcus', '2025-12-23 13:58:39', 1, 0),
-(58, 'lina', 'lina@gmail.com', 123456789, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '694bb398bcdee.jpg', '', 'lina', '2025-12-24 17:34:16', 1, 100),
-(59, 'lili', 'lili@gmail.com', 1823456789, NULL, '8cb2237d0679ca88db6464eac60da96345513964', '694bb70f4cab6.jpg', '', 'lili', '2025-12-24 17:49:03', 1, 14),
-(60, 'test', 'lim974818@gmail.com', 112704599, NULL, '601f1889667efaebb33b8c12572835da3f027f78', '694c189dde1d0.jpg', '', 'test', '2025-12-25 00:45:18', 1, 0);
+INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`, `reward_points`) VALUES
+(63, 'ry', 'limrouyu9@gmail.com', 124458892, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '12, Jalan SS2/1, Petaling Jaya, 47300 Selangor', '2025-12-25 22:14:22', 1, 150),
+(64, 'marcus', 'marcuslimfangye3011@gmail.com', 173310029, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Lorong 4, Taman Sentosa, 41200 Klang, Selangor', '2025-12-25 22:16:35', 1, 150),
+(66, 'lim', 'lim@gmail.com', 104451123, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '7, Jalan Pendidikan 1, 75450 Bukit Beruang, Melaka', '2025-12-25 22:20:01', 1, 0),
+(69, 'Joanna', 'lim974818@gmail.com', 115548871, '8cb2237d0679ca88db6464eac60da96345513964', 'default.jpg', 'member', 'Jalan Usahawan 2 Taman Danau Kota, Wangsa Maju, 53300 Kuala Lumpur', '2025-12-25 23:19:44', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -404,31 +379,31 @@ ALTER TABLE `book`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
