@@ -82,7 +82,6 @@ if (is_post()) {
     // If no errors → store data in session, generate OTP, send email, redirect to OTP verification
     if (!$_err) {
         // Save uploaded photo (if any)
-        $photo = '';
         if ($f) {
             $photo = save_photo($f, '../photos');
         }

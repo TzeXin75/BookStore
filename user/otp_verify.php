@@ -73,7 +73,7 @@ if (is_post() && !isset($_POST['resend'])) {
             $pending['hashed_password'],
             $pending['name'],
             $pending['photo'],
-            $pending['role'],
+            'member',
             $pending['phone'],
             $pending['address']
         ]);
