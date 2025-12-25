@@ -534,12 +534,6 @@ input[type="checkbox"] {
     min-width: 80px;
 }
 
-.badge.customer {
-    background-color: #f1f5f9;
-    color: #475569;
-    border: 1px solid #cbd5e1;
-}
-
 .badge.member {
     background-color: #dbeafe;
     color: #1e40af;
