@@ -569,7 +569,8 @@ input[type="checkbox"] {
     margin-bottom: 1rem;
 }
 
-/*           (ADMIN) USER INFORMATION
+/* =========================================
+          (ADMIN) USER INFORMATION
    ========================================= */
 
 /* --- 1. Page Header & Layout --- */
@@ -878,7 +879,8 @@ input[type="checkbox"] {
     }
 }
 
-/*            User profile ui
+/* =========================================
+           User profile ui
    =========================================  */
 :root {
     --primary-color: #4f46e5; /* Indigo */
@@ -1582,6 +1584,94 @@ footer, #footer-placeholder { background-color: #2c3e50; color: white; padding: 
     }
 }
 
+
+/* Small Mobile View (e.g., 480px and below) */
+@media screen and (max-width: 480px) {
+    /* Switch to 1 column for very small screens for maximum readability */
+    .product-container { 
+        grid-template-columns: 1fr; 
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-table {
+        font-size: 0.9rem;
+    }
+            
+    .cart-table th,
+    .cart-table td {
+        padding: 0.75rem 0.5rem;
+    }
+            
+    .cart-actions {
+        flex-direction: column;
+    }
+            
+    .cart-actions a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Flash Message ----------------------------------------------------------- */
+
+#info {
+    position: fixed;
+    color: #fff;
+    background: #666;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px 20px;
+    left: 50%;
+    translate: -50% 0;
+    z-index: 999;
+
+    top: -100px;
+    opacity: 0;
+}
+
+#info:not(:empty) {
+    animation: fade 5s;
+}
+
+@keyframes fade {
+      0% { top: -100px; opacity: 0; }
+     10% { top:  100px; opacity: 1; }
+     90% { top:  100px; opacity: 1; }
+    100% { top: -100px; opacity: 0; }
+}
+
+/* Reward Tier Styles */
+.tier-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.tier-progress {
+    margin-top: 8px;
+    border-radius: 6px;
+    background: #e6e6e6;
+    height: 12px;
+    overflow: hidden;
+}
+.tier-progress-bar {
+    height: 100%;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+}
+
+.xp-value {
+    font-size: 0.95rem;
+    vertical-align: middle;
+    opacity: 0.95;
+}
+
+
+
+
 /* =========================================
    LOGIN PAGE STYLES
    ========================================= */
@@ -1649,18 +1739,18 @@ footer, #footer-placeholder { background-color: #2c3e50; color: white; padding: 
     display: block;
 }
         
-.form-group {
+.login-form-group {
     margin-bottom: 1.2rem;
 }
         
-.form-group label {
+.login-form-group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: #4a5568;
 }
         
-.form-group input {
+.login-form-group input {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #cbd5e0;
@@ -1669,7 +1759,7 @@ footer, #footer-placeholder { background-color: #2c3e50; color: white; padding: 
     transition: border-color 0.3s;
 }
         
-.form-group input:focus {
+.login-form-group input:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -1698,7 +1788,7 @@ footer, #footer-placeholder { background-color: #2c3e50; color: white; padding: 
     margin-top: 0.5rem;
 }
 
-.reset-btn {
+.login-reset-btn {
     width: 100%;
     padding: 0.85rem;
     background: #f56565;
@@ -1805,86 +1895,296 @@ footer, #footer-placeholder { background-color: #2c3e50; color: white; padding: 
     }
 }
 
-/* Small Mobile View (e.g., 480px and below) */
-@media screen and (max-width: 480px) {
-    /* Switch to 1 column for very small screens for maximum readability */
-    .product-container { 
-        grid-template-columns: 1fr; 
-    }
+/* =============================
+              User 
+   ============================= */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
-
-@media (max-width: 768px) {
-    .cart-table {
-        font-size: 0.9rem;
-    }
-            
-    .cart-table th,
-    .cart-table td {
-        padding: 0.75rem 0.5rem;
-    }
-            
-    .cart-actions {
-        flex-direction: column;
-    }
-            
-    .cart-actions a {
-        width: 100%;
-        text-align: center;
-    }
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
-
-/* Flash Message ----------------------------------------------------------- */
-
-#info {
-    position: fixed;
-    color: #fff;
-    background: #666;
-    border: 1px solid #333;
-    border-radius: 5px;
-    padding: 10px 20px;
-    left: 50%;
-    translate: -50% 0;
-    z-index: 999;
-
-    top: -100px;
-    opacity: 0;
-}
-
-#info:not(:empty) {
-    animation: fade 5s;
-}
-
-@keyframes fade {
-      0% { top: -100px; opacity: 0; }
-     10% { top:  100px; opacity: 1; }
-     90% { top:  100px; opacity: 1; }
-    100% { top: -100px; opacity: 0; }
-}
-
-/* Reward Tier Styles */
-.tier-badge {
-    display: inline-block;
-    padding: 6px 10px;
-    color: #fff;
-    font-weight: 700;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-.tier-progress {
-    margin-top: 8px;
-    border-radius: 6px;
-    background: #e6e6e6;
-    height: 12px;
+/* ====== User Register ====== */
+.register-container {
+    max-width: 500px;
+    width: 100%;
+}   
+.register-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
     overflow: hidden;
 }
-.tier-progress-bar {
+.register-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 50px 30px 40px;
+}
+.register-header h1 {
+    margin: 0 0 10px;
+    font-size: 2.2rem;
+}
+.register-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+.register-form {
+    padding: 40px 30px;
+}
+.register-form-group {
+    margin-bottom: 25px;
+}
+.register-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+}
+textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.3s, box-shadow 0.3s;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+}
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+}
+.file-upload-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #f8f9fa;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.file-upload-label {
+    color: #667eea;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+    opacity: 0;
+    cursor: pointer;
+}
+.file-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+}
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.submit-btn:hover {
+    transform: translateY(-2px);
+}
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+.login-link a {
+    color: #667eea;
+    font-weight: bold;
+    text-decoration: none;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+.error-msg {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+}
+@media (max-width: 768px) {
+    .register-form { padding: 30px 20px; }
+    .register-header { padding: 40px 20px 30px; }
+    .register-container { padding: 15px; }
+}
+@media (max-width: 480px) {
+    .register-header h1 { font-size: 1.8rem; }
+    .register-form { padding: 25px 15px; }
 }
 
-.xp-value {
-    font-size: 0.95rem;
-    vertical-align: middle;
-    opacity: 0.95;
+
+/* ====== reset/token password ====== */
+.reset-container {
+    max-width: 500px;
+    width: 100%;
+}
+.reset-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+.reset-header {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    text-align: center;
+    padding: 50px 30px 40px;
+}
+.reset-header h1 {
+    margin: 0 0 10px;
+    font-size: 2.2rem;
+}
+.reset-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+.reset-form {
+    padding: 40px 30px;
+}
+.reset-form-group {
+    margin-bottom: 30px;
+}
+.reset-form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+}
+input[type="email"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.3s, box-shadow 0.3s;
+    }
+input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.2);
+}
+.error-msg {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 8px;
+    display: block;
+}
+.success-msg {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+}
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.submit-btn:hover {
+    transform: translateY(-2px);
+}
+.reset-btn {
+    width: 100%;
+    background: #f1f1f1;
+    color: #333;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 15px;
+}
+.login-link {
+    text-align: center;
+    margin-top: 30px;
+    color: #666;
+}
+.login-link a {
+    color: #e74c3c;
+    font-weight: bold;
+    text-decoration: none;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+}
+@media (max-width: 768px) {
+    .reset-form { padding: 30px 20px; }
+    .reset-header { padding: 40px 20px 30px; }
+    .reset-container { padding: 15px; }
+}
+@media (max-width: 480px) {
+    .reset-header h1 { font-size: 1.8rem; }
+    .reset-form { padding: 25px 15px; }
 }

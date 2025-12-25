@@ -82,7 +82,7 @@ if (is_post()) {
 
             <!-- Login Form -->
             <form method="post">
-                <div class="form-group">
+                <div class="login-form-group">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" id="email" name="email" class="form-input" 
                            maxlength="100" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" 
@@ -94,7 +94,7 @@ if (is_post()) {
                     <?php endif; ?>
                 </div>
                 
-                <div class="form-group">
+                <div class="login-form-group">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" id="password" name="password" class="form-input" 
                            maxlength="100" required>
@@ -105,9 +105,9 @@ if (is_post()) {
                     <?php endif; ?>
                 </div>
                 
-                <div class="form-group" style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                <div class="login-form-group" style="margin-top: 1.5rem; display: flex; gap: 10px;">
                     <button type="submit" class="login-btn">Login</button>
-                    <button type="reset" class="reset-btn">Reset</button>
+                    <button type="reset" class="login-reset-btn">Reset</button>
                 </div>
                 
                 <div class="login-links">
