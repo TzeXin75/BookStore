@@ -43,7 +43,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <thead>
                 <tr>
                     <th>Order ID</th>
-                    <th>Customer</th>
+                    <th>Member</th>
                     <th>Date</th>
                     <th>Status</th>
                     <th>Total</th>

@@ -79,7 +79,7 @@ $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(0, 8, date('d M Y, H:i', strtotime($order['order_date'])), 0, 1);
 
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(35, 8, 'Customer:', 0, 0);
+$pdf->Cell(35, 8, 'Member:', 0, 0);
 $pdf->SetFont('Arial', '', 11);
 $pdf->Cell(0, 8, htmlspecialchars($order['username']) . ' (' . htmlspecialchars($order['email']) . ')', 0, 1);
 
