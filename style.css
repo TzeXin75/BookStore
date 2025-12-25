@@ -2016,7 +2016,7 @@ input[type="file"] {
     color: #666;
     margin-top: 5px;
 }
-.submit-btn {
+.register-submit-btn {
     width: 100%;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -2027,20 +2027,20 @@ input[type="file"] {
     cursor: pointer;
     transition: transform 0.2s;
 }
-.submit-btn:hover {
+.register-submit-btn:hover {
     transform: translateY(-2px);
 }
-.login-link {
+.register-login-link {
     text-align: center;
     margin-top: 20px;
     color: #666;
 }
-.login-link a {
+.register-login-link a {
     color: #667eea;
     font-weight: bold;
     text-decoration: none;
 }
-.login-link a:hover {
+.register-login-link a:hover {
     text-decoration: underline;
 }
 .error-msg {

@@ -38,9 +38,6 @@ if (is_post()) {
     if (!$confirm) {
         $_err['confirm'] = 'Required';
     }
-    else if (strlen($confirm) < 5 || strlen($confirm) > 100) {
-        $_err['confirm'] = 'Between 5-100 characters';
-    }
     else if ($confirm != $password) {
         $_err['confirm'] = 'Not matched';
     }
@@ -75,8 +72,8 @@ if (is_post()) {
         $_err['address'] = 'Maximum 255 characters';
     }
 
-    // Validate: photo (file)
-    if($f){
+    // Validate: photo (optional)
+    if ($f) {
         if (!str_starts_with($f->type, 'image/')) {
             $_err['photo'] = 'Must be image';
         }
@@ -84,27 +81,52 @@ if (is_post()) {
             $_err['photo'] = 'Maximum 1MB';
         }
     }
-    
     // DB operation
-    if (!$_err) {
-        // (1) Save photo
-        $photo = 'default.jpg';
-
-        // Only save photo if one was actually uploaded
+    if (!$_err) { 
         if ($f) {
             $photo = save_photo($f, '../photos');
         }
-        
-        // (2) Insert user (member)
-        $stm = $_db->prepare('
-            INSERT INTO users (email, user_password, username, user_photo, user_role, user_phone, user_address)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ');
-        $hashedPassword = sha1($password);       
-        $stm->execute([$email, $hashedPassword, $name, $photo, 'member', $phone, $address]);
 
-        temp('info', 'Registration successful! Please login.');
-        redirect('/login.php');
+        // Insert user as inactive
+        $stm = $_db->prepare('
+            INSERT INTO users (email, user_password, username, user_photo, user_role, user_phone, user_address, user_status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+        ');
+        $hashedPassword = sha1($password);
+        $stm->execute([$email, $hashedPassword, $name, $photo, 'member', $phone, $address]);
+        $user_id = $_db->lastInsertId();
+
+        // Generate 6-digit OTP
+        $otp = random_int(100000, 999999);
+
+        // Save OTP in session (with user data for verification)
+        $_SESSION['pending_user'] = [
+            'user_id' => $user_id,
+            'email'   => $email,
+            'otp'     => $otp,
+            'expires' => time() + 900 // 15 minutes
+        ];
+
+        // Send OTP email
+        $mail = get_mail();
+        $mail->addAddress($email, $name);
+        $mail->isHTML(true);
+        $mail->Subject = 'Your BookStore Verification Code';
+        $mail->Body = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
+                <h2 style='color: #667eea;'>Hello $name!</h2>
+                <p>Your verification code is:</p>
+                <h1 style='font-size: 2.5rem; letter-spacing: 10px; text-align: center; color: #667eea;'>$otp</h1>
+                <p>This code expires in 15 minutes.</p>
+                <p>If you didn't request this, please ignore this email.</p>
+                <hr>
+                <p style='color: #666; font-size: 0.9em;'>BookStore Team</p>
+            </div>
+        ";
+        $mail->send();
+
+        temp('info', 'Please check your email for the verification code.');
+        redirect('otp_verify.php');
     }
 }
 ?>
@@ -131,7 +153,7 @@ if (is_post()) {
                 </div>
 
                 <form method="post" class="register-form" enctype="multipart/form-data">
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" maxlength="100" 
                                placeholder="Enter your email" required
@@ -141,7 +163,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" maxlength="100" 
                                placeholder="At least 5 characters" required>
@@ -150,7 +172,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="confirm">Confirm Password</label>
                         <input type="password" id="confirm" name="confirm" maxlength="100" 
                                placeholder="Re-enter password" required>
@@ -159,7 +181,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" maxlength="100" 
                                placeholder="Your full name" required
@@ -169,7 +191,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" maxlength="20" 
                                placeholder="e.g., 0123456789" required
@@ -179,7 +201,7 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="address">Address</label>
                         <textarea id="address" name="address" maxlength="255" 
                                   placeholder="Enter your full address" required><?= encode($_POST['address'] ?? '') ?></textarea>
@@ -189,7 +211,7 @@ if (is_post()) {
                     </div>
 
                     <!-- PHOTO UPLOAD WITH PREVIEW -->
-                    <div class="form-group">
+                    <div class="register-form-group">
                         <label for="photo">Profile Photo</label>
                         <div class="file-upload-wrapper" id="uploadWrapper">
                             <input type="file" id="photo" name="photo" accept="image/*">
@@ -219,9 +241,9 @@ if (is_post()) {
                         <?php endif; ?>
                     </div>
 
-                    <button type="submit" class="submit-btn">Register</button>
+                    <button type="submit" class="register-submit-btn">Register</button>
 
-                    <div class="login-link">
+                    <div class="register-login-link">
                         Already have an account? <a href="../login.php">Login here</a>
                     </div>
                 </form>
