@@ -111,7 +111,7 @@ if (is_post()) {
         $mail = get_mail();
         $mail->addAddress($email, $name);
         $mail->isHTML(true);
-        $mail->Subject = 'Your BookStore Verification Code';
+        $mail->Subject = 'Your SIX SEVEN BS Verification Code';
         $mail->Body = "
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
                 <h2 style='color: #667eea;'>Hello $name!</h2>
@@ -120,7 +120,7 @@ if (is_post()) {
                 <p>This code expires in 15 minutes.</p>
                 <p>If you didn't request this, please ignore this email.</p>
                 <hr>
-                <p style='color: #666; font-size: 0.9em;'>BookStore Team</p>
+                <p style='color: #666; font-size: 0.9em;'>SIX SEVEN BS Team</p>
             </div>
         ";
         $mail->send();
@@ -136,7 +136,7 @@ if (is_post()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - BookStore</title>
+    <title>Register - SIX SEVEN BS</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -149,7 +149,7 @@ if (is_post()) {
             <div class="register-card">
                 <div class="register-header">
                     <h1>Create Your Account</h1>
-                    <p>Join BookStore and explore endless stories!</p>
+                    <p>Join SIX SEVEN BS and explore endless stories!</p>
                 </div>
 
                 <form method="post" class="register-form" enctype="multipart/form-data">

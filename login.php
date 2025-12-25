@@ -61,7 +61,7 @@ if (is_post()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Bookstore</title>
+    <title>Login - SIX SEVEN BS</title>
     <link rel="stylesheet" href="style.css" />
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     
@@ -71,7 +71,7 @@ if (is_post()) {
 
     <div class="login-container">
         <div class="login-box">
-            <h2>Welcome to BookStore</h2>
+            <h2>Welcome to SIX SEVEN BS</h2>
             <p class="login-subtitle">Login to your account</p>
             
             <?php if (isset($_GET['info'])): ?>

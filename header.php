@@ -7,7 +7,7 @@
 <header class="site-header">
     <div class="header-container">
         <div class="header-left">
-            <a href="index.php" class="logo">BookStore</a>
+            <a href="index.php" class="logo">SIX SEVEN BS</a>
         </div>
 
         <div class="header-center">

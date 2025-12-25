@@ -54,7 +54,7 @@ if (!empty($galleryItems)) {
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title><?= htmlspecialchars($book['title']) ?> - Bookstore</title>
+    <title><?= htmlspecialchars($book['title']) ?> - SIX SEVEN BS</title>
     <link rel="stylesheet" href="style.css" />
     <style>
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

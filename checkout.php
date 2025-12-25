@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_points'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout - Bookstore</title>
+    <title>Checkout - SIX SEVEN BS</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <!--map library for map-->
