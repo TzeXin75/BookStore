@@ -42,37 +42,63 @@ if (!$u) {
 ?>
 
 <style>
-    .radio-group {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        height: 38px;
-    }
-    .radio-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        margin: 0;
-        color: #333;
-    }
-    .radio-label input[type="radio"] {
-        margin: 0;
-        width: 18px;
-        height: 18px;
-        accent-color: #2563eb;
-        cursor: pointer;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    :root{ --bg:#f6f9fc; --card:#fff; --muted:#6b7280; --accent:#2563eb; --border:#e6eef8 }
+    body{ font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); }
+    .user-panel{ max-width:1100px; margin:14px auto; padding:12px }
+    .panel-card{ background:var(--card); border:1px solid var(--border); border-radius:8px; box-shadow:0 4px 18px rgba(16,24,40,0.04); overflow:hidden }
+    .panel-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border) }
+    .panel-title{ font-size:18px; font-weight:600; color:#0f172a }
+    .controls{ display:flex; align-items:center; gap:10px }
+    .btn{ background:var(--accent); color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:600 }
+    .btn.ghost{ background:transparent; color:var(--accent); border:1px solid #dbeafe }
+    .panel-body{ padding:18px }
+    .profile-grid{ display:grid; grid-template-columns:320px 1fr; gap:18px }
+    .card{ background:transparent; border-radius:6px }
+    .profile-card{ border:1px solid var(--border); padding:18px; border-radius:8px }
+    .avatar-lg{ width:96px; height:96px; border-radius:12px; object-fit:cover; border:1px solid #eef6ff }
+    .avatar-wrapper{ display:flex; align-items:center; gap:12px }
+    .profile-name{ margin:12px 0 0; font-size:16px; font-weight:700 }
+    .profile-email{ margin:6px 0 0; color:var(--muted); font-size:13px }
+    .role-badge-display .badge-pill{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eef2ff; color:#1e40af; font-weight:600; margin-top:10px }
+    .card-actions{ margin-top:16px; border-top:1px dashed #f1f5f9; padding-top:12px }
+    .card-info-row{ display:flex; justify-content:space-between; padding:8px 0; color:var(--muted) }
+    .select-wrapper{ position:relative; display:inline-block }
+    .custom-select{ padding:8px 36px 8px 12px; border-radius:6px; border:1px solid #e6eef8 }
+    .select-arrow{ position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted) }
+
+    /* personal info card */
+    #personalInfoCard{ border:1px solid var(--border); padding:18px; border-radius:8px; background:linear-gradient(180deg,#fff,#fbfdff) }
+    .info-table{ width:100%; border-collapse:collapse; font-size:14px }
+    .info-table th{ text-align:left; padding:10px 12px; width:28%; color:var(--muted); font-weight:600 }
+    .info-table td{ padding:10px 12px }
+
+    /* edit/view mode toggles */
+    .edit-mode-field{ display:none }
+    #personalInfoCard.is-editing .edit-mode-field{ display:block }
+    #personalInfoCard.is-editing .view-mode-field{ display:none }
+
+    .radio-group{ display:flex; gap:18px; align-items:center }
+    .radio-label{ display:flex; align-items:center; gap:8px; cursor:pointer; color:#111827 }
+    .radio-label input[type="radio"]{ width:16px; height:16px; accent-color:var(--accent) }
+
+    .btn-save-group{ display:none }
+    #personalInfoCard.is-editing .btn-save-group{ display:inline-flex; gap:8px }
+    .btn-cancel{ background:transparent; border:1px solid #e6eef8; padding:8px 12px; border-radius:6px; cursor:pointer }
+
+    @media (max-width:800px){ .profile-grid{ grid-template-columns:1fr; } .avatar-lg{ width:72px; height:72px } }
 </style>
 
-<div class="page-header">
-    <link rel="stylesheet" href="../style.css">
-    <h2>User Details</h2>
-    <a href="?page=users" class="btn-back">← Back to List</a>
-</div>
-
-<div class="profile-grid">
+<div class="user-panel">
+    <div class="panel-card">
+        <div class="panel-header">
+            <div class="panel-title">User Details</div>
+            <div class="controls">
+                <a href="?page=users" class="btn ghost">← Back to List</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="profile-grid">
     
     <div class="card profile-card">
         <div class="card-header-visual">
@@ -225,6 +251,9 @@ if (!$u) {
         </form>
     </div>
 
+</div>
+        </div>
+    </div>
 </div>
 
 <script>
