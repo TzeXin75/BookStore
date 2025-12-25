@@ -1,4 +1,5 @@
 <?php
+//start session and connect to database
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once 'config/db_connect.php';
 
@@ -18,7 +19,7 @@ if ($cart_id) {
     try {
         $pdo->beginTransaction();
 
-        // Strict delete: must match both ID and the logged-in user
+        // Strict delete: must match both cart_id and the logged-in user
         $stmt = $pdo->prepare("DELETE FROM cart WHERE cart_id = ? AND user_id = ?");
         $stmt->execute([$cart_id, $user_id]);
 
@@ -29,5 +30,6 @@ if ($cart_id) {
     }
 }
 
-header("Location: cart.php");
-exit();
+    // After deletion (or if no cart_id provided) redirect back to cart page
+    header("Location: cart.php");
+    exit();

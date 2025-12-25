@@ -20,12 +20,11 @@ if (is_post()) {
         $email   = req('email');
         $phone   = req('phone');
         $address = req('address');
-        $dob     = req('dob');
         $status  = req('status'); //1 = active, 0 = inactive
 
         //database record 
-        $stm = $_db->prepare('UPDATE users SET email=?, user_phone=?, user_address=?, user_dob=?, user_status=? WHERE user_id=?');
-        $stm->execute([$email, $phone, $address, $dob, $status, $id]);
+        $stm = $_db->prepare('UPDATE users SET email=?, user_phone=?, user_address=?, user_status=? WHERE user_id=?');
+        $stm->execute([$email, $phone, $address, $status, $id]);
     }
 }
 
@@ -174,13 +173,6 @@ if (!$u) {
                     <td>
                         <span class="view-mode-field"><?= htmlspecialchars($u->user_phone ?: 'Not provided') ?></span>
                         <input type="text" name="phone" class="edit-mode-field" value="<?= htmlspecialchars($u->user_phone) ?>">
-                    </td>
-                </tr>
-                <tr>
-                    <th>Date of Birth</th>
-                    <td>
-                        <span class="view-mode-field"><?= htmlspecialchars($u->user_dob ?: '-') ?></span>
-                        <input type="date" name="dob" class="edit-mode-field" value="<?= htmlspecialchars($u->user_dob) ?>">
                     </td>
                 </tr>
 

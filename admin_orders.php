@@ -1,15 +1,18 @@
 <?php
 require_once 'config/db_connect.php';
 
+// Start session and ensure admin access before loading orders
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    // Not an admin — redirect to login
     header("Location: login.php");
     exit();
 }
 
+// Fetch active (not cancelled) orders along with the member username
 $sql = "SELECT o.*, u.username 
         FROM orders o 
         JOIN users u ON o.user_id = u.user_id 

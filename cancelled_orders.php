@@ -1,17 +1,18 @@
 <?php
 require_once 'config/db_connect.php';
 
+// Start session and verify admin access
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Security check
+// Only administrators should be able to view cancelled orders archive
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
-// Fetch only Cancelled orders
+// Query cancelled orders and include username for display
 $sql = "SELECT o.*, u.username 
         FROM orders o 
         JOIN users u ON o.user_id = u.user_id 
