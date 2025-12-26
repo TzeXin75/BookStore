@@ -14,6 +14,9 @@ if (isset($_SESSION['user']['user_id'])) {
     exit(); 
 }
 
+// Clear any leftover voucher or redeemed points from previous sessions/logins
+unset($_SESSION['voucher_discount'], $_SESSION['voucher_code'], $_SESSION['redeemed_points'], $_SESSION['discount_amount']);
+
 //handle voucher application and removal
 $msg = ""; $msg_type = ""; 
 if (isset($_POST['remove_voucher'])) {
