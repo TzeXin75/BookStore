@@ -17,14 +17,13 @@ if (isset($_SESSION['user']['user_id'])) {
 //handle voucher application and removal
 $msg = ""; $msg_type = ""; 
 if (isset($_POST['remove_voucher'])) {
-    unset($_SESSION['discount_amount']);
+    unset($_SESSION['voucher_discount']);
     unset($_SESSION['voucher_code']);
     $msg = "Voucher removed."; $msg_type = "success";
 }
 
 // allow removing redeemed points
 if (isset($_POST['remove_points'])) {
-    unset($_SESSION['discount_amount']);
     unset($_SESSION['redeemed_points']);
     $msg = "Redeemed points removed."; $msg_type = "success";
 }
@@ -36,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voucher_code'])) {
     $stmt->execute([$code]);
     $voucher = $stmt->fetch();
     if ($voucher) {
-        $_SESSION['discount_amount'] = $voucher['discount_amount'];
+        $_SESSION['voucher_discount'] = $voucher['discount_amount'];
         $_SESSION['voucher_code'] = $code; 
         $msg = "Voucher Applied!"; $msg_type = "success";
     } else {
@@ -56,8 +55,14 @@ if (count($cart_items) == 0) { header("Location: index.php"); exit(); }
 //calculate subtotal , apply discount , generate unique reference for payment
 $base_total = 0;
 foreach ($cart_items as $item) { $base_total += $item['price'] * $item['quantity']; }
-$discount = $_SESSION['discount_amount'] ?? 0;
+// combine voucher and redeemed points, cap at subtotal
+$voucher_discount = $_SESSION['voucher_discount'] ?? 0;
+$redeemed_points_amount = $_SESSION['redeemed_points'] ?? 0;
+$discount = $voucher_discount + $redeemed_points_amount;
+$discount = min($discount, $base_total);
 $final_total = max(0, $base_total - $discount);
+// keep legacy key for compatibility
+$_SESSION['discount_amount'] = $discount;
 $checkout_ref = "REF" . time();
 
 // Fetch user's reward points (for redeem option)
@@ -69,10 +74,12 @@ $user_points = (int)$stmt_pts->fetchColumn();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_points'])) {
     $redeem = min($user_points, $base_total);
     if ($redeem > 0) {
-        $_SESSION['discount_amount'] = $redeem;
         $_SESSION['redeemed_points'] = $redeem;
-        $discount = $redeem;
+        $voucher_discount = $_SESSION['voucher_discount'] ?? 0;
+        $discount = $voucher_discount + $redeem;
+        $discount = min($discount, $base_total);
         $final_total = max(0, $base_total - $discount);
+        $_SESSION['discount_amount'] = $discount;
         $msg = "Points applied!"; $msg_type = "success";
     } else {
         $msg = "No points available to redeem."; $msg_type = "error";
@@ -121,22 +128,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_points'])) {
             </div>
             <hr>
             
-                <!--display the voucher code and reduced price-->
-            <?php if ($discount > 0): ?>
-                <div class="summary-item" style="color: green; font-weight: bold;">
-                    <span>
-                        <?php if (!empty($_SESSION['voucher_code'])): ?>
-                            Discount (<?= htmlspecialchars($_SESSION['voucher_code']) ?>):
-                        <?php else: ?>
-                            Discount:
-                        <?php endif; ?>
-                    </span>
-                    <span>RM<?= number_format($discount, 2) ?></span>
-                </div>
-                <?php if (!empty($_SESSION['voucher_code'])): ?>
-                    <form action="checkout.php" method="POST"><button type="submit" name="remove_voucher" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8em; padding:0; margin-bottom:10px;">[Remove Voucher]</button></form>
+                <!--display the voucher amount separately from redeemed points-->
+                <?php if ($voucher_discount > 0): ?>
+                    <div class="summary-item" style="color: green; font-weight: bold;">
+                        <span>
+                            <?php if (!empty($_SESSION['voucher_code'])): ?>
+                                Discount (<?= htmlspecialchars($_SESSION['voucher_code']) ?>):
+                            <?php else: ?>
+                                Discount:
+                            <?php endif; ?>
+                        </span>
+                        <span>RM<?= number_format($voucher_discount, 2) ?></span>
+                    </div>
+                    <?php if (!empty($_SESSION['voucher_code'])): ?>
+                        <form action="checkout.php" method="POST"><button type="submit" name="remove_voucher" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8em; padding:0; margin-bottom:10px;">[Remove Voucher]</button></form>
+                    <?php endif; ?>
                 <?php endif; ?>
-            <?php endif; ?>
             
             <!-- Reward points redeem -->
             <?php if (!empty($user_points)): ?>
