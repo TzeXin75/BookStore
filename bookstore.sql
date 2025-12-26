@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2025 at 07:28 PM
+-- Generation Time: Dec 26, 2025 at 05:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -87,8 +87,8 @@ INSERT INTO `book` (`id`, `title`, `description`, `author`, `publisher`, `catego
 (37, 'Space Explorer', 'Blast off into the cosmos! Color your way through galaxies, planets, and stars. This educational coloring book introduces children to the wonders of our solar system and the mysteries beyond.', 'Anna White', 'Sky Books', 'Children', 'Color Book', 'English', 16.00, 450, NULL, 'Space Explorer.jpg', NULL, '2025-12-25 09:38:53'),
 (38, 'Princess Tales', 'A magical coloring journey through enchanted forests and majestic castles. This book features beautiful princesses, brave knights, and fairy-tale scenes that will capture the imagination of every little dreamer.', 'Lucy Green', 'Fairy Books', 'Children', 'Color Book', 'English', 14.00, 390, NULL, 'Princess Tales.jpg', NULL, '2025-12-25 09:38:53'),
 (39, 'Farm Animals', 'Introduce your toddler to life on the farm! With simple, bold outlines, this coloring book is perfect for little hands to practice their motor skills while learning about cows, sheep, and friendly farm dogs.', 'Tom Brown', 'Barn Press', 'Children', 'Color Book', 'English', 12.00, 500, NULL, 'Farm Animals.jpg', NULL, '2025-12-25 09:38:53'),
-(40, 'The Beginning After the End: Vol. 9 Reckoning', 'Arthur Leywin continues his perilous journey in the land of Alacrya. Disguised as an ascender, he must master the mysteries of aether within the Relictombs to reclaim his lost power. As political tensions rise and ancient threats resurface, Arthur faces his most difficult trials yet in a desperate bid to return to his loved ones and save his homeland from total destruction.', 'TurtleMe', 'Tapas', 'Fiction', 'Novel', 'English', 32.00, 400, NULL, 'The Beginning after the End Vol 9.jpg', NULL, '2025-12-25 10:46:18'),
-(41, 'Omniscient Reader\'s Viewpoint: Vol. 5', 'The scenarios become increasingly lethal as Kim Dokja navigates the fifth trial. As the boundaries between the story and reality continue to blur, Dokja must use his exclusive knowledge of the original novel to protect his companions and stay one step ahead of the Constellations. In this volume, the stakes are higher than ever as the true nature of the Star Stream begins to reveal itself.', 'singNsong', 'Ize Press', 'Fiction', 'Novel', 'English', 35.00, 419, NULL, 'Omniscient Reader\'s Viewpoint Vol 5.jpg', NULL, '2025-12-25 10:46:18');
+(43, 'NEW PRODUCT A', NULL, 'AUTHOR A', NULL, 'Non-Fiction', 'Biography', NULL, 20.00, 200, 'download.svg', NULL, NULL, '2025-12-26 04:43:57'),
+(44, 'NEW PRODUCT B', NULL, 'AUTHOR B', NULL, 'Fiction', 'Novel', NULL, 50.00, 10, 'download.svg', NULL, NULL, '2025-12-26 04:43:57');
 
 -- --------------------------------------------------------
 
@@ -103,15 +103,6 @@ CREATE TABLE `cart` (
   `quantity` int(11) NOT NULL DEFAULT 1,
   `added_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`cart_id`, `user_id`, `id`, `quantity`, `added_at`) VALUES
-(7, 4, 41, 1, '2025-12-26 02:17:24'),
-(13, 1, 24, 1, '2025-12-26 02:22:44'),
-(14, 1, 32, 1, '2025-12-26 02:22:49');
 
 -- --------------------------------------------------------
 
@@ -138,8 +129,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `total_amount`, `orde
 (3, 1, '2025-12-26 02:13:34', 0.00, 'Cancelled', 'Jalan Persekutuan, Federal Hill, Bangsar, Kuala Lumpur, 50566, Malaysia'),
 (4, 4, '2025-12-26 02:15:41', 29.00, 'Shipped', '73, Jalan Bukit Bintang, Bukit Bintang, Kuala Lumpur, 55100, Malaysia'),
 (5, 4, '2025-12-26 02:17:09', 61.12, 'Completed', 'Semarak, Kuala Lumpur, 53200, Malaysia'),
-(6, 2, '2025-12-26 02:18:38', 74.00, 'Pending', 'Jalan Taylors, PJS 7, Sunway City, Subang Jaya City Council, Petaling, Selangor, 46150, Malaysia'),
-(7, 2, '2025-12-26 02:19:15', 168.00, 'Shipped', 'Jalan Sri Semantan 2, Taman Duta, Kuala Lumpur, 50480, Malaysia');
+(8, 1, '2025-12-26 11:55:12', 575.00, 'Pending', 'Kuala Lumpur, Jalan Tun Sambanthan, Kampung Attap, Kuala Lumpur, 50000, Malaysia'),
+(9, 3, '2025-12-26 12:30:18', 128.00, 'Cancelled', 'Tower Wing, Jalan Sultan Hishamuddin, Kuala Lumpur, 50566, Malaysia');
 
 -- --------------------------------------------------------
 
@@ -170,7 +161,10 @@ INSERT INTO `order_details` (`detail_id`, `order_id`, `id`, `quantity`, `unit_pr
 (8, 6, 10, 1, 39.00),
 (9, 6, 17, 1, 140.00),
 (10, 7, 9, 1, 48.00),
-(11, 7, 12, 1, 120.00);
+(11, 7, 12, 1, 120.00),
+(12, 8, 41, 21, 35.00),
+(13, 9, 42, 5, 20.00),
+(14, 9, 4, 1, 38.00);
 
 -- --------------------------------------------------------
 
@@ -199,7 +193,9 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `payment_method`, `transaction
 (4, 4, 'E-Wallet', '', '2025-12-26 02:15:41', 29.00, 'Success'),
 (5, 5, 'Online Banking', '1234432111112222', '2025-12-26 02:17:09', 61.12, 'Success'),
 (6, 6, 'Credit Card', '1231212112341111', '2025-12-26 02:18:38', 74.00, 'Success'),
-(7, 7, 'E-Wallet', '', '2025-12-26 02:19:15', 168.00, 'Success');
+(7, 7, 'E-Wallet', '', '2025-12-26 02:19:15', 168.00, 'Success'),
+(8, 8, 'E-Wallet', '', '2025-12-26 11:55:12', 575.00, 'Success'),
+(9, 9, 'E-Wallet', '', '2025-12-26 12:30:18', 128.00, 'Success');
 
 -- --------------------------------------------------------
 
@@ -238,9 +234,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `user_phone`, `user_password`, `user_photo`, `user_role`, `user_address`, `user_registrationDate`, `user_status`, `reward_points`) VALUES
-(1, 'RY', 'limrouyu9@gmail.com', 124458892, '8cb2237d0679ca88db6464eac60da96345513964', '', 'member', '12, Jalan SS2/1, Petaling Jaya, 47300 Selangor', '2025-12-25 22:14:22', 1, 160),
-(2, 'marcus', 'marcuslimfangye3011@gmail.com', 173310029, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'member', '5, Lorong 4, Taman Sentosa, 41200 Klang, Selangor', '2025-12-25 22:16:35', 1, 242),
-(3, 'lim', 'lim@gmail.com', 104451123, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '7, Jalan Pendidikan 1, 75450 Bukit Beruang, Melaka', '2025-12-25 22:20:01', 1, 0),
+(1, 'RY', 'limrouyu9@gmail.com', 124458892, '8cb2237d0679ca88db6464eac60da96345513964', '', 'member', '12, Jalan SS2/1, Petaling Jaya, 47300 Selangor', '2025-12-25 22:14:22', 1, 575),
+(3, 'lim', 'lim@gmail.com', 104451123, '8cb2237d0679ca88db6464eac60da96345513964', NULL, 'admin', '7, Jalan Pendidikan 1, 75450 Bukit Beruang, Melaka', '2025-12-25 22:20:01', 1, 128),
 (4, 'Joanna', 'lim974818@gmail.com', 115548871, '8cb2237d0679ca88db6464eac60da96345513964', 'default.jpg', 'member', 'Jalan Usahawan 2 Taman Danau Kota, Wangsa Maju, 53300 Kuala Lumpur', '2025-12-25 23:19:44', 1, 90);
 
 -- --------------------------------------------------------
@@ -335,31 +330,31 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT for table `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -372,12 +367,7 @@ ALTER TABLE `users`
 --
 ALTER TABLE `vouchers`
   MODIFY `voucher_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- Constraints for dumped tables
---
-
-
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
