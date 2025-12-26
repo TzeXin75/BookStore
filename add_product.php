@@ -68,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .card h3 { margin-top: 0; margin-bottom: 10px; font-size: 1rem; border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; color: #2563eb; }
     .product-form label { display: block; font-weight: 600; font-size: 0.85rem; margin-top: 8px; }
-    .product-form input, .product-form select, .product-form textarea { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; }
+    .product-form input, .product-form select, .product-form textarea { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; position: relative; z-index: 2; background: #fff; }
+    .product-form input[type="file"], .product-form .preview-container, .product-form .video-preview { position: relative; z-index: 1; }
     .btn-primary { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: bold; cursor: pointer; }
 
     /* PREVIEW STYLING */
